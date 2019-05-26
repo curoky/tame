@@ -8,5 +8,5 @@
 def get_fit_cmd(name):
     if name.endswith("tar.xz"):
         return "xvf"
-    if name.endswith("tar.gz"):
+    if name.endswith("tar.gz") or name.endswith("tgz"):
         return "zxvf"

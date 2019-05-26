@@ -121,9 +121,9 @@ class Target(object):
         res.wait()
         return res
 
-    def cmake_cmd(self):
-        return "cmake -DCMAKE_INSTALL_PREFIX=%s && %s" % (
-            self.install_path(), self.make_cmd())
+    def cmake_cmd(self, mat="", *args):
+        return "cmake -DCMAKE_INSTALL_PREFIX=%s %s && %s" % (
+            self.install_path(), mat % args, self.make_cmd())
 
     def configure_cmd(self, mat="", *args):
         return "./configure --prefix=%s %s && %s" % (
