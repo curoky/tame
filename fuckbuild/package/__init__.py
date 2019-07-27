@@ -5,24 +5,32 @@
 # @desc        :
 
 
-import os
-import sys
-import git
-import time
-import shutil
 import logging
+import os
+import shutil
 import subprocess
-from ..tar_util import get_fit_cmd
+import sys
+import tarfile
+import threading
 from abc import ABCMeta, abstractmethod
+from cStringIO import StringIO
+
+import git
+import requests
+
+from ..build_manager import BuildManager
+from ..cache_manager import CacheManager
+
+total_deps = {}
 
 
 # class Target(metaclass=ABCMeta):
 class Target(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, prefix_path, name, version, website=None,
-                 git_uri=None, archive_uri=None, thread_num=20):
-        self.prefix_path = prefix_path
+    def __init__(self, root, name, version, install_root=None, website=None,
+                 git_uri=None, archive_uri=None, thread_num=40, deps=None):
+        self.root = root
         self.name = name
         self.version = version
         self.website = website
@@ -30,32 +38,36 @@ class Target(object):
         self.git_uri = git_uri
 
         self.archive_uri = archive_uri
-        self.download_uri = None
-        self.extract_dir_name = None
 
         self.thread_num = thread_num
 
-    def file_name(self):
-        return "%s_%s" % (self.name, self.version)
+        self.cache_dir = os.path.join(self.root, "_cache")
 
-    def repo_path(self):
-        return os.path.join(self.prefix_path, self.file_name())
+        self.repo_name = "%s_%s" % (self.name, self.version)
+        self.repo_path = os.path.join(self.root, self.repo_name)
 
-    def install_path(self):
-        return os.path.join(self.repo_path(), "__build")
+        self.install_root = install_root or os.path.join(self.repo_path, "_build")
+        self.install_bin = os.path.join(self.install_root, "bin")
+        self.install_inc = os.path.join(self.install_root, "include")
+        self.install_lib = os.path.join(self.install_root, "lib")
+        self.deps = deps or []
+        self.prepare()
 
-    def get_include(self):
-        return os.path.join(self.install_path(), "include")
+    def prepare(self):
+        if not os.path.exists(self.root):
+            os.makedirs(self.root)
+        if not os.path.exists(self.cache_dir):
+            os.makedirs(self.cache_dir)
 
-    def get_lib(self):
-        return os.path.join(self.install_path(), "lib")
-
-    def get_bin(self):
-        return os.path.join(self.install_path(), "bin")
+        deps = [dep(self.root) for dep in self.deps]
+        self.deps = deps
+        for dep in self.deps:
+            if dep.repo_name not in total_deps:
+                total_deps[dep.repo_name] = dep
 
     def update_git_repo(self):
-        if os.path.isdir(self.repo_path()):
-            repo = git.Repo(path=self.repo_path())
+        if os.path.isdir(self.repo_path):
+            repo = git.Repo(path=self.repo_path)
 
             if not repo.head.is_detached:
                 if str(repo.active_branch) == str(self.version):
@@ -72,62 +84,86 @@ class Target(object):
                     return
 
             logging.warning("%s exists, but branch not equal(%s->%s), remove",
-                            self.repo_path(), repo.active_branch, self.version)
-            shutil.rmtree(self.repo_path())
-        logging.info("Save To: %s", self.repo_path())
+                            self.repo_path, repo.active_branch, self.version)
+            shutil.rmtree(self.repo_path)
+        logging.info("Save To: %s", self.repo_path)
         try:
-            git.Repo.clone_from(url=self.git_uri, to_path=self.repo_path(), branch=self.version, depth=1)
+            git.Repo.clone_from(url=self.git_uri, to_path=self.repo_path, branch=self.version, depth=1)
         except git.GitCommandError as e:
-            logging.critical("%s", e.stderr)
+            logging.error("%s", e.stderr)
+        logging.info("[%s]: success to clone", self.repo_name)
 
     def update_archive_repo(self):
-        temp_save_name = time.strftime("%m-%d-%H-%M_", time.localtime()) + self.file_name()
+        download_file_name = os.path.basename(self.archive_uri)
+        f = CacheManager.get(self.cache_dir, download_file_name)
+        if f is None:
+            f = StringIO()
+            f.write(requests.get(self.archive_uri).content)
+            CacheManager.set(self.cache_dir, download_file_name, f)
 
-        if os.path.exists(os.path.join(self.prefix_path, self.file_name())):
-            logging.info("dir %s is exits, not update", self.file_name())
-            return
-        update_cmd = "wget %s -O %s && tar %s %s && mv %s %s && rm %s" % (
-            self.download_uri, temp_save_name,
-            get_fit_cmd(self.download_uri), temp_save_name,
-            self.extract_dir_name, self.file_name(),
-            temp_save_name)
-        logging.info("update_cmd %s", update_cmd)
-        res = subprocess.Popen(update_cmd,
-                               cwd=self.prefix_path,
-                               shell=True, stdout=sys.stdout, stderr=sys.stderr)
-        res.wait()
-        return res
+        t = tarfile.open(fileobj=f, mode="r:%s" % download_file_name.split(".")[-1])
+        for m in t.getmembers():
+            m.path = "/".join(m.path.split('/')[1:])
+        t.extractall(self.repo_path)
 
     @abstractmethod
     def get_build_cmd(self):
         pass
 
-    def update(self):
-        if self.git_uri:
-            self.update_git_repo()
-            return
-        elif self.archive_uri:
-            self.update_archive_repo()
-            return
-        logging.critical("git_uri and archive_uri is none")
+    def update(self, update_deps=False):
+        if update_deps:
+            logging.info('[%s]: prepare all deps is %s', self.repo_name, str(total_deps))
+            ths = []
+            for dep in total_deps:
+                th = threading.Thread(target=total_deps[dep].update)
+                th.start()
+                ths.append(th)
+            for th in ths:
+                th.join()
+            logging.info("[%s]: finish to update-deps", self.repo_name)
 
-    def build(self):
+        try:
+            if self.archive_uri:
+                self.update_archive_repo()
+            elif self.git_uri:
+                self.update_git_repo()
+            else:
+                logging.critical("git_uri and archive_uri is none")
+        except Exception as e:
+            logging.error("[%s]: has exception %s", self.repo_name, str(e))
+
+    def build(self, build_deps=False):
+        if build_deps:
+            logging.info('[%s]: build all deps is %s', self.repo_name, str(total_deps))
+            ths = []
+            for dep in total_deps:
+                th = threading.Thread(target=total_deps[dep].build)
+                th.start()
+                ths.append(th)
+            for th in ths:
+                th.join()
+            logging.info("[%s]: finish to build-deps", self.repo_name)
+
+        if BuildManager.check_mark(self.install_root, self.repo_name):
+            return
         logging.info("build cmd:" + self.get_build_cmd())
-        if not os.path.exists(self.install_path()):
-            os.makedirs(self.install_path())
+        if not os.path.exists(self.install_root):
+            os.makedirs(self.install_root)
         res = subprocess.Popen(self.get_build_cmd(),
-                               cwd=self.repo_path(),
+                               cwd=self.repo_path,
                                shell=True, stdout=sys.stdout, stderr=sys.stderr)
-        res.wait()
+        ret = res.wait()
+        if ret == 0:
+            BuildManager.write_mark(self.install_root, self.repo_name)
         return res
 
     def cmake_cmd(self, mat="", *args):
         return "cmake -DCMAKE_INSTALL_PREFIX=%s %s && %s" % (
-            self.install_path(), mat % args, self.make_cmd())
+            self.install_root, mat % args, self.make_cmd())
 
     def configure_cmd(self, mat="", *args):
         return "./configure --prefix=%s %s && %s" % (
-            self.install_path(), mat % args, self.make_cmd())
+            self.install_root, mat % args, self.make_cmd())
 
     def make_cmd(self):
         return "make -j %d && make install" % self.thread_num
