@@ -5,39 +5,28 @@
 # @desc:
 
 from . import Target
-from .boost import Boost
-from .lz4 import Lz4
-from .snappy import Snappy
-from .gflags import Gflags
-from .lzma import Lzma
-from .glog import Glog
-from .zstd import Zstd
-from .double_conversion import DoubleConversion
-from .libevent import Libevent
-from .openssl import Openssl
+from .boost import boost
+from .double_conversion import double_conversion
+from .gflags import gflags
+from .glog import glog
+from .libevent import libevent
+from .lz4 import lz4
+from .lzma import lzma
+from .openssl import openssl
+from .snappy import snappy
+from .zstd import zstd
 
 
-class Folly(Target):
+class folly(Target):
 
-    def __init__(self, prefix_path):
-        super(Folly, self).__init__(prefix_path,
-                                    name="folly",
-                                    version="v2018.08.20.00",
-                                    website="",
-                                    git_uri="git@github.com:facebook/folly")
-
-        self.deps = [
-            Boost(self.prefix_path),
-            Lz4(self.prefix_path),
-            Snappy(self.prefix_path),
-            Gflags(self.prefix_path),
-            Lzma(self.prefix_path),
-            Glog(self.prefix_path),
-            Openssl(self.prefix_path),
-            Zstd(self.prefix_path),
-            DoubleConversion(self.prefix_path),
-            Libevent(self.prefix_path)]
+    def __init__(self, root, version="v2018.08.20.00", install_root=None):
+        super(folly, self).__init__(
+            root, "folly", version, install_root,
+            git_uri="git@github.com:facebook/folly",
+            deps=[boost, lz4, snappy, gflags, lzma, glog, openssl, zstd,
+                  double_conversion, libevent]
+        )
 
     def get_build_cmd(self):
-        prefix_path = [dep.install_path() for dep in self.deps]
-        return self.cmake_cmd('-DCMAKE_PREFIX_PATH="%s"', ";".join(prefix_path))
+        root = [dep.install_root for dep in self.deps]
+        return self.cmake_cmd('-DCMAKE_PREFIX_PATH="%s"', ";".join(root))

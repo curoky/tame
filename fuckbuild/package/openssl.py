@@ -7,20 +7,24 @@
 from . import Target
 
 
-class Openssl(Target):
+class openssl(Target):
     """
     - OPENSSL_ROOT_DIR=$HOME
     - OPENSSL_INCLUDE_DIR=$HOME/include
     - OPENSSL_LIBRARIES=$HOME/lib
     """
 
-    def __init__(self, prefix_path):
-        super(Openssl, self).__init__(prefix_path,
-                                      name="openssl",
-                                      version="OpenSSL_1_1_1",
-                                      website="https://www.openssl.org",
-                                      git_uri="git@github.com:openssl/openssl.git")
+    def __init__(self, root, version="OpenSSL_1_1_1", install_root=None):
+        archive_uri = "https://github.com/openssl/openssl/archive/%s.tar.gz" % version
+        super(openssl, self).__init__(
+            root,
+            "openssl",
+            version,
+            install_root,
+            website="https://www.openssl.org",
+            archive_uri=archive_uri,
+            git_uri="git@github.com:openssl/openssl.git")
 
     def get_build_cmd(self):
         return "./config --prefix=%s --openssldir=%s/ssl && " % (
-            self.install_path(), self.install_path()) + self.make_cmd()
+            self.install_root, self.install_root) + self.make_cmd()

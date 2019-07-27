@@ -7,15 +7,16 @@
 from . import Target
 
 
-class Pcre(Target):
-    def __init__(self, prefix_path):
-        super(Pcre, self).__init__(prefix_path,
-                                   name="pcre",
-                                   version="8.35",
-                                   website="https://pcre.org/",
-                                   archive_uri="https://ftp.pcre.org/pub/pcre/pcre-%s.tar.gz")
-        self.download_uri = self.archive_uri % self.version
-        self.extract_dir_name = "pcre-%s" % self.version
+class pcre(Target):
+    def __init__(self, root, version="8.35", install_root=None):
+        archive_uri = "https://ftp.pcre.org/pub/pcre/pcre-%s.tar.gz" % version
+        super(pcre, self).__init__(
+            root,
+            "pcre",
+            version,
+            install_root,
+            website="https://pcre.org/",
+            archive_uri=archive_uri)
 
     def get_build_cmd(self):
         return self.configure_cmd()

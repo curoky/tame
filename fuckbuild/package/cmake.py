@@ -8,18 +8,14 @@
 from . import Target
 
 
-class Cmake(Target):
+class cmake(Target):
 
-    def __init__(self, prefix_path):
-        super(Cmake, self).__init__(prefix_path,
-                                    name="cmake",
-                                    version="v3.13.4",
-                                    website="https://cmake.org/",
-                                    git_uri="git@github.com:Kitware/CMake.git")
-
-    # def install_path(self):
-    #     return "/data01/home/liqiming.icecory/.local"
+    def __init__(self, root, version="v3.13.4", install_root=None):
+        super(cmake, self).__init__(
+            root, "cmake", version, install_root,
+            website="https://cmake.org/",
+            git_uri="git@github.com:Kitware/CMake.git")
 
     def get_build_cmd(self):
-        return "./bootstrap --prefix=%s && " % self.install_path() + \
+        return "./bootstrap --prefix=%s && " % self.install_root + \
                self.make_cmd()

@@ -4,25 +4,18 @@
 # @Copyright(C): GPL 3.0
 # @desc        :
 
-import os
 from . import Target
 
 
-class Ncurses(Target):
+class ncurses(Target):
 
-    def __init__(self, prefix_path):
-        super(Ncurses, self).__init__(prefix_path,
-                                      name="ncurses",
-                                      version="6.1",
-                                      website="https://www.gnu.org/software/ncurses/",
-                                      archive_uri="https://invisible-mirror.net/archives/ncurses/ncurses-%s.tar.gz"
-                                      )
-
-        self.download_uri = self.archive_uri % self.version
-        self.extract_dir_name = "ncurses-%s" % self.version
-
-    # def install_path(self):
-    #     return "/data01/home/liqiming.icecory/.local"
+    def __init__(self, root, version="6.1", install_root=None):
+        archive_uri = "https://invisible-mirror.net/archives/ncurses/ncurses-%s.tar.gz" % version
+        super(ncurses, self).__init__(
+            root, "ncurses", version, install_root,
+            website="https://www.gnu.org/software/ncurses/",
+            archive_uri=archive_uri
+        )
 
     def get_build_cmd(self):
         return self.configure_cmd(" --with-shared"
@@ -37,4 +30,4 @@ class Ncurses(Target):
                                   " --enable-interop"
                                   " --with-progs"
                                   " --enable-pc-files"
-                                  " --with-pkg-config-libdir=%s/pkgconfig", self.get_lib())
+                                  " --with-pkg-config-libdir=%s/pkgconfig", self.install_lib)

@@ -5,26 +5,25 @@
 # @desc        :
 
 from . import Target
-from .bison import Bison
-from .gettext import Gettext
-from .automake import Automake
+from .automake import automake
+from .bison import bison
+from .gettext import gettext
 
 
-class Flex(Target):
+class flex(Target):
     """
     need gettext [autopoint]
 
     need install v2.6.4 before master
     """
-    def __init__(self, prefix_path):
-        super(Flex, self).__init__(prefix_path,
-                                   name="flex",
-                                   version="v2.6.4",
-                                   # version="master",
-                                   website="https://www.gnu.org/software/flex/",
-                                   git_uri="git@github.com:westes/flex.git")
-        self.deps = [Gettext(self.prefix_path), Automake(self.prefix_path), Bison(self.prefix_path)]
+
+    def __init__(self, root, version="v2.6.4", install_root=None):
+        super(flex, self).__init__(
+            root, "flex", version, install_root,
+            website="https://www.gnu.org/software/flex/",
+            git_uri="git@github.com:westes/flex.git",
+            deps=[gettext, automake, bison])
 
     def get_build_cmd(self):
-        env = "export PATH=%s:$PATH && " % ":".join([dep.get_bin() for dep in self.deps])
+        env = "export PATH=%s:$PATH && " % ":".join([dep.install_bin for dep in self.deps])
         return env + "./autogen.sh && " + self.configure_cmd()

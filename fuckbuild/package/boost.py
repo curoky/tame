@@ -8,22 +8,16 @@
 from . import Target
 
 
-class Boost(Target):
-    """
-    - export BOOST_ROOT=$HOME
-    - export Boost_LIBRARY_DIRS=$HOME/lib
-    - export BOOST_INCLUDEDIR=$HOME/include
-    """
+class boost(Target):
 
-    def __init__(self, prefix_path):
-        super(Boost, self).__init__(prefix_path=prefix_path,
-                                    name="boost",
-                                    version="1.67.0",
-                                    website="",
-                                    archive_uri="https://dl.bintray.com/boostorg/release/%s/source/boost_%s.tar.gz")
-        self.download_uri = self.archive_uri % (self.version, self.version.replace(".", "_"))
-        self.extract_dir_name = "boost_%s" % self.version.replace(".", "_")
+    def __init__(self, root, version="1.67.0", install_root=None):
+        archive_uri = "https://dl.bintray.com/boostorg/release/%s/source/boost_%s.tar.gz" % (
+            version, version.replace(".", "_"))
+        super(boost, self).__init__(
+            root, "boost", version, install_root,
+            website="https://www.boost.org/",
+            archive_uri=archive_uri)
 
     def get_build_cmd(self):
         return "./bootstrap.sh --prefix=%s" \
-               " && ./b2 install --prefix=%s -j 20" % (self.install_path(), self.install_path())
+               " && ./b2 install --prefix=%s -j 20" % (self.install_root, self.install_root)

@@ -8,13 +8,12 @@
 from . import Target
 
 
-class DoubleConversion(Target):
+class double_conversion(Target):
 
-    def __init__(self, prefix_path):
-        super(DoubleConversion, self).__init__(prefix_path,
-                                               name="double-conversion",
-                                               version="v3.0.0",
-                                               git_uri="git@github.com:google/double-conversion.git")
+    def __init__(self, root, version="v3.0.0", install_root=None):
+        super(double_conversion, self).__init__(
+            root, "double-conversion", version, install_root,
+            git_uri="git@github.com:google/double-conversion.git")
 
     def get_build_cmd(self):
         return self.cmake_cmd()

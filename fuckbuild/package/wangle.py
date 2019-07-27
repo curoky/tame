@@ -5,35 +5,28 @@
 # @desc        :
 
 from . import Target
-from .folly import Folly
-from .boost import Boost
-from .glog import Glog
-from .gflags import Gflags
-from .openssl import Openssl
-from .libevent import Libevent
-from .double_conversion import DoubleConversion
-from .gtest import Gtest
+from .boost import boost
+from .double_conversion import double_conversion
+from .folly import folly
+from .gflags import gflags
+from .glog import glog
+from .gtest import gtest
+from .libevent import libevent
+from .openssl import openssl
 
 
-class Wangle(Target):
+class wangle(Target):
 
-    def __init__(self, prefix_path):
-        super(Wangle, self).__init__(prefix_path,
-                                     name="wangle",
-                                     version="v2018.08.20.00",
-                                     website="",
-                                     git_uri="git@github.com:facebook/wangle")
-
-        self.deps = [
-            Folly(self.prefix_path),
-            Boost(self.prefix_path),
-            Glog(self.prefix_path),
-            Gflags(self.prefix_path),
-            Openssl(self.prefix_path),
-            Libevent(self.prefix_path),
-            DoubleConversion(self.prefix_path),
-            Gtest(self.prefix_path)]
+    def __init__(self, root, version="v2018.08.20.00", install_root=None):
+        super(wangle, self).__init__(
+            root,
+            "wangle",
+            version,
+            install_root,
+            git_uri="git@github.com:facebook/wangle",
+            deps=[folly, boost, glog, gflags, openssl,
+                  libevent, double_conversion, gtest])
 
     def get_build_cmd(self):
-        prefix_path = [dep.install_path() for dep in self.deps]
-        return "cd wangle && " + self.cmake_cmd('-DCMAKE_PREFIX_PATH="%s"', ";".join(prefix_path))
+        root = [dep.install_root for dep in self.deps]
+        return "cd wangle && " + self.cmake_cmd('-DCMAKE_PREFIX_PATH="%s"', ";".join(root))

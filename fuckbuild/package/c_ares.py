@@ -7,14 +7,13 @@
 from . import Target
 
 
-class Cares(Target):
+class c_ares(Target):
 
-    def __init__(self, prefix_path):
-        super(Cares, self).__init__(prefix_path,
-                                    name="c_ares",
-                                    version="cares-1_15_0",
-                                    website="https://c-ares.haxx.se/",
-                                    git_uri="git@github.com:c-ares/c-ares.git")
+    def __init__(self, root, version="cares-1_15_0", install_root=None):
+        super(c_ares, self).__init__(
+            root, "c_ares", version, install_root,
+            website="https://c-ares.haxx.se/",
+            git_uri="git@github.com:c-ares/c-ares.git")
 
     def get_build_cmd(self):
         return self.cmake_cmd()

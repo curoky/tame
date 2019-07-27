@@ -6,19 +6,21 @@
 
 
 from . import Target
-from .boost import Boost
+from .boost import boost
 
 
-class Mstch(Target):
+class mstch(Target):
 
-    def __init__(self, prefix_path):
-        super(Mstch, self).__init__(prefix_path,
-                                    name="mstch",
-                                    version="1.0.2",
-                                    website="http://mustache.github.io/",
-                                    git_uri="git@github.com:no1msd/mstch.git")
-        self.deps = [Boost(self.prefix_path)]
+    def __init__(self, root, version="1.0.2", install_root=None):
+        super(mstch, self).__init__(
+            root,
+            "mstch",
+            version,
+            install_root,
+            website="http://mustache.github.io/",
+            git_uri="git@github.com:no1msd/mstch.git",
+            deps=[boost])
 
     def get_build_cmd(self):
-        prefix_path = [dep.install_path() for dep in self.deps]
-        return self.cmake_cmd('-DCMAKE_PREFIX_PATH="%s"', ";".join(prefix_path))
+        root = [dep.install_root for dep in self.deps]
+        return self.cmake_cmd('-DCMAKE_PREFIX_PATH="%s"', ";".join(root))

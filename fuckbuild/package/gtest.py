@@ -8,13 +8,12 @@
 from . import Target
 
 
-class Gtest(Target):
+class gtest(Target):
 
-    def __init__(self, prefix_path):
-        super(Gtest, self).__init__(prefix_path,
-                                    name="gtest",
-                                    version="release-1.8.1",
-                                    git_uri="git@github.com:google/googletest.git")
+    def __init__(self, root, version="release-1.8.1", install_root=None):
+        super(gtest, self).__init__(
+            root, "gtest", version, install_root,
+            git_uri="git@github.com:google/googletest.git")
 
     def get_build_cmd(self):
         return self.cmake_cmd()

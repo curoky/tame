@@ -5,23 +5,22 @@
 # @desc:
 
 from . import Target
-from .ncurses import Ncurses
-from .protobuf import Protobuf
+from .ncurses import ncurses
+from .protobuf import protobuf
 
 
-class Mosh(Target):
+class mosh(Target):
 
-    def __init__(self, prefix_path):
-        super(Mosh, self).__init__(prefix_path,
-                                   name="mosh",
-                                   version="mosh-1.3.2",
-                                   website="https://mosh.org",
-                                   git_uri="git@github.com:mobile-shell/mosh.git")
-        self.deps = [Ncurses(self.prefix_path), Protobuf(self.prefix_path)]
+    def __init__(self, root, version="mosh-1.3.2", install_root=None):
+        super(mosh, self).__init__(
+            root, "mosh", version, install_root,
+            website="https://mosh.org",
+            git_uri="git@github.com:mobile-shell/mosh.git",
+            deps=[ncurses, protobuf])
 
     def get_build_cmd(self):
-        PKG_CONFIG_PATH = self.deps[1].get_lib() + "/pkgconfig" + ":" + self.deps[0].get_lib() + "/pkgconfig"
+        PKG_CONFIG_PATH = self.deps[1].install_lib + "/pkgconfig" + ":" + self.deps[0].install_lib + "/pkgconfig"
         port = "export PATH=/usr/bin:/usr/local/bin:/bin:%s && export PKG_CONFIG_PATH=%s" % (
-            self.deps[1].get_bin(), PKG_CONFIG_PATH)
+            self.deps[1].install_bin, PKG_CONFIG_PATH)
         return "./autogen.sh && %s && " % port + \
                self.configure_cmd(" CPPFLAGS=-std=c++11")

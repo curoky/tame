@@ -6,29 +6,24 @@
 
 
 from . import Target
-from .curl import Curl
-from .gettext import Gettext
+from .gettext import gettext
+from .libcurl import libcurl
 
 
-class Libgit(Target):
+class libgit(Target):
     """
     1. fatal: Unable to find remote helper for 'https'
-        resolution: --with-curl=path_to_curl
+        resolution: --with-libcurl=path_to_curl
     """
 
-    def __init__(self, prefix_path):
-        super(Libgit, self).__init__(prefix_path,
-                                     name="git",
-                                     version="2.19.2",
-                                     website="https://git-scm.com/",
-                                     archive_uri="https://mirrors.edge.kernel.org/pub/software/scm/git/git-%s.tar.gz")
-        self.download_uri = self.archive_uri % self.version
-        self.extract_dir_name = "git-%s" % self.version
-        self.deps = [Curl(self.prefix_path), Gettext(self.prefix_path)]
-
-    # def install_path(self):
-    #     return "/data01/home/liqiming.icecory/.local"
+    def __init__(self, root, version="2.19.2", install_root=None):
+        archive_uri = "https://mirrors.edge.kernel.org/pub/software/scm/git/git-%s.tar.gz" % version
+        super(libgit, self).__init__(
+            root, "git", version, install_root,
+            website="https://git-scm.com/",
+            archive_uri=archive_uri,
+            deps=[libcurl, gettext])
 
     def get_build_cmd(self):
-        env = "export PATH=%s:$PATH && " % self.deps[1].get_bin()
-        return env + self.configure_cmd("--with-curl=%s", self.deps[0].install_path())
+        env = "export PATH=%s:$PATH && " % self.deps[1].install_bin
+        return env + self.configure_cmd("--with-libcurl=%s", self.deps[0].install_root)

@@ -5,17 +5,16 @@
 # @desc        :
 
 from . import Target
-from .gflags import Gflags
+from .gflags import gflags
 
 
-class Glog(Target):
+class glog(Target):
 
-    def __init__(self, prefix_path):
-        super(Glog, self).__init__(prefix_path,
-                                   name="glog",
-                                   version="v0.3.3",
-                                   git_uri="git@github.com:google/glog")
-        self.deps = [Gflags(self.prefix_path)]
+    def __init__(self, root, version="v0.3.3", install_root=None):
+        super(glog, self).__init__(
+            root, "glog", version, install_root,
+            git_uri="git@github.com:google/glog",
+            deps=[gflags])
 
     def get_build_cmd(self):
-        return self.configure_cmd("--with-gflags=%s", self.deps[0].install_path())
+        return self.configure_cmd("--with-gflags=%s", self.deps[0].install_root)

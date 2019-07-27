@@ -10,14 +10,12 @@ from . import Target
 
 class Libtool(Target):
 
-    def __init__(self, prefix_path):
-        super(Libtool, self).__init__(prefix_path,
-                                      name="libtool",
-                                      version="2.4.6",
-                                      website="https://www.gnu.org/software/libtool/",
-                                      archive_uri="http://ftpmirror.gnu.org/libtool/libtool-%s.tar.gz")
-        self.download_uri = self.archive_uri % self.version
-        self.extract_dir_name = "libtool-%s" % self.version
+    def __init__(self, root, version="2.4.6", install_root=None):
+        archive_uri = "http://ftpmirror.gnu.org/libtool/libtool-%s.tar.gz" % version
+        super(Libtool, self).__init__(
+            root, "libtool", version, install_root,
+            website="https://www.gnu.org/software/libtool/",
+            archive_uri=archive_uri)
 
     def get_build_cmd(self):
         return self.configure_cmd()

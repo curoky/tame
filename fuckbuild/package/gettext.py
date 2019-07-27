@@ -8,16 +8,15 @@
 from . import Target
 
 
-class Gettext(Target):
+class gettext(Target):
 
-    def __init__(self, prefix_path):
-        super(Gettext, self).__init__(prefix_path,
-                                      name="gettext",
-                                      version="0.19.8",
-                                      website="https://www.gnu.org/software/gettext/",
-                                      archive_uri="https://ftp.gnu.org/gnu/gettext/gettext-%s.tar.gz")
-        self.download_uri = self.archive_uri % self.version
-        self.extract_dir_name = "gettext-%s" % self.version
+    def __init__(self, root, version="0.19.8", install_root=None):
+        archive_uri = "https://ftp.gnu.org/gnu/gettext/gettext-%s.tar.gz" % version
+        super(gettext, self).__init__(
+            root, "gettext", version, install_root,
+            website="https://www.gnu.org/software/gettext/",
+            archive_uri=archive_uri,
+        )
 
     def get_build_cmd(self):
         return self.configure_cmd()

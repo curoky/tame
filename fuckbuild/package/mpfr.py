@@ -6,20 +6,22 @@
 
 
 from . import Target
-from .gmp import Gmp
+from .gmp import gmp
 
 
-class Mpfr(Target):
+class mpfr(Target):
 
-    def __init__(self, prefix_path):
-        super(Mpfr, self).__init__(prefix_path,
-                                   name="mpfr",
-                                   version="4.0.2",
-                                   website="https://www.mpfr.org/",
-                                   archive_uri="https://www.mpfr.org/mpfr-current/mpfr-%s.tar.gz")
-        self.download_uri = self.archive_uri % self.version
-        self.extract_dir_name = "mpfr-%s" % self.version
-        self.deps = [Gmp(self.prefix_path)]
+    def __init__(self, root, version="4.0.2", install_root=None):
+        archive_uri = "https://www.mpfr.org/mpfr-current/mpfr-%s.tar.gz" % version
+        super(mpfr, self).__init__(
+            root,
+            "mpfr",
+            version,
+            install_root,
+            website="https://www.mpfr.org/",
+            archive_uri=archive_uri,
+            deps=[gmp]
+        )
 
     def get_build_cmd(self):
-        return self.configure_cmd("--with-gmp=%s", self.deps[0].install_path())
+        return self.configure_cmd("--with-gmp=%s", self.deps[0].install_root)

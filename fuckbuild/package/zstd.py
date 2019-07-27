@@ -7,13 +7,15 @@
 from . import Target
 
 
-class Zstd(Target):
+class zstd(Target):
 
-    def __init__(self, prefix_path):
-        super(Zstd, self).__init__(prefix_path,
-                                   name="zstd",
-                                   version="v1.3.5",
-                                   git_uri="git@github.com:facebook/zstd.git")
+    def __init__(self, root, version="v1.3.5", install_root=None):
+        super(zstd, self).__init__(
+            root,
+            "zstd",
+            version, install_root,
+            git_uri="git@github.com:facebook/zstd.git")
 
     def get_build_cmd(self):
-        return "cd build/cmake && " + self.cmake_cmd()
+        return self.cmake_cmd(" -S build/cmake"
+                              " -B %s" % self.repo_path)

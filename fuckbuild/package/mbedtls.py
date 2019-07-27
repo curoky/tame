@@ -7,14 +7,13 @@
 from . import Target
 
 
-class Mbedtls(Target):
+class mbedtls(Target):
 
-    def __init__(self, prefix_path):
-        super(Mbedtls, self).__init__(prefix_path,
-                                      name="mbedtls",
-                                      version="mbedtls-2.1.18",
-                                      website="https://tls.mbed.org",
-                                      git_uri="git@github.com:ARMmbed/mbedtls.git")
+    def __init__(self, root, version="mbedtls-2.1.18", install_root=None):
+        super(mbedtls, self).__init__(
+            root, "mbedtls", version, install_root,
+            website="https://tls.mbed.org",
+            git_uri="git@github.com:ARMmbed/mbedtls.git")
 
     def get_build_cmd(self):
         return self.cmake_cmd()
