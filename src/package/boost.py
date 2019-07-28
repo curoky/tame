@@ -10,7 +10,7 @@ from . import Target
 
 class boost(Target):
 
-    def __init__(self, root, version="1.67.0", install_root=None):
+    def __init__(self, root, version="1.70.0", install_root=None):
         archive_uri = "https://dl.bintray.com/boostorg/release/%s/source/boost_%s.tar.gz" % (
             version, version.replace(".", "_"))
         super(boost, self).__init__(

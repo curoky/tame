@@ -12,11 +12,11 @@ import subprocess
 import sys
 import tarfile
 import threading
-from abc import ABCMeta, abstractmethod
-from cStringIO import StringIO
-
 import git
 import requests
+from abc import ABCMeta, abstractmethod
+from io import StringIO, BytesIO
+
 
 from ..build_manager import BuildManager
 from ..cache_manager import CacheManager
@@ -29,7 +29,7 @@ class Target(object):
     __metaclass__ = ABCMeta
 
     def __init__(self, root, name, version, install_root=None, website=None,
-                 git_uri=None, archive_uri=None, thread_num=40, deps=None):
+                 git_uri=None, archive_uri=None, thread_num=2, deps=None):
         self.root = root
         self.name = name
         self.version = version
@@ -52,7 +52,7 @@ class Target(object):
         self.env = None
         self.prepare_env()
 
-        # 目前只有cmake支持在指定路径build, 其它情况默认在项目根路径build
+        # 目前只有cmake automake支持在指定路径build, 其它情况默认在项目根路径build
         self.build_root = None
         self.prepare_build_path("")
 
@@ -122,8 +122,9 @@ class Target(object):
         download_file_name = os.path.basename(self.archive_uri)
         f = CacheManager.get(self.cache_dir, download_file_name)
         if f is None:
-            f = StringIO()
+            f = BytesIO()
             f.write(requests.get(self.archive_uri).content)
+            logging.info("success to download %s", download_file_name)
             CacheManager.set(self.cache_dir, download_file_name, f)
 
         t = tarfile.open(fileobj=f, mode="r:%s" % download_file_name.split(".")[-1])
@@ -147,15 +148,12 @@ class Target(object):
                 th.join()
             logging.info("[%s]: finish to update-deps", self.repo_name)
 
-        try:
-            if self.archive_uri:
-                self.update_archive_repo()
-            elif self.git_uri:
-                self.update_git_repo()
-            else:
-                logging.critical("git_uri and archive_uri is none")
-        except Exception as e:
-            logging.error("[%s]: has exception %s", self.repo_name, str(e))
+        if self.archive_uri:
+            self.update_archive_repo()
+        elif self.git_uri:
+            self.update_git_repo()
+        else:
+            logging.critical("git_uri and archive_uri is none")
 
     def build(self, build_deps=False, force=False):
         if build_deps:
@@ -194,8 +192,12 @@ class Target(object):
             self.build_root, cmake_prefix_path, self.install_root,
             mat % args, self.make_cmd())
 
-    def configure_cmd(self, mat="", *args):
-        return "./configure --prefix=%s %s && %s" % (
+    def configure_cmd(self, autogen=False, mat="", *args):
+        pre = ""
+        self.prepare_build_path("_build")
+        if autogen:
+            pre = "bash %s/autogen.sh && " % self.repo_path
+        return pre + "bash %s/configure --prefix=%s %s && %s" % (self.repo_path,
             self.install_root, mat % args, self.make_cmd())
 
     def make_cmd(self):

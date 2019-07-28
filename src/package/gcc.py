@@ -13,7 +13,7 @@ from .mpfr import mpfr
 class gcc(Target):
 
     def __init__(self, root, version="5.5.0", install_root=None):
-        archive_uri = "https://bigsearcher.com/mirrors/gcc/releases/gcc-%s/gcc-%s.tar.xz" % (
+        archive_uri = "https://ftp.gnu.org/gnu/gcc/gcc-%s/gcc-%s.tar.xz" % (
             version, version)
         super(gcc, self).__init__(
             root, "gcc", version, install_root,
