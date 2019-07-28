@@ -18,4 +18,4 @@ class lz4(Target):
             git_uri="git@github.com:lz4/lz4.git")
 
     def get_build_cmd(self):
-        return "cd contrib/cmake_unofficial && " + self.cmake_cmd()
+        return self.cmake_cmd(" -S %s", self.get_repo_sub_path("contrib/cmake_unofficial"))

@@ -28,5 +28,4 @@ class wangle(Target):
                   libevent, double_conversion, gtest])
 
     def get_build_cmd(self):
-        root = [dep.install_root for dep in self.deps]
-        return "cd wangle && " + self.cmake_cmd('-DCMAKE_PREFIX_PATH="%s"', ";".join(root))
+        return self.cmake_cmd(' -S %s', self.get_repo_sub_path("wangle"))

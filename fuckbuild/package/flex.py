@@ -25,5 +25,4 @@ class flex(Target):
             deps=[gettext, automake, bison])
 
     def get_build_cmd(self):
-        env = "export PATH=%s:$PATH && " % ":".join([dep.install_bin for dep in self.deps])
-        return env + "./autogen.sh && " + self.configure_cmd()
+        return "./autogen.sh && " + self.configure_cmd()

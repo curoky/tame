@@ -20,5 +20,4 @@ class krb5(Target):
             deps=[bison])
 
     def get_build_cmd(self):
-        env = "export PATH=%s:$PATH && " % self.deps[0].install_bin
-        return env + "cd src && autoreconf -ivf && " + self.configure_cmd()
+        return "cd src && autoreconf -ivf && " + self.configure_cmd()

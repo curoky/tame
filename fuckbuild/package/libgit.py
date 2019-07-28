@@ -25,5 +25,5 @@ class libgit(Target):
             deps=[libcurl, gettext])
 
     def get_build_cmd(self):
-        env = "export PATH=%s:$PATH && " % self.deps[1].install_bin
-        return env + self.configure_cmd("--with-libcurl=%s", self.deps[0].install_root)
+        # env = "export PATH=%s:$PATH && " % self.deps[1].install_bin
+        return self.configure_cmd("--with-libcurl=%s", self.deps[0].install_root)

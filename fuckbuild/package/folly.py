@@ -28,5 +28,4 @@ class folly(Target):
         )
 
     def get_build_cmd(self):
-        root = [dep.install_root for dep in self.deps]
-        return self.cmake_cmd('-DCMAKE_PREFIX_PATH="%s"', ";".join(root))
+        return self.cmake_cmd()

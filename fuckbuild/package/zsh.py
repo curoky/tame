@@ -26,13 +26,10 @@ class zsh(Target):
             deps=[ncurses])
 
     def get_build_cmd(self):
-        """
-        ./configure --prefix=$HOME CPPFLAGS="-I$HOME/include/ncurses" LDFLAGS="-L$HOME/lib"
-        :return:
-        """
-        CPPFLAGS = "-I" + self.deps[0].install_inc + "/ncurses"
-        LDFLAGS = "-L" + self.deps[0].install_lib
         pre = "./Util/preconfig && export C_INCLUDE_PATH=%s && " % (self.deps[0].install_inc)
-        return pre + './configure --prefix=%s --datadir=%s --with-tcsetpgrp CPPFLAGS="%s" LDFLAGS="%s"' % (
-            self.install_root, self.install_root + "/doc", CPPFLAGS, LDFLAGS
-        ) + " && " + self.make_cmd()
+        return pre + self.configure_cmd(' --with-tcsetpgrp'
+                                        ' CPPFLAGS="%s"'
+                                        ' LDFLAGS="%s"' % (
+                                            "-I" + self.deps[0].install_inc + "/ncurses",
+                                            "-L" + self.deps[0].install_lib
+                                        ))

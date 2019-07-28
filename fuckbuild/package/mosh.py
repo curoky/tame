@@ -19,8 +19,4 @@ class mosh(Target):
             deps=[ncurses, protobuf])
 
     def get_build_cmd(self):
-        PKG_CONFIG_PATH = self.deps[1].install_lib + "/pkgconfig" + ":" + self.deps[0].install_lib + "/pkgconfig"
-        port = "export PATH=/usr/bin:/usr/local/bin:/bin:%s && export PKG_CONFIG_PATH=%s" % (
-            self.deps[1].install_bin, PKG_CONFIG_PATH)
-        return "./autogen.sh && %s && " % port + \
-               self.configure_cmd(" CPPFLAGS=-std=c++11")
+        return "./autogen.sh && " + self.configure_cmd(" CPPFLAGS=-std=c++11")

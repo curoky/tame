@@ -46,14 +46,28 @@ class Target(object):
         self.repo_name = "%s_%s" % (self.name, self.version)
         self.repo_path = os.path.join(self.root, self.repo_name)
 
-        self.install_root = install_root or os.path.join(self.repo_path, "_build")
+        self.deps = deps or []
+        self.prepare_deps()
+
+        self.env = None
+        self.prepare_env()
+
+        # 目前只有cmake支持在指定路径build, 其它情况默认在项目根路径build
+        self.build_root = None
+        self.prepare_build_path("")
+
+        self.install_root = install_root or os.path.join(self.repo_path, "_install")
         self.install_bin = os.path.join(self.install_root, "bin")
         self.install_inc = os.path.join(self.install_root, "include")
         self.install_lib = os.path.join(self.install_root, "lib")
-        self.deps = deps or []
-        self.prepare()
 
-    def prepare(self):
+    def get_repo_sub_path(self, name):
+        return os.path.join(self.repo_path, name)
+
+    def prepare_build_path(self, build_suffix):
+        self.build_root = os.path.join(self.repo_path, build_suffix)
+
+    def prepare_deps(self):
         if not os.path.exists(self.root):
             os.makedirs(self.root)
         if not os.path.exists(self.cache_dir):
@@ -65,18 +79,29 @@ class Target(object):
             if dep.repo_name not in total_deps:
                 total_deps[dep.repo_name] = dep
 
+    def prepare_env(self):
+        self.env = os.environ.copy()
+        path = ":".join([dep.install_bin for dep in self.deps])
+        self.env["PATH"] = path + ":" + self.env["PATH"]
+
+        pkg = ":".join([dep.install_lib + "/pkgconfig" for dep in self.deps])
+        self.env["PKG_CONFIG_PATH"] = pkg
+
     def update_git_repo(self):
         if os.path.isdir(self.repo_path):
-            repo = git.Repo(path=self.repo_path)
+            try:
+                repo = git.Repo(path=self.repo_path)
+            except git.InvalidGitRepositoryError:
+                repo = None
 
-            if not repo.head.is_detached:
+            if repo and not repo.head.is_detached:
                 if str(repo.active_branch) == str(self.version):
                     repo.git.reset('--hard')
                     repo.git.clean('-xdf')
                     repo.remotes.origin.pull()
                     logging.info("git:%s exists, just pull", self.git_uri)
                     return
-            else:
+            elif repo:
                 if str(repo.head.commit) == repo.git.execute(["git", "rev-list", "-1", self.version]):
                     repo.git.reset('--hard')
                     repo.git.clean('-xdf')
@@ -132,7 +157,7 @@ class Target(object):
         except Exception as e:
             logging.error("[%s]: has exception %s", self.repo_name, str(e))
 
-    def build(self, build_deps=False):
+    def build(self, build_deps=False, force=False):
         if build_deps:
             logging.info('[%s]: build all deps is %s', self.repo_name, str(total_deps))
             ths = []
@@ -144,13 +169,16 @@ class Target(object):
                 th.join()
             logging.info("[%s]: finish to build-deps", self.repo_name)
 
-        if BuildManager.check_mark(self.install_root, self.repo_name):
+        if not force and BuildManager.check_mark(self.install_root, self.repo_name):
             return
         logging.info("build cmd:" + self.get_build_cmd())
         if not os.path.exists(self.install_root):
             os.makedirs(self.install_root)
+        if not os.path.exists(self.build_root):
+            os.makedirs(self.build_root)
         res = subprocess.Popen(self.get_build_cmd(),
-                               cwd=self.repo_path,
+                               cwd=self.build_root,
+                               env=self.env,
                                shell=True, stdout=sys.stdout, stderr=sys.stderr)
         ret = res.wait()
         if ret == 0:
@@ -158,8 +186,13 @@ class Target(object):
         return res
 
     def cmake_cmd(self, mat="", *args):
-        return "cmake -DCMAKE_INSTALL_PREFIX=%s %s && %s" % (
-            self.install_root, mat % args, self.make_cmd())
+        if "-S" not in mat:
+            mat += " -S %s " % self.repo_path
+        self.prepare_build_path("_build")
+        cmake_prefix_path = ";".join([dep.install_root for dep in self.deps])
+        return 'cmake -B %s -DCMAKE_PREFIX_PATH="%s" -DCMAKE_INSTALL_PREFIX=%s %s && %s' % (
+            self.build_root, cmake_prefix_path, self.install_root,
+            mat % args, self.make_cmd())
 
     def configure_cmd(self, mat="", *args):
         return "./configure --prefix=%s %s && %s" % (
