@@ -14,7 +14,7 @@ class openssl(Target):
     - OPENSSL_LIBRARIES=$HOME/lib
     """
 
-    def __init__(self, root, version="OpenSSL_1_1_1", install_root=None):
+    def __init__(self, root, version="OpenSSL_1_0_1", install_root=None):
         archive_uri = "https://github.com/openssl/openssl/archive/%s.tar.gz" % version
         super(openssl, self).__init__(
             root,

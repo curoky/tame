@@ -29,7 +29,7 @@ class fbthrift(Target):
 
     """
 
-    def __init__(self, root, version="v2018.08.20.00", install_root=None):
+    def __init__(self, root, version="v2019.03.04.00", install_root=None):
         super(fbthrift, self).__init__(
             root, "fbthrift", version, install_root,
             git_uri="git@github.com:facebook/fbthrift",

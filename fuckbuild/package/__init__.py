@@ -73,7 +73,7 @@ class Target(object):
         if not os.path.exists(self.cache_dir):
             os.makedirs(self.cache_dir)
 
-        deps = [dep(self.root) for dep in self.deps]
+        deps = [dep(root=self.root, install_root=self.install_root) for dep in self.deps]
         self.deps = deps
         for dep in self.deps:
             if dep.repo_name not in total_deps:

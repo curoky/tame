@@ -17,7 +17,7 @@ from .openssl import openssl
 
 class wangle(Target):
 
-    def __init__(self, root, version="v2018.08.20.00", install_root=None):
+    def __init__(self, root, version="v2019.03.04.00", install_root=None):
         super(wangle, self).__init__(
             root,
             "wangle",

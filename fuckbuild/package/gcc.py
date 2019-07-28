@@ -12,7 +12,7 @@ from .mpfr import mpfr
 
 class gcc(Target):
 
-    def __init__(self, root, version="7.4.0", install_root=None):
+    def __init__(self, root, version="5.5.0", install_root=None):
         archive_uri = "https://bigsearcher.com/mirrors/gcc/releases/gcc-%s/gcc-%s.tar.xz" % (
             version, version)
         super(gcc, self).__init__(

@@ -19,7 +19,7 @@ from .zstd import zstd
 
 class folly(Target):
 
-    def __init__(self, root, version="v2018.08.20.00", install_root=None):
+    def __init__(self, root, version="v2019.03.04.00", install_root=None, ):
         super(folly, self).__init__(
             root, "folly", version, install_root,
             git_uri="git@github.com:facebook/folly",
