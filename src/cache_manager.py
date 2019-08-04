@@ -13,12 +13,16 @@ import logging
 from io import BytesIO
 
 
+
 class CacheManager(object):
 
-    def __init__(self, cache_dir, install_dir):
-        self.cache_dir = cache_dir
-        self.install_dir = install_dir
+    def __init__(self, root):
+        self.root = root
+        self.cache_dir = os.path.join(root, "_cache")
         self.logger = logging.getLogger(__name__)
+
+        if not os.path.exists(self.cache_dir):
+            os.makedirs(self.cache_dir)
 
     def get(self, file_name):
         rio = BytesIO()
@@ -41,21 +45,21 @@ class CacheManager(object):
         self.logger.info("[%s]: save to cache", file_name)
 
     def _load_mark(self):
-        mark_path = os.path.join(self.install_dir, "VERSION")
+        mark_path = os.path.join(self.root, "VERSION")
         if os.path.isfile(mark_path):
             with codecs.open(mark_path, "r", "utf8") as f:
                 return json.loads(f.read())
 
     def check_mark(self, name):
-        mark = self._load_mark(self.install_dir)
+        mark = self._load_mark()
         if mark and name in mark:
             self.logger.info("[%s]: already build", name)
             return True
         return False
 
     def write_mark(self, name):
-        mark_path = os.path.join(self.install_dir, "VERSION")
-        mark = self._load_mark(self.install_dir)
+        mark_path = os.path.join(self.root, "VERSION")
+        mark = self._load_mark()
         if not mark:
             mark = {}
         if name not in mark:
