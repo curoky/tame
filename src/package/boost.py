@@ -10,14 +10,15 @@ from . import Target
 
 class boost(Target):
 
-    def __init__(self, root, version="1.70.0", install_root=None):
-        archive_uri = "https://dl.bintray.com/boostorg/release/%s/source/boost_%s.tar.gz" % (
+    def __init__(self, root, version):
+        version = version or "1.70.0"
+        archive_url = "https://dl.bintray.com/boostorg/release/%s/source/boost_%s.tar.gz" % (
             version, version.replace(".", "_"))
         super(boost, self).__init__(
-            root, "boost", version, install_root,
+            root, "boost", version,
             website="https://www.boost.org/",
-            archive_uri=archive_uri)
+            url=archive_url)
 
-    def get_build_cmd(self):
+    def get_build_cmd(self, install_path):
         return "./bootstrap.sh --prefix=%s" \
-               " && ./b2 install --prefix=%s -j 20" % (self.install_root, self.install_root)
+               " && ./b2 install --prefix=%s -j %d" % (install_path, install_path, self.thread_num)

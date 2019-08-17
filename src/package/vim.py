@@ -6,21 +6,20 @@
 
 
 from . import Target
-from .ncurses import ncurses
 
 
 class vim(Target):
     """
     http://mirrors.ustc.edu.cn/vim/
     """
-    def __init__(self, root, version="v8.1.0996", install_root=None):
-        super(vim, self).__init__(
-            root, "vim", version, install_root,
-            website="https://www.vim.org/",
-            # archive_uri="https://github.com/vim/vim/archive/%s.tar.gz" % version,
-            git_uri="git@github.com:vim/vim.git",
-            deps=[ncurses])
 
-    def get_build_cmd(self):
-        LDFLAGS = "-L%s" % self.deps[0].install_lib
-        return self.configure_cmd('LDFLAGS="%s"', LDFLAGS)
+    def __init__(self, root, version):
+        version = version or "v8.1.0996"
+        super(vim, self).__init__(
+            root, "vim", version,
+            website="https://www.vim.org/",
+            url="git@github.com:vim/vim.git",
+            deps=["ncurses"])
+
+    def get_build_cmd(self, install_path):
+        return self.configure_cmd(install_path)

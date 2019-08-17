@@ -5,7 +5,6 @@
 # @desc        :
 
 from . import Target
-from .ncurses import ncurses
 
 
 class zsh(Target):
@@ -15,21 +14,14 @@ class zsh(Target):
         solution: add --with-tcsetpgrp for configure
     """
 
-    def __init__(self, root, version="zsh-5.7.1", install_root=None):
+    def __init__(self, root, version):
+        version = version or "5.7.1"
         super(zsh, self).__init__(
-            root,
-            "zsh",
-            version,
-            install_root,
+            root, "zsh", version,
             website="http://www.zsh.org",
-            git_uri="git@github.com:zsh-users/zsh.git",
-            deps=[ncurses])
+            # url="http://www.zsh.org/pub/zsh-%s.tar.xz"
+            url="https://jaist.dl.sourceforge.net/project/zsh/zsh/%s/zsh-%s.tar.xz",
+            deps=["ncurses"])
 
-    def get_build_cmd(self):
-        pre = "./Util/preconfig && export C_INCLUDE_PATH=%s && " % (self.deps[0].install_inc)
-        return pre + self.configure_cmd(' --with-tcsetpgrp'
-                                        ' CPPFLAGS="%s"'
-                                        ' LDFLAGS="%s"' % (
-                                            "-I" + self.deps[0].install_inc + "/ncurses",
-                                            "-L" + self.deps[0].install_lib
-                                        ))
+    def get_build_cmd(self, install_path):
+        return self.configure_cmd(install_path, mat='--with-term-lib="ncurses"')

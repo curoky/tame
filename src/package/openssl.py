@@ -14,17 +14,13 @@ class openssl(Target):
     - OPENSSL_LIBRARIES=$HOME/lib
     """
 
-    def __init__(self, root, version="OpenSSL_1_0_1", install_root=None):
-        archive_uri = "https://github.com/openssl/openssl/archive/%s.tar.gz" % version
+    def __init__(self, root, version):
+        version = version or "1.1.1b"
         super(openssl, self).__init__(
-            root,
-            "openssl",
-            version,
-            install_root,
+            root, "openssl", version,
             website="https://www.openssl.org",
-            archive_uri=archive_uri,
-            git_uri="git@github.com:openssl/openssl.git")
+            url="https://www.openssl.org/source/openssl-%s.tar.gz" % version)
 
-    def get_build_cmd(self):
-        return "./config --prefix=%s --openssldir=%s/ssl && " % (
-            self.install_root, self.install_root) + self.make_cmd()
+    def get_build_cmd(self, install_path):
+        return "./config --prefix=%s --openssldir=%s/ssl" % (
+            install_path, install_path) + " && " + self.make_cmd()
