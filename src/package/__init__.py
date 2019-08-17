@@ -5,87 +5,80 @@
 # @desc        :
 
 
-import logging
 import os
-import shutil
-import subprocess
 import sys
-import tarfile
-import threading
 import git
+import shutil
+import logging
+import tarfile
 import requests
+import subprocess
+from io import BytesIO
 from abc import ABCMeta, abstractmethod
-from io import StringIO, BytesIO
 
-
-from ..build_manager import BuildManager
-from ..cache_manager import CacheManager
-
-total_deps = {}
+from ..utils import get_mirror
 
 
 # class Target(metaclass=ABCMeta):
 class Target(object):
+    """
+    """
     __metaclass__ = ABCMeta
 
-    def __init__(self, root, name, version, install_root=None, website=None,
-                 git_uri=None, archive_uri=None, thread_num=2, deps=None):
+    def __init__(self, root, name, version, url=None, cache=None,
+                 thread_num=2,
+                 website=None,
+                 deps=None, build_config=None):
+
         self.root = root
         self.name = name
+        self.url = url
         self.version = version
         self.website = website
-
-        self.git_uri = git_uri
-
-        self.archive_uri = archive_uri
-
-        self.thread_num = thread_num
-
-        self.cache_dir = os.path.join(self.root, "_cache")
-
         self.repo_name = "%s_%s" % (self.name, self.version)
-        self.repo_path = os.path.join(self.root, self.repo_name)
 
-        self.deps = deps or []
-        self.prepare_deps()
+        self.cache = cache
+        self.thread_num = thread_num
+        self.logger = logging.getLogger(name)
+
+        # 目前只有cmake automake支持在指定路径build, 其它情况默认在项目根路径build
+
+        self.repo_path = os.path.join(root, self.repo_name)
+        self.deps_path = os.path.join(root, "install_deps")
+        self.deps = set(deps) if deps else set()
+
+        self.build_config = build_config
 
         self.env = None
         self.prepare_env()
 
-        # 目前只有cmake automake支持在指定路径build, 其它情况默认在项目根路径build
-        self.build_root = None
-        self.prepare_build_path("")
+    @staticmethod
+    def from_config(root, cache, config, version=None):
+        """
+        :param config:
+            dict(
+                name=name,
+                url=url,
+                version=version,
+                config=config,
+                website=website,
+                deps=deps
+            )
+        :return:
+        """
+        version = version or config["version"]
+        return Target(root=root, cache=cache,
+                      version=version, name=config["name"], url=config["url"],
+                      website=config["website"], deps=config["deps"],
+                      build_config=config["build_config"])
 
-        self.install_root = install_root or os.path.join(self.repo_path, "_install")
-        self.install_bin = os.path.join(self.install_root, "bin")
-        self.install_inc = os.path.join(self.install_root, "include")
-        self.install_lib = os.path.join(self.install_root, "lib")
-
-    def get_repo_sub_path(self, name):
-        return os.path.join(self.repo_path, name)
-
-    def prepare_build_path(self, build_suffix):
-        self.build_root = os.path.join(self.repo_path, build_suffix)
-
-    def prepare_deps(self):
-        if not os.path.exists(self.root):
-            os.makedirs(self.root)
-        if not os.path.exists(self.cache_dir):
-            os.makedirs(self.cache_dir)
-
-        deps = [dep(root=self.root, install_root=self.install_root) for dep in self.deps]
-        self.deps = deps
-        for dep in self.deps:
-            if dep.repo_name not in total_deps:
-                total_deps[dep.repo_name] = dep
-
-    def prepare_env(self):
-        self.env = os.environ.copy()
-        path = ":".join([dep.install_bin for dep in self.deps])
-        self.env["PATH"] = path + ":" + self.env["PATH"]
-
-        pkg = ":".join([dep.install_lib + "/pkgconfig" for dep in self.deps])
-        self.env["PKG_CONFIG_PATH"] = pkg
+    def update(self):
+        if "git@" in self.url:
+            self.update_git_repo()
+        elif self.url:
+            self.update_archive_repo()
+        else:
+            raise RuntimeError()
 
     def update_git_repo(self):
         if os.path.isdir(self.repo_path):
@@ -99,13 +92,13 @@ class Target(object):
                     repo.git.reset('--hard')
                     repo.git.clean('-xdf')
                     repo.remotes.origin.pull()
-                    logging.info("git:%s exists, just pull", self.git_uri)
+                    logging.info("git:%s exists, just pull", self.url)
                     return
             elif repo:
                 if str(repo.head.commit) == repo.git.execute(["git", "rev-list", "-1", self.version]):
                     repo.git.reset('--hard')
                     repo.git.clean('-xdf')
-                    logging.info("git:%s exists, commit equal", self.git_uri)
+                    logging.info("git:%s exists, commit equal", self.url)
                     return
 
             logging.warning("%s exists, but branch not equal(%s->%s), remove",
@@ -113,92 +106,75 @@ class Target(object):
             shutil.rmtree(self.repo_path)
         logging.info("Save To: %s", self.repo_path)
         try:
-            git.Repo.clone_from(url=self.git_uri, to_path=self.repo_path, branch=self.version, depth=1)
+            git.Repo.clone_from(url=self.url, to_path=self.repo_path, branch=self.version, depth=1)
         except git.GitCommandError as e:
             logging.error("%s", e.stderr)
         logging.info("[%s]: success to clone", self.repo_name)
 
     def update_archive_repo(self):
-        download_file_name = os.path.basename(self.archive_uri)
-        f = CacheManager.get(self.cache_dir, download_file_name)
+        download_file_name = os.path.basename(self.url)
+        f = self.cache.get(download_file_name)
         if f is None:
             f = BytesIO()
-            f.write(requests.get(self.archive_uri).content)
+            f.write(requests.get(get_mirror(self.url)).content)
             logging.info("success to download %s", download_file_name)
-            CacheManager.set(self.cache_dir, download_file_name, f)
+            self.cache.set(download_file_name, f)
 
         t = tarfile.open(fileobj=f, mode="r:%s" % download_file_name.split(".")[-1])
         for m in t.getmembers():
             m.path = "/".join(m.path.split('/')[1:])
         t.extractall(self.repo_path)
 
-    @abstractmethod
-    def get_build_cmd(self):
-        pass
+    def prepare_env(self):
+        self.env = os.environ.copy()
+        self.env["PATH"] = os.path.join(self.deps_path, "bin") + ":" + self.env["PATH"]
+        self.env["PKG_CONFIG_PATH"] = os.path.join(self.deps_path, "lib")
 
-    def update(self, update_deps=False):
-        if update_deps:
-            logging.info('[%s]: prepare all deps is %s', self.repo_name, str(total_deps))
-            ths = []
-            for dep in total_deps:
-                th = threading.Thread(target=total_deps[dep].update)
-                th.start()
-                ths.append(th)
-            for th in ths:
-                th.join()
-            logging.info("[%s]: finish to update-deps", self.repo_name)
+    def build(self, install_path):
 
-        if self.archive_uri:
-            self.update_archive_repo()
-        elif self.git_uri:
-            self.update_git_repo()
+        build_command = self.get_build_cmd(install_path)
+        if "cmake" in build_command or "configure" in build_command:
+            build_path = os.path.join(self.repo_path, "_build")
+            if not os.path.exists(build_path):
+                os.makedirs(build_path)
         else:
-            logging.critical("git_uri and archive_uri is none")
+            build_path = self.repo_path
 
-    def build(self, build_deps=False, force=False):
-        if build_deps:
-            logging.info('[%s]: build all deps is %s', self.repo_name, str(total_deps))
-            ths = []
-            for dep in total_deps:
-                th = threading.Thread(target=total_deps[dep].build)
-                th.start()
-                ths.append(th)
-            for th in ths:
-                th.join()
-            logging.info("[%s]: finish to build-deps", self.repo_name)
+        self.logger.info('[%s]: start to build\n build cmd: [%s]', self.repo_name, build_command)
 
-        if not force and BuildManager.check_mark(self.install_root, self.repo_name):
-            return
-        logging.info("build cmd:" + self.get_build_cmd())
-        if not os.path.exists(self.install_root):
-            os.makedirs(self.install_root)
-        if not os.path.exists(self.build_root):
-            os.makedirs(self.build_root)
-        res = subprocess.Popen(self.get_build_cmd(),
-                               cwd=self.build_root,
-                               env=self.env,
+        res = subprocess.Popen(build_command, cwd=build_path, env=self.env,
                                shell=True, stdout=sys.stdout, stderr=sys.stderr)
-        ret = res.wait()
-        if ret == 0:
-            BuildManager.write_mark(self.install_root, self.repo_name)
-        return res
+        return res.wait()
 
-    def cmake_cmd(self, mat="", *args):
-        if "-S" not in mat:
-            mat += " -S %s " % self.repo_path
-        self.prepare_build_path("_build")
-        cmake_prefix_path = ";".join([dep.install_root for dep in self.deps])
-        return 'cmake -B %s -DCMAKE_PREFIX_PATH="%s" -DCMAKE_INSTALL_PREFIX=%s %s && %s' % (
-            self.build_root, cmake_prefix_path, self.install_root,
-            mat % args, self.make_cmd())
+    @abstractmethod
+    def get_build_cmd(self, install_path):
+        if self.build_config:
+            if self.build_config["type"] == "cmake":
+                return self.cmake_cmd(install_path,
+                                      src=self.build_config["src"],
+                                      mat=self.build_config["mat"],
+                                      *self.build_config["args"]
+                                      )
+            elif self.build_config["type"] == "configure":
+                return self.configure_cmd(install_path,
+                                          autogen=self.build_config["autogen"],
+                                          mat=self.build_config["mat"],
+                                          *self.build_config["args"]
+                                          )
+            raise RuntimeError("unreachable")
 
-    def configure_cmd(self, autogen=False, mat="", *args):
-        pre = ""
-        self.prepare_build_path("_build")
-        if autogen:
-            pre = "bash %s/autogen.sh && " % self.repo_path
-        return pre + "bash %s/configure --prefix=%s %s && %s" % (self.repo_path,
-            self.install_root, mat % args, self.make_cmd())
+    def cmake_cmd(self, install_path, src=".", mat="", *args):
+        return 'cmake -S %s -DCMAKE_PREFIX_PATH="%s" -DCMAKE_INSTALL_PREFIX=%s %s' % (
+            os.path.join(self.repo_path, src),
+            self.deps_path,
+            install_path,
+            mat % args) + " && " + self.make_cmd()
+
+    def configure_cmd(self, install_path, autogen=False, mat="", *args):
+        pre = "" if not autogen else "bash %s/autogen.sh && " % self.repo_path
+        return pre + "bash %s/configure --prefix=%s %s" % (
+            self.repo_path, install_path,
+            mat % args) + " && " + self.make_cmd()
 
     def make_cmd(self):
         return "make -j %d && make install" % self.thread_num
