@@ -16,71 +16,11 @@ import git
 import requests
 from jinja2 import Template
 
+from src.config import global_config
+
 global_mirror = {
     "ftp.gnu.org": ["mirrors.tuna.tsinghua.edu.cn", ],
     "www.python.org/ftp": ["npm.taobao.org/mirrors", ],
-}
-
-global_url = {
-    # gnu
-    'autoconf': 'http://ftp.gnu.org/gnu/autoconf/autoconf-{{version}}.tar.gz',
-    'automake': 'http://ftp.gnu.org/gnu/automake/automake-{{version}}.tar.gz',
-    'bison': 'http://ftp.gnu.org/gnu/bison/bison-{{version}}.tar.gz',
-    'gettext': 'http://ftp.gnu.org/gnu/gettext/gettext-{{version}}.tar.gz',
-    'gmp': 'http://ftp.gnu.org/gnu/gmp/gmp-{{version}}.tar.xz',
-    'mpfr': 'http://ftp.gnu.org/gnu/mpfr/mpfr-{{version}}.tar.gz',
-    'mpc': 'http://ftp.gnu.org/gnu/mpc/mpc-{{version}}.tar.gz',
-    'gcc': 'http://ftp.gnu.org/gnu/gcc/gcc-{{version}}/gcc-{{version}}.tar.xz',
-    'help2man': 'http://ftp.gnu.org/gnu/help2man/help2man-{{version}}.tar.xz',
-    'ncurses': 'http://ftp.gnu.org/gnu/ncurses/ncurses-{{version}}.tar.gz',
-    'libtool': 'http://ftp.gnu.org/gnu/libtool/libtool-{{version}}.tar.gz',
-    'm4': 'http://ftp.gnu.org/gnu/m4/m4-{{version}}.tar.gz',
-
-    # github release
-    'tmux': 'https://github.com/tmux/tmux/releases/download/2.8/tmux-2.8.tar.gz',
-    'flex': 'https://github.com/westes/flex/releases/download/v{{version}}/flex-{{version}}.tar.gz',
-    'libsodium': 'https://github.com/jedisct1/libsodium/releases/download/{{version}}/libsodium-{{version}}.tar.gz',
-    'mosh': 'https://github.com/mobile-shell/mosh/releases/download/mosh-{{version}}/mosh-{{version}}.tar.gz',
-    'libevent': 'https://github.com/libevent/libevent/'
-                'releases/download/release-{{version}}/libevent-{{version}}.tar.gz',
-    'protobuf': 'https://github.com/protocolbuffers/protobuf/'
-                'releases/download/v{{version}}/protobuf-all-{{version}}.tar.gz',
-    'shadowsocks-libev': 'https://github.com/shadowsocks/shadowsocks-libev/'
-                         'releases/download/v{{version}}/shadowsocks-libev-{{version}}.tar.gz',
-
-    # github git
-    'cmake': 'git@github.com:Kitware/CMake.git',
-    'zlib': 'git@github.com:madler/zlib.git',
-    'zstd': 'git@github.com:facebook/zstd.git',
-    'gflags': 'git@github.com:gflags/gflags.git',
-    'glog': 'git@github.com:google/glog',
-    'lz4': 'git@github.com:lz4/lz4.git',
-    'snappy': 'git@github.com:google/snappy.git',
-    'mstch': 'git@github.com:no1msd/mstch.git',
-    'mbedtls': 'git@github.com:ARMmbed/mbedtls.git',
-    'c_ares': 'git@github.com:c-ares/c-ares.git',
-    'double-conversion': 'git@github.com:google/double-conversion.git',
-    'gtest': 'git@github.com:google/googletest.git',
-    'fizz': 'git@github.com:facebookincubator/fizz.git',
-    'folly': 'git@github.com:facebook/folly',
-    'wangle': 'git@github.com:facebook/wangle',
-    'fbthrift': 'git@github.com:facebook/fbthrift',
-    'yarpl': 'git@github.com:rsocket/rsocket-cpp.git',
-    'vim': 'git@github.com:vim/vim.git',
-    'krb5': 'git@github.com:krb5/krb5.git',
-
-    # others
-    'pcre': 'http://ftp.pcre.org/pub/pcre/pcre-{{version}}.tar.gz',
-    'boost': 'https://dl.bintray.com/boostorg/release/{{version}}/source/boost_{{version|replace(".","_")}}.tar.gz',
-    'pkg-config': 'https://pkg-config.freedesktop.org/releases/pkg-config-{{version}}.tar.gz',
-    'curl': 'http://curl.haxx.se/download/curl-{{version}}.tar.gz',
-    'libev': 'http://dist.schmorp.de/libev/libev-{{version}}.tar.gz',
-    'git': 'https://mirrors.edge.kernel.org/pub/software/scm/git/git-{{version}}.tar.gz',
-    'lzma': 'https://tukaani.org/xz/xz-{{version}}.tar.gz',
-    'python': 'https://www.python.org/ftp/python/{{version}}/Python-{{version}}.tgz',
-    'zsh': 'https://jaist.dl.sourceforge.net/project/zsh/zsh/{{version}}/zsh-{{version}}.tar.xz',
-    'openssl': 'https://www.openssl.org/source/openssl-{{version}}.tar.gz',
-    'tree': 'http://mama.indstate.edu/users/ice/tree/src/tree-{{version}}.tgz',
 }
 
 global_info = {
@@ -113,7 +53,7 @@ global_info = {
     'shadowsocks-libev': dict(version=['3.2.4', ], website='None'),
     'git': dict(version=['2.19.2', ], website='https://git-scm.com/'),
     'zstd': dict(version=['v1.3.5', ], website='None'),
-    'gflags': dict(version=['v2.2.2', ], website='https://gflags.github.io/gflags/'),
+    'gflags': dict(version=['v2.2.0', ], website='https://gflags.github.io/gflags/'),
     'glog': dict(version=['v0.4.0', ], website='None'),
     'lz4': dict(version=['v1.8.2', ], website='None'),
     'snappy': dict(version=['1.1.7', ], website='None'),
@@ -123,9 +63,9 @@ global_info = {
     'double-conversion': dict(version=['v3.0.0', ], website='None'),
     'gtest': dict(version=['release-1.8.1', ], website='None'),
     'fizz': dict(version=['v2019.04.22.00', ], website='None'),
-    'folly': dict(version=['v2019.03.04.00', ], website='None'),
-    'wangle': dict(version=['v2019.03.04.00', ], website='None'),
-    'fbthrift': dict(version=['v2019.03.04.00', ], website='None'),
+    'folly': dict(version=['v2019.04.22.00', ], website='None'),
+    'wangle': dict(version=['v2019.04.22.00', ], website='None'),
+    'fbthrift': dict(version=['v2019.04.22.00', ], website='None'),
     'yarpl': dict(version=['master', ], website='http://rsocket.io/'),
 
     'zsh': dict(version=['5.7.1', ], website='http://www.zsh.org'),
@@ -133,7 +73,7 @@ global_info = {
 
     'openssl': dict(version=['1.1.1b', ], website="https://www.openssl.org"),
     'krb5': dict(version=['krb5-1.16.1-final', ]),
-    'boost': dict(version=['1.70.0', ], website="https://www.boost.org/"),
+    'boost': dict(version=['1.68.0', ], website="https://www.boost.org/"),
     'tree': dict(version=['1.8.0', ]),
 
 }
@@ -161,7 +101,7 @@ class Downloader(object):
             th.join()
 
     def _download_one(self, name, version, proxies):
-        url = Template(global_url[name]).render(version=version)
+        url = Template(global_config[name]["url"]).render(version=version)
         if "git@" in url:
             self._down_load_with_git(url, name, version, proxies)
         else:
@@ -191,7 +131,7 @@ class Downloader(object):
                     self.logger.info("[%s]: git exists, commit equal", repo_name)
                     return
 
-            self.logger.warning("[%s]:exist not available remove it", repo_name, version)
+            self.logger.warning("[%s]:exist not available remove it", repo_name)
             shutil.rmtree(repo_path)
 
         self.logger.info("[%s]:start clone ~", repo_name)

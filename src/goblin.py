@@ -8,7 +8,8 @@
 import logging
 import os
 
-from .builder import Builder, TargetInfo
+from . import TargetInfo
+from .builder import Builder
 from .depender import Depender
 from .downloader import Downloader, global_info
 
@@ -22,13 +23,13 @@ class Goblin(object):
                  build_thread_num, download_thread_num):
         self.name = name
         self.root = root
+        self.install_path = install_path
         self.logger = logging.getLogger(__name__)
 
         self.builder = Builder(root, build_thread_num)
         self.depender = Depender()
         self.downloader = Downloader(root, download_thread_num)
 
-        self.install_path = install_path or os.path.join(self.root, "install")
         if not os.path.exists(self.root):
             os.makedirs(self.root)
 
@@ -39,7 +40,7 @@ class Goblin(object):
     def _prepare_target_info(self, versions: dict):
         deps = self.depender.get_deps_list(self.name)
         for dep in deps:
-            t = TargetInfo(name=dep, install_path=self.install_path,
+            t = TargetInfo(root=self.root, name=dep, install_path=self.install_path,
                            version=versions.get(dep, global_info[dep]["version"][0]),
                            force_build=False)
             self.targets_list.append(t)
