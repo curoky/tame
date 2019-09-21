@@ -31,3 +31,8 @@ boost/crc.hpp:154:41: note: shadowed declaration is here
 - issues https://github.com/facebook/folly/issues
 - solution1 with boost 1.69.0
 - solution2 ignore it ?
+
+
+#### fizz
+1. Not find zlib.h
+    for add `include_directories(${zlib_path})` to CmakeList.txt
