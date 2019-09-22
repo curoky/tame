@@ -14,7 +14,8 @@ class TargetInfo(object):
         self.name = name
         self.version = version
         self.repo_name = "%s_%s" % (name, version)
-        self.install_path = install_path or os.path.join(root, self.repo_name, "_install")
+        self.install_path = install_path or os.path.join(
+            root, self.repo_name, "_install")
         self.force_build = force_build
 
     def __str__(self):

@@ -23,5 +23,6 @@ register(name="double-conversion", url="git@github.com:google/double-conversion.
 register(name="gtest", url="git@github.com:google/googletest.git",
          builder=cmake_helper())
 
-register(name="gflags", website="https://gflags.github.io/gflags/", url="git@github.com:gflags/gflags.git",
+register(name="gflags", website="https://gflags.github.io/gflags/",
+         url="git@github.com:gflags/gflags.git",
          builder=cmake_helper("-DBUILD_SHARED_LIBS=OFF"))

@@ -76,6 +76,11 @@ global_info = {
     'boost': dict(version=['1.68.0', ], website="https://www.boost.org/"),
     'tree': dict(version=['1.8.0', ]),
 
+    'bzip2': dict(version=['1.0.6']),
+    'polipo': dict(version=['1.1.1']),
+    'texinfo': dict(version=['6.6']),
+    'ack': dict(version=['2.28']),
+    'rapidjson': dict(version=['master']),
 }
 
 

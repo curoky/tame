@@ -48,7 +48,8 @@ class Builder(object):
         # self.env["CXXFLAGS"] = '-I%s' % os.path.join(self.deps_path, "include")
 
     def build(self, name, totle_target: {str, TargetInfo}):
-        install_paths = set([os.path.join(self.root, t.install_path) for t in totle_target.values()])
+        install_paths = set([os.path.join(self.root, t.install_path)
+                             for t in totle_target.values()])
 
         repo_name = name + "_" + totle_target[name].version
         repo_path = os.path.join(self.root, repo_name)
@@ -99,7 +100,8 @@ class Builder(object):
         if not mark:
             mark = {}
         if repo_name not in mark:
-            mark[repo_name] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.localtime())
+            mark[repo_name] = time.strftime(
+                "%Y-%m-%dT%H:%M:%SZ", time.localtime())
             with codecs.open(mark_path, "w", "utf8") as f:
                 f.write(json.dumps(mark))
         self.logger.info("[%s] write build version", repo_name)

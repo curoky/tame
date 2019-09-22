@@ -17,7 +17,7 @@ register(name="wangle",
 
 register(name="fbthrift",
          deps={'wangle', 'zlib', 'flex', 'folly', 'fizz', 'bison', 'openssl',
-               'glog', 'mstch', 'zstd', 'krb5', 'gtest',
+               'glog', 'mstch', 'zstd', 'krb5', 'gtest', 'yarpl',
                'boost', 'gflags'}, url="git@github.com:facebook/fbthrift",
          builder=cmake_helper())
 
@@ -25,7 +25,7 @@ register(name="fizz",
          deps={'zlib', 'libsodium', 'double-conversion', 'libevent', 'folly',
                'openssl', 'gflags'},
          url="git@github.com:facebookincubator/fizz.git",
-         builder=cmake_helper(src_path="fizz",args="-DCMAKE_CROSSCOMPILING=OFF"))
+         builder=cmake_helper(src_path="fizz",args="-DBUILD_TESTS=OFF"))
 
 register(name="folly",
          deps={'double-conversion', 'lz4', 'libevent', 'openssl', 'glog',
