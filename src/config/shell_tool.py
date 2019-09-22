@@ -4,7 +4,7 @@
 # @Copyright(C): GPL 3.0
 # @desc        :
 
-from . import register, configure_helper
+from . import register, configure_helper, builder_helper
 
 register(name="tmux", deps={'pkg-config', 'ncurses', 'libevent'},
          url="https://github.com/tmux/tmux/releases/download/2.8/tmux-2.8.tar.gz",
@@ -38,3 +38,10 @@ register(name="shadowsocks-libev", deps={'libsodium', 'libev', 'mbedtls', 'c_are
 
 register(name="python", url="https://www.python.org/ftp/python/{{version}}/Python-{{version}}.tgz",
          builder=configure_helper("--enable-optimizations"))
+
+register(name="ack",website="https://beyondgrep.com/",
+         url="git@github.com:beyondgrep/ack2.git",
+         builder=builder_helper(
+             type="custom", build_path=".", src_path=".",
+             cmd="mkdir -p {{install_path}}/bin && curl https://beyondgrep.com/ack-2.28-single-file > {{install_path}}/bin/ack && chmod 0755 {{install_path}}/bin/ack",
+         ))

@@ -52,3 +52,6 @@ register(name="libtool", website="https://www.gnu.org/software/libtool/",
 
 register(name="m4", url="http://ftp.gnu.org/gnu/m4/m4-{{version}}.tar.gz",
          builder=configure_helper())
+
+register(name="texinfo", url="http://ftp.gnu.org/gnu/texinfo/texinfo-{{version}}.tar.gz",
+         builder=configure_helper())

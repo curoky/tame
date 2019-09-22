@@ -39,22 +39,24 @@ register(name="zlib", website="http://zlib.net/", url="git@github.com:madler/zli
 register(name="lz4", url="git@github.com:lz4/lz4.git",
          builder=cmake_helper(src_path="contrib/cmake_unofficial"))
 
-register(name="mstch", deps={'boost'}, url="git@github.com:no1msd/mstch.git", builder=cmake_helper())
-register(name="mbedtls", website="https://tls.mbed.org", url="git@github.com:ARMmbed/mbedtls.git",
+register(name="mstch", deps={
+         'boost'}, url="git@github.com:no1msd/mstch.git", builder=cmake_helper())
+register(name="mbedtls", website="https://tls.mbed.org",     url="git@github.com:ARMmbed/mbedtls.git",
          builder=cmake_helper())
 
 register(name="c_ares", website="https://c-ares.haxx.se/", url="git@github.com:c-ares/c-ares.git",
          builder=cmake_helper())
 
 register(name="yarpl", website="http://rsocket.io/",
-         deps={'double-conversion', 'folly', 'glog', 'gtest', 'boost', 'gflags'},
+         deps={'double-conversion', 'folly',
+               'glog', 'gtest', 'boost', 'gflags'},
          url="git@github.com:rsocket/rsocket-cpp.git",
          builder=cmake_helper(args='-DBUILD_TESTS=OFF -DBUILD_EXAMPLES= -DBUILD_BENCHMARKS=OFF'))
 
 register(name="krb5", deps={'bison', 'automake'}, url="git@github.com:krb5/krb5.git",
          builder=builder_helper(
              type="custom",
-             cmd='cd src && autoreconf -ivf && {{repo_path}}/configure --prefix={{install_path}} &&' + make_cmd(),
+             cmd='cd src && autoreconf -ivf && {{repo_path}}/src/configure --prefix={{install_path}} &&' + make_cmd(),
              build_path=".",
              src_path="."))
 
@@ -78,3 +80,17 @@ register(name="tree", url="http://mama.indstate.edu/users/ice/tree/src/tree-{{ve
          builder=builder_helper(type="custom", cmd='make && cp {{repo_path}}/tree {{install_path}}/bin',
                                 build_path='.',
                                 src_path='.'))
+
+register(name="bzip2", website="http://www.bzip.org/", url="https://nchc.dl.sourceforge.net/project/bzip2/bzip2-{{version}}.tar.gz",
+         builder=builder_helper(type="custom", cmd="make && make install PREFIX={{install_path}}",
+                                build_path='.', src_path='.'))
+
+register(name="polipo", website="https://www.irif.fr/~jch/software/polipo/",
+         url="https://github.com/jech/polipo/archive/polipo-{{version}}.tar.gz",
+         builder=builder_helper(type="custom", cmd="make && cp {{repo_path}}/polipo {{install_path}}/bin",
+                                build_path='.', src_path='.'))
+register(name="rapidjson", website="http://rapidjson.org/",
+         url="git@github.com:Tencent/rapidjson.git",
+         builder=cmake_helper(args="-DRAPIDJSON_BUILD_DOC=OFF"
+                              " -DRAPIDJSON_BUILD_EXAMPLES=OFF"
+                              " -DRAPIDJSON_BUILD_TESTS=OFF"))
