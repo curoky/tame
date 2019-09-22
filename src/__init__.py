@@ -9,6 +9,12 @@ import os
 
 
 class TargetInfo(object):
+    """
+    @root: root path for workspace
+    @name: repo name
+    @version: repo build version
+    """
+
     def __init__(self, root, name, version, install_path, force_build):
         self.root = root
         self.name = name

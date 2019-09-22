@@ -4,7 +4,6 @@
 # @Copyright(C): GPL 3.0
 # @desc        :
 
-
 import codecs
 import json
 import logging
@@ -29,8 +28,9 @@ class Builder(object):
 
     def _prepare_env(self, install_paths: [str]):
         self.env = dict()
-        self.env["PATH"] = ":".join(
-            [os.path.join(p, "bin") for p in install_paths]) + ":" + os.environ["PATH"]
+        self.env["PATH"] = ":".join([
+            os.path.join(p, "bin") for p in install_paths
+        ]) + ":" + os.environ["PATH"]
 
         self.env["PKG_CONFIG_PATH"] = ":".join(
             [os.path.join(p, "lib") for p in install_paths])
@@ -48,8 +48,10 @@ class Builder(object):
         # self.env["CXXFLAGS"] = '-I%s' % os.path.join(self.deps_path, "include")
 
     def build(self, name, totle_target: {str, TargetInfo}):
-        install_paths = set([os.path.join(self.root, t.install_path)
-                             for t in totle_target.values()])
+        install_paths = set([
+            os.path.join(self.root, t.install_path)
+            for t in totle_target.values()
+        ])
 
         repo_name = name + "_" + totle_target[name].version
         repo_path = os.path.join(self.root, repo_name)
@@ -65,15 +67,18 @@ class Builder(object):
         if builder["type"] == "cmake":
             cmd = Template(builder["cmd"]).render(
                 cmake_prefix=";".join(install_paths),
-                install_path=install_path, repo_path=repo_path,
+                install_path=install_path,
+                repo_path=repo_path,
                 thread_num=self.thread_num)
         elif builder["type"] == "configure":
             self._prepare_env(install_paths)
-            cmd = Template(builder["cmd"]).render(
-                install_path=install_path, repo_path=repo_path, thread_num=self.thread_num)
+            cmd = Template(builder["cmd"]).render(install_path=install_path,
+                                                  repo_path=repo_path,
+                                                  thread_num=self.thread_num)
         else:
-            cmd = Template(builder["cmd"]).render(
-                install_path=install_path, repo_path=repo_path, thread_num=self.thread_num)
+            cmd = Template(builder["cmd"]).render(install_path=install_path,
+                                                  repo_path=repo_path,
+                                                  thread_num=self.thread_num)
 
         build_path = os.path.join(repo_path, builder["build_path"])
         if not os.path.exists(build_path):
@@ -81,8 +86,12 @@ class Builder(object):
 
         self.logger.info("start to build %s\n\t with cmd: %s\n\t with env: %s",
                          str(totle_target[name]), cmd, self.env)
-        res = subprocess.Popen(cmd, cwd=build_path, env=self.env,
-                               shell=True, stdout=sys.stdout, stderr=sys.stderr)
+        res = subprocess.Popen(cmd,
+                               cwd=build_path,
+                               env=self.env,
+                               shell=True,
+                               stdout=sys.stdout,
+                               stderr=sys.stderr)
         retcode = res.wait()
         if retcode == 0:
             self._write_build_mark(repo_name)
@@ -100,8 +109,8 @@ class Builder(object):
         if not mark:
             mark = {}
         if repo_name not in mark:
-            mark[repo_name] = time.strftime(
-                "%Y-%m-%dT%H:%M:%SZ", time.localtime())
+            mark[repo_name] = time.strftime("%Y-%m-%dT%H:%M:%SZ",
+                                            time.localtime())
             with codecs.open(mark_path, "w", "utf8") as f:
                 f.write(json.dumps(mark))
         self.logger.info("[%s] write build version", repo_name)

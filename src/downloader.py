@@ -99,7 +99,8 @@ class Downloader(object):
         self.logger.info('start to download \n[%s]', str(repos))
         ths = []
         for name in repos:
-            th = threading.Thread(target=self._download_one, args=(name, repos[name], proxies,))
+            th = threading.Thread(target=self._download_one,
+                                  args=(name, repos[name], proxies,))
             th.start()
             ths.append(th)
         for th in ths:
@@ -133,15 +134,18 @@ class Downloader(object):
                 if str(repo.head.commit) == repo.git.execute(["git", "rev-list", "-1", version]):
                     repo.git.reset('--hard')
                     repo.git.clean('-xdf')
-                    self.logger.info("[%s]: git exists, commit equal", repo_name)
+                    self.logger.info(
+                        "[%s]: git exists, commit equal", repo_name)
                     return
 
-            self.logger.warning("[%s]:exist not available remove it", repo_name)
+            self.logger.warning(
+                "[%s]:exist not available remove it", repo_name)
             shutil.rmtree(repo_path)
 
         self.logger.info("[%s]:start clone ~", repo_name)
         try:
-            git.Repo.clone_from(url=url, to_path=repo_path, branch=version, depth=1)
+            git.Repo.clone_from(url=url, to_path=repo_path,
+                                branch=version, depth=1)
         except git.GitCommandError as e:
             self.logger.critical("%s", e.stderr)
         self.logger.info("[%s]:success to clone", repo_name)

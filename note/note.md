@@ -18,6 +18,8 @@ snappy_unittest.cc:(.text+0x6477): undefined reference to `testing::Message::Mes
 
 #### folly
 
+报错1
+
 ```bash
 boost/crc.hpp: In member function ‘void boost::crc_basic<Bits>::process_bits(unsigned char, std::size_t)’:
 boost/crc.hpp:759:1: error: declaration of ‘bit_count’ shadows a previous local [-Werror=shadow=compatible-local]
@@ -34,6 +36,17 @@ boost/crc.hpp:154:41: note: shadowed declaration is here
 - issues https://github.com/facebook/folly/issues
 - solution1 with boost 1.69.0 ? 1.68.0
 - solution2 ignore it ?
+
+报错2
+
+```bash
+/usr/local/include/folly/Portability.h:222:10: fatal error: __config: No such file or directory
+ #include <__config> // @manual
+          ^~~~~~~~~~
+compilation terminated.
+```
+
+使用gcc构建，但已经定义了FOLLY_USE_LIBCPP, 这往往是为了clang, 使用与现在使用的编译器配置不同的编译器, 编译器配置需要保持一致
 
 #### fizz
 
@@ -64,3 +77,12 @@ make[3]: *** [Makefile:1910: freadahead.o] Error 1
 ```
 
 参考此处: https://bugzilla.redhat.com/show_bug.cgi?id=1573342
+
+#### openssl
+
+MacOS 报错 system variable OPENSSL_ROOT_DIR (missing OPENSSL_INCLUDE_DIR)
+
+```bash
+export OPENSSL_ROOT_DIR=/usr/local/Cellar/openssl/1.0.2p/
+export OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2p/include/
+```

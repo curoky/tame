@@ -6,9 +6,13 @@
 
 import logging
 
-global_config = {
+from .shell_tool import *
+from .other import *
+from .facebook import *
+from .google import *
+from .gun import *
 
-}
+global_config = {}
 
 
 def register(name, url, builder, website=None, deps=None):
@@ -34,8 +38,8 @@ def make_cmd():
 def configure_helper(args="", src_path=".", build_path="_build"):
     return builder_helper(
         type="configure",
-        cmd="{{repo_path}}/%s/configure --prefix={{install_path}} %s" % (
-            src_path, args) + " && " + make_cmd(),
+        cmd="{{repo_path}}/%s/configure --prefix={{install_path}} %s" %
+        (src_path, args) + " && " + make_cmd(),
         src_path=src_path,
         build_path=build_path)
 
@@ -43,15 +47,9 @@ def configure_helper(args="", src_path=".", build_path="_build"):
 def cmake_helper(args="", src_path=".", build_path="_build"):
     return builder_helper(
         type="cmake",
-        cmd='cmake -B {{repo_path}}/%s -S {{repo_path}}/%s -DCMAKE_PREFIX_PATH="{{cmake_prefix}}"'
-            ' -DCMAKE_INSTALL_PREFIX={{install_path}} %s' % (
-                build_path, src_path, args) + " && " + make_cmd(),
+        cmd=
+        'cmake -B {{repo_path}}/%s -S {{repo_path}}/%s -DCMAKE_PREFIX_PATH="{{cmake_prefix}}"'
+        ' -DCMAKE_INSTALL_PREFIX={{install_path}} %s' %
+        (build_path, src_path, args) + " && " + make_cmd(),
         src_path=src_path,
         build_path=build_path)
-
-
-from .gun import *
-from .google import *
-from .facebook import *
-from .other import *
-from .shell_tool import *
