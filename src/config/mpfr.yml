@@ -1,0 +1,23 @@
+name: mpfr
+website: https://www.mpfr.org/
+description:
+
+version:
+  - 4.0.2
+
+download:
+  archive-url: http://ftp.gnu.org/gnu/mpfr/mpfr-{{version}}.tar.gz
+  git-url:
+
+depend:
+  lib:
+    - gmp
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

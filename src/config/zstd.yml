@@ -1,0 +1,22 @@
+name: zstd
+website:
+description:
+
+version:
+  - v1.3.5
+
+download:
+  archive-url:
+  git-url: git@github.com:facebook/zstd.git
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: cmake build/cmake
+  build_path: _build
+  step:
+    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/build/cmake -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

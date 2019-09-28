@@ -1,0 +1,22 @@
+name: bison
+website: https://www.gnu.org/software/bison/
+description:
+
+version:
+  - 3.1
+
+download:
+  archive-url: http://ftp.gnu.org/gnu/bison/bison-{{version}}.tar.gz
+  git-url:
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

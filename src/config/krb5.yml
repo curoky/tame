@@ -1,0 +1,26 @@
+name: krb5
+website:
+description:
+
+version:
+  - krb5-1.16.1-final
+
+download:
+  archive-url:
+  git-url: git@github.com:krb5/krb5.git
+
+depend:
+  lib:
+    - automake
+    - bison
+  tool:
+
+build:
+  type: custom
+  build_path: .
+  step:
+    - 'cd src'
+    - 'autoreconf -ivf'
+    - '{{repo_path}}/src/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

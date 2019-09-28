@@ -1,0 +1,22 @@
+name: m4
+website:
+description:
+
+version:
+  - 1.4.18
+
+download:
+  archive-url: http://ftp.gnu.org/gnu/m4/m4-{{version}}.tar.gz
+  git-url:
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

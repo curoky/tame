@@ -1,0 +1,21 @@
+name: bzip2
+website: http://www.bzip.org/
+description:
+
+version:
+  - 1.0.6
+
+download:
+  archive-url: https://nchc.dl.sourceforge.net/project/bzip2/bzip2-{{version}}.tar.gz
+  git-url:
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: custom
+  build_path: .
+  step:
+    - 'make'
+    - 'make install PREFIX={{install_path}}'

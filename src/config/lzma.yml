@@ -1,0 +1,22 @@
+name: lzma
+website:
+description:
+
+version:
+  - 5.2.3
+
+download:
+  archive-url: https://tukaani.org/xz/xz-{{version}}.tar.gz
+  git-url:
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

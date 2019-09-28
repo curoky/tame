@@ -1,0 +1,22 @@
+name: mbedtls
+website: https://tls.mbed.org
+description:
+
+version:
+  - mbedtls-2.1.18
+
+download:
+  archive-url:
+  git-url: git@github.com:ARMmbed/mbedtls.git
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: cmake
+  build_path: _build
+  step:
+    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

@@ -1,0 +1,32 @@
+name: folly
+website:
+description:
+
+version:
+  - v2019.04.22.00
+
+download:
+  archive-url:
+  git-url: git@github.com:facebook/folly.git
+
+depend:
+  lib:
+    - zstd
+    - snappy
+    - lzma
+    - lz4
+    - double-conversion
+    - libevent
+    - gflags
+    - glog
+    - boost
+    - openssl
+  tool:
+
+build:
+  type: cmake
+  build_path: _build
+  step:
+    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

@@ -1,0 +1,22 @@
+name: zlib
+website: http://zlib.net/
+description:
+
+version:
+  - v1.2.11
+
+download:
+  archive-url:
+  git-url: git@github.com:madler/zlib.git
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

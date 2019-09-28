@@ -1,0 +1,22 @@
+name: libtool
+website: https://www.gnu.org/software/libtool/
+description:
+
+version:
+  - 2.4.6
+
+download:
+  archive-url: http://ftp.gnu.org/gnu/libtool/libtool-{{version}}.tar.gz
+  git-url:
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

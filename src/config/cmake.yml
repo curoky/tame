@@ -1,0 +1,22 @@
+name: cmake
+website: https://cmake.org/
+description:
+
+version:
+  - v3.13.4
+
+download:
+  archive-url:
+  git-url: git@github.com:Kitware/CMake.git
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

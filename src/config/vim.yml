@@ -1,0 +1,23 @@
+name: vim
+website: https://www.vim.org/
+description:
+
+version:
+  - v8.1.0996
+
+download:
+  archive-url:
+  git-url: git@github.com:vim/vim.git
+
+depend:
+  lib:
+    - ncurses
+  tool:
+
+build:
+  type: configure
+  build_path: .
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

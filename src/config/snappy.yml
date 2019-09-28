@@ -1,0 +1,23 @@
+name: snappy
+website:
+description:
+
+version:
+  - 1.1.7
+
+download:
+  archive-url:
+  git-url: git@github.com:google/snappy.git
+
+depend:
+  lib:
+    - gtest
+  tool:
+
+build:
+  type: cmake
+  build_path: _build
+  step:
+    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DSNAPPY_BUILD_TESTS=OFF'
+    - 'make -j {{thread_num}}'
+    - 'make install'

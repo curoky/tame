@@ -1,0 +1,22 @@
+name: libsodium
+website: https://libsodium.org
+description:
+
+version:
+  - 1.0.16
+
+download:
+  archive-url: https://github.com/jedisct1/libsodium/releases/download/{{version}}/libsodium-{{version}}.tar.gz
+  git-url: https://github.com/jedisct1/libsodium.git
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

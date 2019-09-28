@@ -1,0 +1,32 @@
+# this a template for a repo, you can use {{version}} in download url
+# and
+# {{thread_num}}/{{install_path}}/{{repo_path}}/{{cmake_prefix}}
+# in build command.
+# all this template will be xxx by jinja.
+
+name: demo
+website:
+description:
+
+version:
+  - 1.0.0
+
+download:
+  archive-url: https://demo.com
+  git-url: git@github.com:xxx/xxx.git
+
+depend:
+  lib:
+    - dep1
+    - dep2
+  tool:
+    - cmake
+    - automake
+
+build:
+  type: cmake
+  build_path: _build
+  step:
+    - "cmake"
+    - "make"
+    - "make install"

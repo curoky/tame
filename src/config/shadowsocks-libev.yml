@@ -1,0 +1,27 @@
+name: shadowsocks-libev
+website:
+description:
+
+version:
+  - 3.2.4
+
+download:
+  archive-url: https://github.com/shadowsocks/shadowsocks-libev/releases/download/v{{version}}/shadowsocks-libev-{{version}}.tar.gz
+  git-url: https://github.com/shadowsocks/shadowsocks-libev.git
+
+depend:
+  lib:
+    - libev
+    - c_ares
+    - mbedtls
+    - pcre
+    - libsodium
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}} --disable-documentation'
+    - 'make -j {{thread_num}}'
+    - 'make install'

@@ -1,0 +1,22 @@
+name: libevent
+website: http://libevent.org
+description:
+
+version:
+  - 2.1.8-stable
+
+download:
+  archive-url: https://github.com/libevent/libevent/releases/download/release-{{version}}/libevent-{{version}}.tar.gz
+  git-url: https://github.com/libevent/libevent.git
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

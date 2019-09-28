@@ -1,0 +1,22 @@
+name: gettext
+website: https://www.gnu.org/software/gettext/
+description:
+
+version:
+  - 0.19.8
+
+download:
+  archive-url: http://ftp.gnu.org/gnu/gettext/gettext-{{version}}.tar.gz
+  git-url:
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

@@ -1,0 +1,22 @@
+name: ncurses
+website: https://www.gnu.org/software/ncurses/
+description:
+
+version:
+  - 6.1
+
+download:
+  archive-url: http://ftp.gnu.org/gnu/ncurses/ncurses-{{version}}.tar.gz
+  git-url:
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}} --with-ticlib --with-shared --disable-tic-depends --with-pkg-config --with-pkg-config-libdir={{install_path}}/lib/pkgconfig  --enable-pc-files'
+    - 'make -j {{thread_num}}'
+    - 'make install'

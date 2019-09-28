@@ -1,0 +1,26 @@
+name: gcc
+website: https://gcc.gnu.org
+description:
+
+version:
+  - 5.5.0
+
+download:
+  archive-url: http://ftp.gnu.org/gnu/gcc/gcc-{{version}}/gcc-{{version}}.tar.xz
+  git-url:
+
+depend:
+  lib:
+    - mpc
+    - gmp
+    - zlib
+    - mpfr
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}} --disable-multilib --enable-checking=release --enable-languages=c,c++ --with-system-zlib'
+    - 'make -j {{thread_num}}'
+    - 'make install'

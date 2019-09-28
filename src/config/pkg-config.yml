@@ -1,0 +1,22 @@
+name: pkg-config
+website:
+description:
+
+version:
+  - 0.29.2
+
+download:
+  archive-url: https://pkg-config.freedesktop.org/releases/pkg-config-{{version}}.tar.gz
+  git-url: https://pkg-config.freedesktop.org.git
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}} --with-internal-glib'
+    - 'make -j {{thread_num}}'
+    - 'make install'

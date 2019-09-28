@@ -1,0 +1,22 @@
+name: lz4
+website:
+description:
+
+version:
+  - v1.8.2
+
+download:
+  archive-url:
+  git-url: git@github.com:lz4/lz4.git
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: cmake contrib/cmake_unofficial
+  build_path: _build
+  step:
+    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/contrib/cmake_unofficial -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'
