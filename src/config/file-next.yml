@@ -1,0 +1,23 @@
+name: file-next
+website:
+description:
+
+version:
+  - 1.16
+
+download:
+  archive-url:
+  git-url: git@github.com:petdance/file-next.git
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: custom
+  build_path: .
+  step:
+    - perl Makefile.PL INSTALL_BASE={{install_path}}
+    - make
+    - make test
+    - make install
