@@ -7,10 +7,12 @@
 import logging
 import os
 
-from . import TargetInfo
+from . import Target
 from .builder import Builder
 from .depender import Depender
-from .downloader import Downloader, global_info
+from .downloader import Downloader
+
+from .config import register_all, repo_config
 
 
 class Goblin(object):
@@ -18,55 +20,57 @@ class Goblin(object):
     主要负责全局的资源管理
     """
 
-    def __init__(self, root, name, versions, install_path, build_thread_num,
-                 download_thread_num):
-        self.name = name
+    def __init__(self, root, repo_name, versions, install_path,
+                 build_thread_num):
+        register_all()
+        self.repo_name = repo_name
         self.root = root
         self.install_path = install_path
         self.logger = logging.getLogger(__name__)
 
         self.builder = Builder(root, build_thread_num)
         self.depender = Depender()
-        self.downloader = Downloader(root, download_thread_num)
+        self.downloader = Downloader(root)
 
         if not os.path.exists(self.root):
             os.makedirs(self.root)
 
-        self.targets_list = []
-        self.targets_map = {}
-        self._prepare_target_info(versions)
+        self.target_list = []
+        self.prepare_targets(versions)
 
-    def _prepare_target_info(self, versions: dict):
-        deps = self.depender.get_deps_list(self.name)
-        for dep in deps:
-            t = TargetInfo(root=self.root,
-                           name=dep,
-                           install_path=self.install_path,
-                           version=versions.get(dep,
-                                                global_info[dep]["version"][0]),
-                           force_build=False)
-            self.targets_list.append(t)
-            self.targets_map[dep] = t
+    def prepare_targets(self, versions: dict):
+        repo_names = self.depender.get_deps_list(self.repo_name)
+        for repo_name in repo_names:
+            t = Target(self.root,
+                       repo_name=repo_name,
+                       version=versions.get(repo_name) or
+                       repo_config[repo_name]["version"][0],
+                       install_path=self.install_path,
+                       need_build=True)
+            self.target_list.append(t)
 
     def update(self, update_deps, proxies):
-        need_update_targets = self.targets_list if update_deps else self.targets_list[
-            -1:]
+        if update_deps:
+            need_update_targets = self.target_list
+        else:
+            need_update_targets = self.target_list[-1:]
 
         if proxies:
             self.logger.info("use proxy: %s", str(proxies))
-        self.downloader.downloads(repos=dict(
-            (t.name, t.version) for t in need_update_targets),
-                                  proxies=proxies)
+        self.downloader.downloads(need_update_targets, proxies=proxies)
 
-    def build(self, build_deps, force_build):
-        self.targets_map[self.name].force_build = force_build
-        need_build_deps = self.targets_list if build_deps else self.targets_list[
-            -1:]
+    def build(self, build_deps,):
+        all_install_paths = [t.install_path for t in self.target_list]
 
-        self.logger.info("start to build \ndeps[%s]",
-                         [t.name for t in need_build_deps])
+        if build_deps:
+            need_build_targets = self.target_list
+        else:
+            need_build_targets = self.target_list[-1:]
 
-        for t in need_build_deps:
-            ret = self.builder.build(t.name, self.targets_map)
+        self.logger.info("start to build \n\t%s",
+                         str([t.repo_name for t in need_build_targets]))
+
+        for t in need_build_targets:
+            ret = self.builder.build(t, all_install_paths)
             if ret != 0:
                 self.logger.critical("build error with %d", ret)

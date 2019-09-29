@@ -8,21 +8,21 @@ import logging
 import os
 
 
-class TargetInfo(object):
+class Target(object):
     """
-    @root: root path for workspace
     @name: repo name
     @version: repo build version
     """
 
-    def __init__(self, root, name, version, install_path, force_build):
-        self.root = root
-        self.name = name
+    def __init__(self, root, repo_name, version, install_path, need_build):
+        self.repo_name = repo_name
         self.version = version
-        self.repo_name = "%s_%s" % (name, version)
+        self.repo_path = "%s/%s_%s" % (root, repo_name, version)
+
         self.install_path = install_path or os.path.join(
-            root, self.repo_name, "_install")
-        self.force_build = force_build
+            self.repo_path, "_install")
+
+        self.need_build = need_build
 
     def __str__(self):
         return self.repo_name

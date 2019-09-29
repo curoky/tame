@@ -14,8 +14,7 @@ import time
 
 from jinja2 import Template
 
-from src import TargetInfo
-from src.config import global_config
+from src.config import repo_config
 
 
 class Builder(object):
@@ -33,7 +32,7 @@ class Builder(object):
         ]) + ":" + os.environ["PATH"]
 
         self.env["PKG_CONFIG_PATH"] = ":".join(
-            [os.path.join(p, "lib") for p in install_paths])
+            [os.path.join(p, "lib/pkgconfig") for p in install_paths])
 
         # Just use for automake
         self.dep_libs = ""
@@ -47,45 +46,42 @@ class Builder(object):
         # self.env["LIBS"] = '-lncurses'
         # self.env["CXXFLAGS"] = '-I%s' % os.path.join(self.deps_path, "include")
 
-    def build(self, name, totle_target: {str, TargetInfo}):
-        install_paths = set([
-            os.path.join(self.root, t.install_path)
-            for t in totle_target.values()
-        ])
+        # for perl
+        self.env["PERL5LIB"] = ":".join(
+            [os.path.join(p, "lib/perl5") for p in install_paths])
 
-        repo_name = name + "_" + totle_target[name].version
-        repo_path = os.path.join(self.root, repo_name)
-        install_path = totle_target[name].install_path
-        force_build = totle_target[name].force_build
+    def build(self, target, all_install_paths):
 
-        if self.check_build_mark(repo_name) and not force_build:
-            self.logger.info("[%s]: already build", repo_name)
+        build = repo_config[target.repo_name]["build"]
+        build_cmd = " && ".join(build["step"])
+        build_path = os.path.join(target.repo_path, build["build_path"])
+
+        if self.check_build_mark(target.repo_name):
+            self.logger.info("[%s]: already build", target.repo_name)
             return 0
 
-        builder = global_config[name]["builder"]
-
-        if builder["type"] == "cmake":
-            cmd = Template(builder["cmd"]).render(
-                cmake_prefix=";".join(install_paths),
-                install_path=install_path,
-                repo_path=repo_path,
+        if build["type"] == "cmake":
+            cmd = Template(build_cmd).render(
+                cmake_prefix=";".join(all_install_paths),
+                install_path=target.install_path,
+                repo_path=target.repo_path,
                 thread_num=self.thread_num)
-        elif builder["type"] == "configure":
-            self._prepare_env(install_paths)
-            cmd = Template(builder["cmd"]).render(install_path=install_path,
-                                                  repo_path=repo_path,
-                                                  thread_num=self.thread_num)
+        elif build["type"] == "configure":
+            self._prepare_env(all_install_paths)
+            cmd = Template(build_cmd).render(install_path=target.install_path,
+                                             repo_path=target.repo_path,
+                                             thread_num=self.thread_num)
         else:
-            cmd = Template(builder["cmd"]).render(install_path=install_path,
-                                                  repo_path=repo_path,
-                                                  thread_num=self.thread_num)
+            self._prepare_env(all_install_paths)
+            cmd = Template(build_cmd).render(install_path=target.install_path,
+                                             repo_path=target.repo_path,
+                                             thread_num=self.thread_num)
 
-        build_path = os.path.join(repo_path, builder["build_path"])
         if not os.path.exists(build_path):
             os.makedirs(build_path)
 
-        self.logger.info("start to build %s\n\t with cmd: %s\n\t with env: %s",
-                         str(totle_target[name]), cmd, self.env)
+        self.logger.info("start to build %s\n\tcmd: %s\n\tenv: %s",
+                         target.repo_name, cmd, self.env)
         res = subprocess.Popen(cmd,
                                cwd=build_path,
                                env=self.env,
@@ -94,7 +90,7 @@ class Builder(object):
                                stderr=sys.stderr)
         retcode = res.wait()
         if retcode == 0:
-            self._write_build_mark(repo_name)
+            self._write_build_mark(target.repo_name)
         return retcode
 
     def check_build_mark(self, repo_name):

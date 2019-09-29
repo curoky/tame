@@ -1,0 +1,171 @@
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
+# @Author      : IceCory(icecory520@gmail.com)
+# @Copyright(C): GPL 3.0
+# @desc        :
+
+import argparse
+import logging
+import sys
+import json
+import os
+
+from src.goblin import Goblin
+
+
+class ShutdownHandler(logging.Handler):
+
+    def emit(self, record):
+        logging.shutdown()
+        sys.exit(1)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("command", help="update/build")
+    parser.add_argument("repo_name")
+    parser.add_argument("--root", default=os.getcwd())
+    parser.add_argument("--install-path", default=os.getcwd() + "/install")
+    parser.add_argument("--versions")
+
+    parser.add_argument("--update-deps", action="store_true")
+    parser.add_argument("--build-deps", action="store_true")
+
+    parser.add_argument("--proxy", default=False)
+    parser.add_argument("--build-thread", default=2)
+    return parser.parse_args()
+
+
+def main():
+    arg = parse_args()
+
+    proxies = None if not arg.proxy else {
+        'http': 'socks5://127.0.0.1:1080',
+        'https': 'socks5://127.0.0.1:1080',
+    }
+    gb = Goblin(repo_name=arg.repo_name,
+                root=arg.root,
+                install_path=arg.install_path,
+                build_thread_num=arg.build_thread,
+                versions=json.loads(arg.versions or "{}"))
+    if arg.command == "update":
+        gb.update(update_deps=arg.update_deps, proxies=proxies)
+    elif arg.command == "build":
+        gb.build(build_deps=arg.build_deps)
+
+
+if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s',
+                        level=logging.DEBUG)
+    logging.getLogger().addHandler(ShutdownHandler(level=50))
+    main()
+'''
+    from src.config import global_config
+    global_info = {
+    'autoconf': dict(version=['2.69', ], website='None'),
+    'automake': dict(version=['1.16.1', ], website='None'),
+    'bison': dict(version=['3.1', ], website='https://www.gnu.org/software/bison/'),
+    'gettext': dict(version=['0.19.8', ], website='https://www.gnu.org/software/gettext/'),
+    'gmp': dict(version=['6.1.2', ], website='https://gmplib.org/'),
+    'mpfr': dict(version=['4.0.2', ], website='https://www.mpfr.org/'),
+    'mpc': dict(version=['1.1.0', ], website='None'),
+    'gcc': dict(version=['5.5.0', ], website='https://gcc.gnu.org'),
+    'help2man': dict(version=['1.47.9', ], website='None'),
+    'ncurses': dict(version=['6.1', ], website='https://www.gnu.org/software/ncurses/'),
+    'libtool': dict(version=['2.4.6', ], website='https://www.gnu.org/software/libtool/'),
+    'm4': dict(version=['1.4.18', ], website='None'),
+    'pcre': dict(version=['8.43', ], website='https://pcre.org/'),
+    'pkg-config': dict(version=['0.29.2', ], website='None'),
+    'curl': dict(version=['7.64.0', ], website='https://curl.haxx.se/'),
+    'libev': dict(version=['4.25', ], website='http://software.schmorp.de/pkg/libev.html'),
+    'libevent': dict(version=['2.1.8-stable', ], website='http://libevent.org'),
+    'libsodium': dict(version=['1.0.16', ], website='https://libsodium.org'),
+    'lzma': dict(version=['5.2.3', ], website='None'),
+    'protobuf': dict(version=['3.7.1', ], website='https://developers.google.com/protocol-buffers/'),
+    'zlib': dict(version=['v1.2.11', ], website='http://zlib.net/'),
+    'python': dict(version=['3.6.3', ], website='None'),
+    'tmux': dict(version=['2.8', ], website='None'),
+    'flex': dict(version=['2.6.4', ], website='https://www.gnu.org/software/flex/'),
+    'mosh': dict(version=['1.3.2', ], website='https://mosh.org'),
+    'cmake': dict(version=['v3.13.4', ], website='https://cmake.org/'),
+    'shadowsocks-libev': dict(version=['3.2.4', ], website='None'),
+    'git': dict(version=['2.19.2', ], website='https://git-scm.com/'),
+    'zstd': dict(version=['v1.3.5', ], website='None'),
+    'gflags': dict(version=['v2.2.0', ], website='https://gflags.github.io/gflags/'),
+    'glog': dict(version=['v0.4.0', ], website='None'),
+    'lz4': dict(version=['v1.8.2', ], website='None'),
+    'snappy': dict(version=['1.1.7', ], website='None'),
+    'mstch': dict(version=['1.0.2', ], website='None'),
+    'mbedtls': dict(version=['mbedtls-2.1.18', ], website='https://tls.mbed.org'),
+    'c_ares': dict(version=['cares-1_15_0', ], website='https://c-ares.haxx.se/'),
+    'double-conversion': dict(version=['v3.0.0', ], website='None'),
+    'gtest': dict(version=['release-1.8.1', ], website='None'),
+    'fizz': dict(version=['v2019.04.22.00', ], website='None'),
+    'folly': dict(version=['v2019.04.22.00', ], website='None'),
+    'wangle': dict(version=['v2019.04.22.00', ], website='None'),
+    'fbthrift': dict(version=['v2019.04.22.00', ], website='None'),
+    'yarpl': dict(version=['master', ], website='http://rsocket.io/'),
+
+    'zsh': dict(version=['5.7.1', ], website='http://www.zsh.org'),
+    'vim': dict(version=['v8.1.0996', ], website='https://www.vim.org/'),
+
+    'openssl': dict(version=['1.1.1b', ], website="https://www.openssl.org"),
+    'krb5': dict(version=['krb5-1.16.1-final', ]),
+    'boost': dict(version=['1.68.0', ], website="https://www.boost.org/"),
+    'tree': dict(version=['1.8.0', ]),
+
+    'bzip2': dict(version=['1.0.6']),
+    'polipo': dict(version=['1.1.1']),
+    'texinfo': dict(version=['6.6']),
+    'ack': dict(version=['2.28']),
+    'rapidjson': dict(version=['master']),
+}
+
+    import yaml
+    import codecs
+    # print (global_config)
+    for name, config in global_config.items():
+
+        with codecs.open("src/config/" + name + '.yml', "w", "utf8") as target:
+            target.write("name: %s\n" % (name))
+            if "website" in config and config["website"]:
+                target.write("website: %s\n" % (config.get("website", "")))
+            else:
+                target.write("website:\n")
+            target.write("description:\n")
+            target.write("\n")
+            target.write("version:\n")
+            target.write("  - %s\n" % (global_info[name]["version"][0]))
+            target.write("\n")
+            target.write("download:\n")
+
+            if "git@" not in config["url"]:
+                target.write("  archive-url: %s\n" % (config["url"]))
+            else:
+                target.write("  archive-url:\n")
+
+            if "git@" in config["url"]:
+                target.write("  git-url: %s\n" % (config["url"]))
+            else:
+                if "release" in config["url"]:
+                    target.write("  git-url: %s\n"%(config["url"].split("/releases/")[0]+".git"))
+                else:
+                    target.write("  git-url:\n")
+
+            target.write("\n")
+            target.write("depend:\n")
+            target.write("  lib:\n")
+            for d in config["deps"]:
+                target.write("    - %s\n" % (d))
+            target.write("  tool:\n")
+            target.write("\n")
+
+            target.write("build:\n")
+            target.write("  type: %s\n" % (config["builder"]["type"]))
+            target.write("  src_path: %s\n" % (config["builder"]["src"]))
+            target.write("  build_path: %s\n" %
+                         (config["builder"]["build_path"]))
+            target.write("  step:\n")
+            for s in config["builder"]["cmd"].split("&&"):
+                target.write("    - '%s'\n" % (s.strip()))
+'''
