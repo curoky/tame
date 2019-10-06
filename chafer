@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
+# @Author      : IceCory(icecory520@gmail.com)
+# @Copyright(C): GPL 3.0
+# @desc        :
+
+import argparse
+import logging
+import sys
+import json
+import os
+
+from src.main import Chafer
+
+
+class ShutdownHandler(logging.Handler):
+
+    def emit(self, record):
+        logging.shutdown()
+        sys.exit(1)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("command", help="update/build")
+    parser.add_argument("repo_name")
+    parser.add_argument("--root", default=os.getcwd())
+    parser.add_argument("--versions")
+
+    parser.add_argument("--update-deps", action="store_true")
+    parser.add_argument("--build-deps", action="store_true")
+    parser.add_argument("--user", action="store_true")
+
+    parser.add_argument("--proxy", default=False)
+    parser.add_argument("--build-thread", default=2)
+    return parser.parse_args()
+
+
+def main():
+    arg = parse_args()
+
+    proxies = None if not arg.proxy else {
+        'http': 'socks5://127.0.0.1:1080',
+        'https': 'socks5://127.0.0.1:1080',
+    }
+    if arg.user:
+        install_path = os.path.expanduser("~/.local/bin")
+    else:
+        install_path = os.path.join(arg.root, "install")
+    gb = Chafer(repo_name=arg.repo_name,
+                root=arg.root,
+                install_path=install_path,
+                build_thread_num=arg.build_thread,
+                versions=json.loads(arg.versions or "{}"))
+    if arg.command == "update":
+        gb.update(update_deps=arg.update_deps, proxies=proxies)
+    elif arg.command == "build":
+        gb.build(build_deps=arg.build_deps)
+
+
+if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s',
+                        level=logging.DEBUG)
+    logging.getLogger().addHandler(ShutdownHandler(level=50))
+    main()

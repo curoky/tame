@@ -15,7 +15,7 @@ from .downloader import Downloader
 from .config import register_all, repo_config
 
 
-class Goblin(object):
+class Chafer(object):
     """
     主要负责全局的资源管理
     """
