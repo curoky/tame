@@ -1,0 +1,24 @@
+name: glib
+website: https://www.gtk.org/
+description:
+
+version:
+  - 2.61
+
+download:
+  archive-url: https://ftp.gnome.org/pub/gnome/sources/glib/{{version}}/glib-{{version}}.0.tar.xz
+  git-url:
+
+depend:
+  lib:
+    - zlib
+    - util-linux
+  tool:
+
+build:
+  type: ninja
+  build_path: _build
+  step:
+    - "meson {{repo_path}} --prefix={{install_path}} --libdir=lib --buildtype=release"
+    - "ninja -j {{thread_num}}"
+    - "ninja install"

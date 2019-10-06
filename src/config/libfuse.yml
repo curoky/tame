@@ -1,0 +1,24 @@
+# this repo must be with root, because need chown root:root
+
+name: libfuse
+website:
+description: The reference implementation of the Linux FUSE (Filesystem in Userspace) interface
+
+version:
+  - 3.5.0
+
+download:
+  archive-url: https://github.com/libfuse/libfuse/releases/download/fuse-{{version}}/fuse-{{version}}.tar.xz
+  git-url: git@github.com:libfuse/libfuse.git
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: ninja
+  build_path: _build
+  step:
+    - 'meson {{repo_path}} --prefix={{install_path}}'
+    - 'ninja -j {{thread_num}}'
+    - 'ninja install'
