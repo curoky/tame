@@ -70,11 +70,13 @@ class Builder(object):
             self._prepare_env(all_install_paths)
             cmd = Template(build_cmd).render(install_path=target.install_path,
                                              repo_path=target.repo_path,
+                                             build_path=build_path,
                                              thread_num=self.thread_num)
         else:
             self._prepare_env(all_install_paths)
             cmd = Template(build_cmd).render(install_path=target.install_path,
                                              repo_path=target.repo_path,
+                                             build_path=build_path,
                                              thread_num=self.thread_num)
 
         if not os.path.exists(build_path):

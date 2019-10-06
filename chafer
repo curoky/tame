@@ -44,7 +44,7 @@ def main():
         'https': 'socks5://127.0.0.1:1080',
     }
     if arg.user:
-        install_path = os.path.expanduser("~/.local/bin")
+        install_path = os.path.expanduser("~/.local/")
     else:
         install_path = os.path.join(arg.root, "install")
     gb = Chafer(repo_name=arg.repo_name,
