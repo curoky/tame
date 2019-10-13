@@ -1,0 +1,22 @@
+name: pixman
+website: http://www.pixman.org/
+description: Pixman is a library that provides low-level pixel manipulation
+
+version:
+  - 0.38.4
+
+download:
+  archive-url: https://www.cairographics.org/releases/pixman-{{version}}.tar.gz
+  git-url:
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'
