@@ -59,8 +59,9 @@ class Chafer(object):
             self.logger.info("use proxy: %s", str(proxies))
         self.downloader.downloads(need_update_targets, proxies=proxies)
 
-    def build(self, build_deps,):
-        all_install_paths = [t.install_path for t in self.target_list]
+    def build(self, build_deps):
+        search_paths = [t.install_path for t in self.target_list]
+        search_paths.append(os.path.join(self.root, "install"))
 
         if build_deps:
             need_build_targets = self.target_list
@@ -71,6 +72,6 @@ class Chafer(object):
                          str([t.repo_name for t in need_build_targets]))
 
         for t in need_build_targets:
-            ret = self.builder.build(t, all_install_paths)
+            ret = self.builder.build(t, search_paths)
             if ret != 0:
                 self.logger.critical("build error with %d", ret)

@@ -50,7 +50,7 @@ class Builder(object):
         self.env["PERL5LIB"] = ":".join(
             [os.path.join(p, "lib/perl5") for p in install_paths])
 
-    def build(self, target, all_install_paths):
+    def build(self, target, search_paths):
 
         build = repo_config[target.repo_name]["build"]
         build_cmd = " && ".join(build["step"])
@@ -62,18 +62,18 @@ class Builder(object):
 
         if build["type"] == "cmake":
             cmd = Template(build_cmd).render(
-                cmake_prefix=";".join(all_install_paths),
+                cmake_prefix=";".join(search_paths),
                 install_path=target.install_path,
                 repo_path=target.repo_path,
                 thread_num=self.thread_num)
         elif build["type"] == "configure":
-            self._prepare_env(all_install_paths)
+            self._prepare_env(search_paths)
             cmd = Template(build_cmd).render(install_path=target.install_path,
                                              repo_path=target.repo_path,
                                              build_path=build_path,
                                              thread_num=self.thread_num)
         else:
-            self._prepare_env(all_install_paths)
+            self._prepare_env(search_paths)
             cmd = Template(build_cmd).render(install_path=target.install_path,
                                              repo_path=target.repo_path,
                                              build_path=build_path,
@@ -82,8 +82,8 @@ class Builder(object):
         if not os.path.exists(build_path):
             os.makedirs(build_path)
 
-        self.logger.info("start to build %s\n\tcmd: %s\n\tenv: %s",
-                         target.repo_name, cmd, self.env)
+        self.logger.info("start to build %s\n\tcmd: %s\n\tenv: %s\n\tpath: %s",
+                         target.repo_name, cmd, self.env, build_path)
         res = subprocess.Popen(cmd,
                                cwd=build_path,
                                env=self.env,
