@@ -62,7 +62,7 @@ class Chafer(object):
     def build(self, build_deps):
         search_paths = [t.install_path for t in self.target_list]
         search_paths.append(os.path.join(self.root, "install"))
-
+        search_paths = set(search_paths)
         if build_deps:
             need_build_targets = self.target_list
         else:

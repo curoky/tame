@@ -25,14 +25,15 @@ class Builder(object):
         self.thread_num = thread_num
         self.env = None
 
-    def _prepare_env(self, install_paths: [str]):
+    def _prepare_env(self, install_paths: {}):
         self.env = dict()
         self.env["PATH"] = ":".join([
             os.path.join(p, "bin") for p in install_paths
         ]) + ":" + os.environ["PATH"]
 
         self.env["PKG_CONFIG_PATH"] = ":".join(
-            [os.path.join(p, "lib/pkgconfig") for p in install_paths])
+            [os.path.join(p, "lib/pkgconfig") for p in install_paths] +
+            [os.path.join(p, "share/pkgconfig") for p in install_paths])
 
         # Just use for automake
         self.dep_libs = ""
@@ -61,6 +62,7 @@ class Builder(object):
             return 0
 
         if build["type"] == "cmake":
+            self._prepare_env(search_paths)
             cmd = Template(build_cmd).render(
                 cmake_prefix=";".join(search_paths),
                 install_path=target.install_path,
@@ -110,7 +112,12 @@ class Builder(object):
             mark[repo_name] = time.strftime("%Y-%m-%dT%H:%M:%SZ",
                                             time.localtime())
             with codecs.open(mark_path, "w", "utf8") as f:
-                f.write(json.dumps(mark))
+                f.write(
+                    json.dumps(mark,
+                               sort_keys=True,
+                               indent=4,
+                               separators=(',', ':'),
+                               ensure_ascii=False))
         self.logger.info("[%s] write build version", repo_name)
 
     def _load_build_mark(self):
