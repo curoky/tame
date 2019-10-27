@@ -1,0 +1,23 @@
+name: libxcb
+website: https://xcb.freedesktop.org/
+description: The X protocol C-language Binding (XCB) is a replacement for Xlib featuring a small footprint, latency hiding, direct access to the protocol, improved threading support, and extensibility.
+
+version:
+  - 1.13
+
+download:
+  archive-url: https://xcb.freedesktop.org/dist/libxcb-{{version}}.tar.gz
+  git-url:
+
+depend:
+  lib:
+    - xcb-proto
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'
