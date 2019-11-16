@@ -3,7 +3,7 @@ website: https://curl.haxx.se/
 description:
 
 version:
-  - 7.64.0
+  - "7.64.0"
 
 download:
   archive-url: http://curl.haxx.se/download/curl-{{version}}.tar.gz

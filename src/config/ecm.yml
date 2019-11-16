@@ -1,0 +1,18 @@
+# Not complate !!!
+name: ecm
+website: https://commits.kde.org/extra-cmake-modules
+description: Extra modules and scripts for CMake.
+
+version:
+  - v5.59.0
+
+download:
+  archive-url:
+  git-url: git://anongit.kde.org/extra-cmake-modules.git
+
+depend:
+  lib:
+    # - opengl sudo apt install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+  tool:
+
+build:

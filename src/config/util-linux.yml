@@ -1,6 +1,3 @@
-# this repo must be with root, because need chgrp
-# chgrp: changing group of '.../bin/wall': Operation not permitted
-
 name: util-linux
 website: https://en.wikipedia.org/wiki/Util-linux
 description: util-linux is a random collection of Linux utilities
@@ -21,6 +18,6 @@ build:
   type: configure
   build_path: .
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - '{{repo_path}}/configure --prefix={{install_path}} --disable-makeinstall-chown --disable-makeinstall-setuid --disable-bash-completion'
     - 'make -j {{thread_num}}'
     - 'make install'

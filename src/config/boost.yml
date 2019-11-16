@@ -3,7 +3,7 @@ website: https://www.boost.org/
 description:
 
 version:
-  - 1.68.0
+  - "1.68.0"
 
 download:
   archive-url: https://dl.bintray.com/boostorg/release/{{version}}/source/boost_{{version|replace('.','_')}}.tar.gz
