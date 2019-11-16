@@ -1,0 +1,23 @@
+name: wayland-protocols
+website:
+description: Wayland protocol development
+
+version:
+  - 1.17
+
+download:
+  archive-url: https://wayland.freedesktop.org/releases/wayland-protocols-{{version}}.tar.xz
+  git-url:
+
+depend:
+  lib:
+    - wayland
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}} --disable-documentation'
+    - 'make -j {{thread_num}}'
+    - 'make install'

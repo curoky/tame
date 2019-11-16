@@ -1,0 +1,23 @@
+name: wayland
+website: Wayland is intended as a simpler replacement for X, easier to develop and maintain.
+description: https://wayland.freedesktop.org/
+
+version:
+  - 1.17.0
+
+download:
+  archive-url: https://wayland.freedesktop.org/releases/wayland-{{version}}.tar.xz
+  git-url:
+
+depend:
+  lib:
+    - libxml
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}} --disable-documentation'
+    - 'make -j {{thread_num}}'
+    - 'make install'
