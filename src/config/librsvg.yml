@@ -1,0 +1,25 @@
+# not complete!!!
+name: librsvg
+website: https://wiki.gnome.org/Projects/LibRsvg
+description: librsvg is a library to render SVG files using cairo.
+
+version:
+  - 2.45
+
+download:
+  archive-url: https://download.gnome.org/sources/librsvg/{{version}}/librsvg-2.45.6.tar.xz
+  git-url:
+
+depend:
+  lib:
+    - cairo
+    - gdk-pixbuf
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

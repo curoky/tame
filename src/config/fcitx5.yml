@@ -1,0 +1,37 @@
+
+name: fcitx5
+website:
+description: Fcitx 5 is a generic input method framework released under LGPL-2.1+.
+
+version:
+  - master
+
+download:
+  archive-url: https://gitlab.com/fcitx/fcitx5/-/archive/master/fcitx5-{{version}}.tar.gz
+  git-url: git@gitlab.com:fcitx/fcitx5.git
+
+depend:
+  lib:
+    # - ecm  sudo apt install extra-cmake-modules
+    - dbus
+    - fmt
+    - json-c
+    - libevent
+    - libxkbfile
+    - cairo
+    - pango
+    - enchant
+    - gdk-pixbuf  # sudo apt install libgdk-pixbuf2.0-dev
+    - xkbcommon
+    - libxcb
+    - xcb-util-vm
+    - xcb-imdkit
+  tool:
+
+build:
+  type: cmake
+  build_path: _build
+  step:
+    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

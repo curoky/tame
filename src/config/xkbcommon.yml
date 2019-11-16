@@ -1,0 +1,26 @@
+name: xkbcommon
+website: https://xkbcommon.org/
+description: xkbcommon is a library for handling of keyboard descriptions, including loading them from disk, parsing them and handling their state.
+
+version:
+  - 0.8.4
+
+download:
+  archive-url: https://xkbcommon.org/download/libxkbcommon-{{version}}.tar.xz
+  git-url:
+
+depend:
+  lib:
+    - libxcb
+    - wayland
+    - wayland-protocols
+  tool:
+    - bison
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

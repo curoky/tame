@@ -1,0 +1,22 @@
+name: json-c
+website: https://github.com/json-c/json-c/wiki
+description: JSON-C - A JSON implementation in C
+
+version:
+  - 0.13.1-20180305
+
+download:
+  archive-url: https://github.com/json-c/json-c/archive/json-c-{{version}}.tar.gz
+  git-url:
+
+depend:
+  lib:
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

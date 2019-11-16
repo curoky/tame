@@ -1,0 +1,25 @@
+name: pango
+website: https://www.pango.org/
+description: Pango is a library for laying out and rendering of text, with an emphasis on internationalization.
+
+version:
+  - 1.38
+
+download:
+  archive-url: http://ftp.gnome.org/pub/GNOME/sources/pango/{{version}}/pango-{{version}}.1.tar.xz
+  git-url: git://git.gnome.org/pango
+
+depend:
+  lib:
+    - cairo
+    - harfbuzz
+  tool:
+
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'

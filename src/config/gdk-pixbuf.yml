@@ -1,0 +1,27 @@
+name: gdk-pixbuf
+website: https://gtk.org
+description: GdkPixbuf is a library for loading, saving, and transforming image data in various formats, like PNG, JPEG, and TIFF
+
+version:
+  - 2.38
+
+download:
+  archive-url: https://download.gnome.org/sources/gdk-pixbuf/{{version}}/gdk-pixbuf-2.38.1.tar.xz
+  git-url:
+
+depend:
+  lib:
+    - glib
+    - libpng
+    - libtiff
+    - libjpeg
+    - gobject-introspection
+  tool:
+
+build:
+  type: ninja
+  build_path: _build
+  step:
+    - "meson {{repo_path}} --prefix={{install_path}} --libdir=lib"
+    - "ninja -j {{thread_num}}"
+    - "ninja install"

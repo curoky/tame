@@ -1,0 +1,23 @@
+name: enchant
+website: https://abiword.github.io/enchant/
+description: Generic spell checking library
+
+version:
+  - 2.2.3
+
+download:
+  archive-url: https://github.com/AbiWord/enchant/releases/download/v{{version}}/enchant-{{version}}.tar.gz
+  git-url:
+
+depend:
+  lib:
+    - glib
+  tool:
+
+build:
+  type: configure
+  build_path: _build
+  step:
+    - '{{repo_path}}/configure --prefix={{install_path}}'
+    - 'make -j {{thread_num}}'
+    - 'make install'
