@@ -86,3 +86,7 @@ MacOS 报错 system variable OPENSSL_ROOT_DIR (missing OPENSSL_INCLUDE_DIR)
 export OPENSSL_ROOT_DIR=/usr/local/Cellar/openssl/1.0.2p/
 export OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2p/include/
 ```
+
+#### pango
+
+not found harfbuzz' header file , just rebuild is.

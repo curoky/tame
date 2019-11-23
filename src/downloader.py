@@ -14,6 +14,7 @@ import threading
 from io import BytesIO
 import requests
 import git
+import requests_ftp
 from jinja2 import Template
 
 from src.config import repo_config
@@ -25,6 +26,9 @@ global_mirror = {
     "www.python.org/ftp": [
         "npm.taobao.org/mirrors",
     ],
+    "ftp.gnome.org/pub/gnome/": [
+        "mirrors.ustc.edu.cn/gnome/",
+    ]
 }
 
 
@@ -34,7 +38,8 @@ class Downloader(object):
         self.root = root
         self.cache_dir = os.path.join(root, "_cache")
         self.logger = logging.getLogger(__name__)
-
+        requests_ftp.monkeypatch_session()
+        self.session = requests.Session()
         if not os.path.exists(self.cache_dir):
             os.makedirs(self.cache_dir)
 
@@ -114,7 +119,7 @@ class Downloader(object):
         f = self._get_cache(file_name)
         if f is None:
             f = BytesIO()
-            f.write(requests.get(url, proxies=proxies).content)
+            f.write(self.session.get(url, proxies=proxies).content)
             self.logger.info("success to download file %s", file_name)
             self._set_cache(file_name, f)
         mode = file_name.split(".")[-1]
