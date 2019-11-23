@@ -1,0 +1,24 @@
+name: fcitx5-gtk
+website:
+description: gtk im module and glib based dbus client library
+
+version:
+  - master
+
+download:
+  archive-url:
+  # git-url: git@gitlab.com:fcitx/fcitx5-gtk.git
+  git-url: https://gitlab.com/fcitx/fcitx5-gtk.git
+
+depend:
+  lib:
+    - fcitx5
+  tool:
+
+build:
+  type: cmake
+  build_path: _build
+  step:
+    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DENABLE_GTK2_IM_MODULE=OFF'
+    - 'make -j {{thread_num}}'
+    - 'make install'
