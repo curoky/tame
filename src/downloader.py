@@ -11,16 +11,20 @@ import shutil
 import tarfile
 import zipfile
 import threading
+import sys
 from io import BytesIO
 import requests
-import git
 import requests_ftp
 from jinja2 import Template
 
-from src.config import repo_config
+import requests
+import requests_ftp
+
+from . import Package
 
 global_mirror = {
     "ftp.gnu.org": [
+        "mirrors.cloud.tencent.com",
         "mirrors.tuna.tsinghua.edu.cn",
     ],
     "www.python.org/ftp": [
@@ -28,29 +32,34 @@ global_mirror = {
     ],
     "ftp.gnome.org/pub/gnome/": [
         "mirrors.ustc.edu.cn/gnome/",
-    ]
+    ],
+    "www.openssl.org": ["mirrors.cloud.tencent.com/openssl"]
 }
 
 
 class Downloader(object):
 
-    def __init__(self, root):
+    def __init__(self, root, global_config, thread_num):
         self.root = root
-        self.cache_dir = os.path.join(root, "_cache")
-        self.logger = logging.getLogger(__name__)
+        self.global_config = global_config
+        self.thread_num = thread_num
+
+        self.archive_path = os.path.join(root, "archive")
+
+        self.logger = logging.getLogger('downloader')
         requests_ftp.monkeypatch_session()
         self.session = requests.Session()
-        if not os.path.exists(self.cache_dir):
-            os.makedirs(self.cache_dir)
+        if not os.path.exists(self.archive_path):
+            os.makedirs(self.archive_path)
 
-    def downloads(self, target_list, proxies):
+    def downloads(self, package_list, proxies):
         ths = []
-        for target in target_list:
+        for package in package_list:
             th = threading.Thread(target=self._download_one,
                                   args=(
-                                      target.repo_name,
-                                      target.repo_path,
-                                      target.version,
+                                      package.repo_name,
+                                      package.download_path,
+                                      package.version,
                                       proxies,
                                   ))
             th.start()
@@ -58,58 +67,14 @@ class Downloader(object):
         for th in ths:
             th.join()
 
-    def _download_one(self, repo_name, repo_path, version, proxies):
-        config = repo_config[repo_name]
+    def _download_one(self, repo_name, download_path, version, proxies):
+        config = self.global_config[repo_name]
+
         raw_url = config["download"].get("archive-url")
-        if raw_url:
-            url = Template(raw_url).render(version=version)
-            self._download_with_tar(url, repo_path, version, proxies)
-            return
-        raw_url = config["download"].get("git-url")
-        if raw_url:
-            url = Template(raw_url).render(version=version)
-            self._download_with_git(url, repo_path, version, proxies)
-            return
-        raise RuntimeError("not have download url for %s" % repo_name)
+        url = Template(raw_url).render(version=version)
+        self._download_with_tar(url, download_path, version, proxies)
 
-    def _download_with_git(self, url, repo_path, version, proxies):
-
-        if os.path.isdir(repo_path):
-            try:
-                repo = git.Repo(path=repo_path)
-            except git.InvalidGitRepositoryError:
-                repo = None
-
-            if repo and not repo.head.is_detached:
-                if str(repo.active_branch) == version:
-                    repo.git.reset('--hard')
-                    repo.git.clean('-xdf')
-                    repo.remotes.origin.pull()
-                    self.logger.debug("[%s]: git exists, just pull", repo_path)
-                    return
-            elif repo:
-                if str(repo.head.commit) == repo.git.execute(
-                    ["git", "rev-list", "-1", version]):
-                    repo.git.reset('--hard')
-                    repo.git.clean('-xdf')
-                    self.logger.debug("[%s]: git exists, commit equal",
-                                      repo_path)
-                    return
-
-            self.logger.warning("[%s]:exist not available remove it", repo_path)
-            shutil.rmtree(repo_path)
-
-        self.logger.info("[%s]:start clone to ", repo_path)
-        try:
-            git.Repo.clone_from(url=url,
-                                to_path=repo_path,
-                                branch=version,
-                                depth=1)
-        except git.GitCommandError as e:
-            self.logger.critical("%s", e.stderr)
-        self.logger.info("[%s]:success to clone", repo_path)
-
-    def _download_with_tar(self, url, repo_path, version, proxies):
+    def _download_with_tar(self, url, download_path, version, proxies):
         # check for mirror
         for k in global_mirror:
             if k in url:
@@ -129,17 +94,17 @@ class Downloader(object):
             t = tarfile.open(fileobj=f, mode="r:" + mode)
             for m in t.getmembers():
                 m.path = "/".join(m.path.split('/')[1:])
-            shutil.rmtree(repo_path, ignore_errors=True)
-            t.extractall(repo_path)
+            shutil.rmtree(download_path, ignore_errors=True)
+            t.extractall(download_path)
         elif mode in ("zip"):
             t = zipfile.ZipFile(f, mode="r")
-            t.extractall(repo_path)
+            t.extractall(download_path)
 
     def _get_cache(self, file_name):
         rio = BytesIO()
-        if os.path.exists(os.path.join(self.cache_dir, file_name)):
+        if os.path.exists(os.path.join(self.archive_path, file_name)):
             self.logger.info("[%s]: find in cache", file_name)
-            with codecs.open(os.path.join(self.cache_dir, file_name),
+            with codecs.open(os.path.join(self.archive_path, file_name),
                              "rb") as cf:
                 rio.write(cf.read())
                 rio.seek(0)
@@ -148,10 +113,11 @@ class Downloader(object):
         return None
 
     def _set_cache(self, file_name, file_obj):
-        if os.path.exists(os.path.join(self.cache_dir, file_name)):
+        if os.path.exists(os.path.join(self.archive_path, file_name)):
             self.logger.critical('[%s] should not exists', file_name)
 
-        with codecs.open(os.path.join(self.cache_dir, file_name), "wb") as cf:
+        with codecs.open(os.path.join(self.archive_path, file_name),
+                         "wb") as cf:
             file_obj.seek(0)
             cf.write(file_obj.read())
             file_obj.seek(0)
