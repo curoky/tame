@@ -8,23 +8,21 @@ import logging
 import os
 
 
-class Target(object):
-    """
-    @name: repo name
-    @version: repo build version
-    """
+class Package(object):
 
-    def __init__(self, root, repo_name, version, install_path, need_build):
+    def __init__(self, root, repo_name, version):
+
         self.repo_name = repo_name
         self.version = version
-        self.repo_path = "%s/%s_%s" % (root, repo_name, version)
+        self.dirname = "%s_%s" % (self.repo_name, self.version)
+        self.download_path = os.path.join(root, "build", self.dirname)
+        self.install_path = os.path.join(root, "install", self.dirname)
+        self.build_path = None
 
-        self.install_path = install_path or os.path.join(
-            self.repo_path, "_install")
-
-        self.need_build = need_build
+        # if not os.path.exists(self.install_path):
+        #     os.makedirs(self.install_path)
 
     def __str__(self):
-        return self.repo_name
+        return self.dirname
 
     __repr__ = __str__
