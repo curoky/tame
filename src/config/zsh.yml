@@ -18,6 +18,13 @@ build:
   type: configure
   build_path: .
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}} --with-term-lib="ncurses"'
+    - '{{repo_path}}/configure --prefix={{install_path}} --with-tcsetpgrp --with-term-lib="ncurses"'
     - 'make -j {{thread_num}}'
     - 'make install'
+
+### ERROR 1
+# checking if POSIX sigsuspend() works... no
+# checking if tcsetpgrp() actually works... error
+# configure: error: unexpected return status
+# CRITICAL	:builder: build error with 1
+# slove : add arg `--with-tcsetpgrp` to configure

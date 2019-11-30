@@ -1,13 +1,13 @@
-name: zlib
-website: http://zlib.net/
+name: libiconv
+website: https://www.gnu.org/software/libiconv/
 description:
 
 version:
-  - 1.2.11
+  - 1.16
 
 download:
-  archive-url: http://zlib.net/zlib-{{version}}.tar.gz
-  git-url: git@github.com:madler/zlib.git
+  archive-url: http://ftp.gnu.org/gnu/libiconv/libiconv-{{version}}.tar.gz
+  git-url:
 
 depend:
   lib:

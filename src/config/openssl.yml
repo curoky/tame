@@ -3,7 +3,7 @@ website: https://www.openssl.org
 description:
 
 version:
-  - 1.1.1b
+  - 1.1.1c
 
 download:
   archive-url: https://www.openssl.org/source/openssl-{{version}}.tar.gz

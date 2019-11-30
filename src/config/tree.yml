@@ -18,4 +18,5 @@ build:
   build_path: .
   step:
     - 'make'
-    - 'cp {{repo_path}}/tree {{install_path}}/bin'
+    - 'mkdir -p {{install_path}}/bin'
+    - 'cp {{repo_path}}/tree {{install_path}}/bin/tree'

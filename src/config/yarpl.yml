@@ -6,7 +6,7 @@ version:
   - master
 
 download:
-  archive-url:
+  archive-url: https://github.com/rsocket/rsocket-cpp/archive/{{version}}.zip
   git-url: git@github.com:rsocket/rsocket-cpp.git
 
 depend:

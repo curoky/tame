@@ -19,4 +19,5 @@ build:
   build_path: _build
   step:
     - '{{repo_path}}/configure.py --bootstrap'
-    - 'cp {{build_path}}/ninja {{install_path}}/bin'
+    - 'mkdir -p {{install_path}}/bin/'
+    - 'cp {{build_path}}/ninja {{install_path}}/bin/ninja'

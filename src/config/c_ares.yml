@@ -3,10 +3,10 @@ website: https://c-ares.haxx.se/
 description:
 
 version:
-  - cares-1_15_0
+  - 1.15.0
 
 download:
-  archive-url:
+  archive-url: https://c-ares.haxx.se/download/c-ares-{{version}}.tar.gz
   git-url: git@github.com:c-ares/c-ares.git
 
 depend:

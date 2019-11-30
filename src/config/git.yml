@@ -13,11 +13,12 @@ depend:
   lib:
     - curl
     - zlib
+    - gettext # /bin/sh: msgfmt: command not found
   tool:
 
 build:
   type: configure
-  build_path: _build
+  build_path: .
   step:
     - '{{repo_path}}/configure --prefix={{install_path}}'
     - 'make -j {{thread_num}}'
