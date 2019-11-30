@@ -11,117 +11,96 @@ import os
 import subprocess
 import sys
 import time
+import shutil
 
 from jinja2 import Template
-
-from src.config import repo_config
 
 
 class Builder(object):
 
-    def __init__(self, root, thread_num):
+    def __init__(self, root, global_config, thread_num):
         self.root = root
-        self.logger = logging.getLogger(__name__)
+        self.global_config = global_config
         self.thread_num = thread_num
-        self.env = None
 
-    def _prepare_env(self, install_paths: {}):
-        self.env = dict()
-        self.env["PATH"] = ":".join([
-            os.path.join(p, "bin") for p in install_paths
-        ]) + ":" + os.environ["PATH"]
+        self.logger = logging.getLogger("builder")
 
-        self.env["PKG_CONFIG_PATH"] = ":".join(
-            [os.path.join(p, "lib/pkgconfig") for p in install_paths] +
-            [os.path.join(p, "share/pkgconfig") for p in install_paths])
+    @staticmethod
+    def _prepare_env(include_paths):
+        env = dict()
+        env["PATH"] = ":".join([os.path.join(p, "bin") for p in include_paths
+                               ]) + ":" + os.environ["PATH"]
 
+        env["PKG_CONFIG_PATH"] = ":".join(
+            [os.path.join(p, "lib/pkgconfig") for p in include_paths] +
+            [os.path.join(p, "share/pkgconfig") for p in include_paths])
+
+        env["LD_LIBRARY_PATH"] = ":".join(
+            [os.path.join(p, "lib") for p in include_paths])
         # Just use for automake
-        self.dep_libs = ""
-        self.dep_incs = ""
-        for p in install_paths:
-            self.dep_libs += "-L%s " % os.path.join(p, "lib")
-            self.dep_incs += "-I%s " % os.path.join(p, "include")
-        self.env["LDFLAGS"] = '%s' % self.dep_libs
-        self.env["CPPFLAGS"] = '%s' % self.dep_incs
-        self.env["CFLAGS"] = self.env["CPPFLAGS"]
-        # self.env["LIBS"] = '-lncurses'
-        # self.env["CXXFLAGS"] = '-I%s' % os.path.join(self.deps_path, "include")
+        dep_libs = ""
+        dep_incs = ""
+        for p in include_paths:
+            dep_libs += "-L%s " % os.path.join(p, "lib")
+            dep_incs += "-I%s " % os.path.join(p, "include")
+        env["LDFLAGS"] = '%s' % dep_libs
+        env["CPPFLAGS"] = '%s' % dep_incs
+        env["CFLAGS"] = env["CPPFLAGS"]
+        # env["LIBS"] = '-lncurses'
+        # env["CXXFLAGS"] = '-I%s' % os.path.join(deps_path, "include")
 
         # for perl
-        self.env["PERL5LIB"] = ":".join(
-            [os.path.join(p, "lib/perl5") for p in install_paths])
+        env["PERL5LIB"] = ":".join(
+            [os.path.join(p, "lib/perl5") for p in include_paths])
+        return env
 
-    def build(self, target, search_paths):
+    def build(self, package_list, include_paths):
 
-        build = repo_config[target.repo_name]["build"]
-        build_cmd = " && ".join(build["step"])
-        build_path = os.path.join(target.repo_path, build["build_path"])
+        for package in package_list:
 
-        if self.check_build_mark(target.repo_name):
-            self.logger.info("[%s]: already build", target.repo_name)
-            return 0
+            if os.path.isdir(package.install_path) and os.listdir(
+                    package.install_path):
+                self.logger.info("[%s]: already build", package.dirname)
+                include_paths.add(package.install_path)
+                continue
 
-        if build["type"] == "cmake":
-            self._prepare_env(search_paths)
+            build = self.global_config[package.repo_name]["build"]
+            build_cmd = " && ".join(build["step"])
+            package.build_path = os.path.join(package.download_path,
+                                              build["build_path"])
+
+            env = self._prepare_env(include_paths)
+
             cmd = Template(build_cmd).render(
-                cmake_prefix=";".join(search_paths),
-                install_path=target.install_path,
-                repo_path=target.repo_path,
+                cmake_prefix=";".join(include_paths),
+                install_path=package.install_path,
+                repo_path=package.download_path,
+                build_path=package.build_path,
                 thread_num=self.thread_num)
-        elif build["type"] == "configure":
-            self._prepare_env(search_paths)
-            cmd = Template(build_cmd).render(install_path=target.install_path,
-                                             repo_path=target.repo_path,
-                                             build_path=build_path,
-                                             thread_num=self.thread_num)
-        else:
-            self._prepare_env(search_paths)
-            cmd = Template(build_cmd).render(install_path=target.install_path,
-                                             repo_path=target.repo_path,
-                                             build_path=build_path,
-                                             thread_num=self.thread_num)
 
-        if not os.path.exists(build_path):
-            os.makedirs(build_path)
+            if not os.path.exists(package.build_path):
+                os.makedirs(package.build_path)
 
-        self.logger.info("start to build %s\n\tcmd: %s\n\tenv: %s\n\tpath: %s",
-                         target.repo_name, cmd, self.env, build_path)
-        res = subprocess.Popen(cmd,
-                               cwd=build_path,
-                               env=self.env,
-                               shell=True,
-                               stdout=sys.stdout,
-                               stderr=sys.stderr)
-        retcode = res.wait()
-        if retcode == 0:
-            self._write_build_mark(target.repo_name)
-        return retcode
+            self.logger.info(
+                "start to build %s\n\tcmd: %s\n\tenv: %s", package.repo_name,
+                cmd,
+                json.dumps(env, sort_keys=True, indent=4,
+                           separators=(',', ':')))
+            res = subprocess.Popen(cmd,
+                                   cwd=package.build_path,
+                                   env=env,
+                                   shell=True,
+                                   stdout=sys.stdout,
+                                   stderr=sys.stderr)
+            retcode = res.wait()
+            if retcode != 0:
+                shutil.rmtree(package.install_path, ignore_errors=True)
+                self.logger.critical("build error with %d", retcode)
 
-    def check_build_mark(self, repo_name):
-        mark = self._load_build_mark()
-        if mark and repo_name in mark:
-            return True
-        return False
+            include_paths.add(package.install_path)
 
-    def _write_build_mark(self, repo_name):
-        mark_path = os.path.join(self.root, "VERSION")
-        mark = self._load_build_mark()
-        if not mark:
-            mark = {}
-        if repo_name not in mark:
-            mark[repo_name] = time.strftime("%Y-%m-%dT%H:%M:%SZ",
-                                            time.localtime())
-            with codecs.open(mark_path, "w", "utf8") as f:
-                f.write(
-                    json.dumps(mark,
-                               sort_keys=True,
-                               indent=4,
-                               separators=(',', ':'),
-                               ensure_ascii=False))
-        self.logger.info("[%s] write build version", repo_name)
+    def install(self, path):
+        pass
 
-    def _load_build_mark(self):
-        mark_path = os.path.join(self.root, "VERSION")
-        if os.path.isfile(mark_path):
-            with codecs.open(mark_path, "r", "utf8") as f:
-                return json.loads(f.read())
+    def remove(self, name):
+        pass
