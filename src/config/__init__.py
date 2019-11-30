@@ -9,16 +9,16 @@ import logging
 import yaml
 import codecs
 
-repo_config = {}
-
 
 def register_all():
+    global_config = {}
     config_dir = os.path.dirname(os.path.abspath(__file__))
     files = os.listdir(config_dir)
     for f in files:
         if not f.endswith(".yml"):
             continue
         with codecs.open(os.path.join(config_dir, f)) as target:
-            content = yaml.load(target.read())
-            repo_config[content["name"]] = content
-    logging.debug("register %d repo", len(repo_config))
+            content = yaml.load(target.read(), Loader=yaml.SafeLoader)
+            global_config[content["name"]] = content
+    logging.debug("register %d repo", len(global_config))
+    return global_config

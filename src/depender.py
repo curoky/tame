@@ -5,25 +5,28 @@
 # @desc        :
 
 import logging
-import queue
-
-from src.config import repo_config
+import sys
+if sys.version_info < (3, 4):
+    import Queue as queue
+else:
+    import queue
 
 
 class Depender(object):
 
-    def __init__(self):
-        self.logger = logging.getLogger(__name__)
+    def __init__(self, global_config):
+        self.global_config = global_config
+        self.logger = logging.getLogger("depender")
 
-    def _prepare_deps(self, name, all_deps: set):
-        child_deps = repo_config[name]["depend"]["lib"] or set()
+    def _prepare_deps(self, name, all_deps):
+        child_deps = self.global_config[name]["depend"]["lib"] or set()
         all_deps.update(child_deps)
         for dep in child_deps:
             self._prepare_deps(dep, all_deps)
 
-    def _sort_deps(self, deps: set):
+    def _sort_deps(self, deps):
         ret = []
-        cp_repo_config = repo_config.copy()
+        cp_repo_config = self.global_config.copy()
 
         q = queue.Queue()
         for dep in deps:
