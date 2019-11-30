@@ -9,7 +9,6 @@ import logging
 import sys
 import json
 import os
-
 from src.main import Chafer
 
 
@@ -20,46 +19,75 @@ class ShutdownHandler(logging.Handler):
         sys.exit(1)
 
 
+class StoreDictKeyPair(argparse.Action):
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        my_dict = []
+        for kv in values.split(","):
+            if "=" in kv:
+                k, v = kv.split("=")
+                my_dict.append([k, v])
+            else:
+                my_dict.append([kv, None])
+        setattr(namespace, self.dest, my_dict)
+
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("command", help="update/build")
-    parser.add_argument("repo_name")
-    parser.add_argument("--root", default=os.getcwd())
-    parser.add_argument("--versions")
+    parser.add_argument("--root", default=os.path.expanduser("~/.cache/chafer"))
+    parser.add_argument("--target",
+                        dest="target",
+                        action=StoreDictKeyPair,
+                        metavar="KEY1=VAL1,KEY2=VAL2...")
 
-    parser.add_argument("--update-deps", action="store_true")
-    parser.add_argument("--build-deps", action="store_true")
+    parser.add_argument("--deps", action="store_true")
     parser.add_argument("--user", action="store_true")
 
+    parser.add_argument("--build_thread", default=32)
+    parser.add_argument("--download_thread", default=2)
+
+    parser.add_argument("--include_paths", default=[])
+
     parser.add_argument("--proxy", action="store_true")
-    parser.add_argument("--build-thread", default=3)
     return parser.parse_args()
 
 
 def main():
     arg = parse_args()
 
+    # proxies = None if not arg.proxy else {
+    #     'http': 'socks5://127.0.0.1:1080',
+    #     'https': 'socks5://127.0.0.1:1080',
+    # }
+
     proxies = None if not arg.proxy else {
-        'http': 'socks5://127.0.0.1:1080',
-        'https': 'socks5://127.0.0.1:1080',
+        'http': 'http://10.110.216.52:3128',
+        'https': 'http://10.110.216.52:3128',
     }
     if arg.user:
         install_path = os.path.expanduser("~/.local/")
     else:
         install_path = os.path.join(arg.root, "install")
-    gb = Chafer(repo_name=arg.repo_name,
-                root=arg.root,
-                install_path=install_path,
+    gb = Chafer(root=arg.root,
                 build_thread_num=arg.build_thread,
-                versions=json.loads(arg.versions or "{}"))
-    if arg.command == "update":
-        gb.update(update_deps=arg.update_deps, proxies=proxies)
-    elif arg.command == "build":
-        gb.build(build_deps=arg.build_deps)
+                download_thread_num=arg.download_thread)
+
+    if arg.command == "build":
+        if arg.deps:
+            gb.prepare_deps(arg.target)
+        gb.prepare(arg.target)
+        gb.download(update_deps=arg.deps, proxies=proxies)
+        gb.build(build_deps=arg.deps, include_paths=arg.include_paths)
+        gb.gen_env()
+    elif arg.command == "show":
+        gb.show()
+    else:
+        pass
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(levelname)s:%(message)s',
+    logging.basicConfig(format='%(levelname)s\t:%(name)s: %(message)s',
                         level=logging.DEBUG)
     logging.getLogger().addHandler(ShutdownHandler(level=50))
     main()

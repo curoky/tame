@@ -4,15 +4,15 @@
 # @Copyright(C): GPL 3.0
 # @desc        : manage mirror file
 
-import logging
 import os
+import codecs
+import logging
 
-from . import Target
+from . import Package
+from .config import register_all
 from .builder import Builder
 from .depender import Depender
 from .downloader import Downloader
-
-from .config import register_all, repo_config
 
 
 class Chafer(object):
@@ -20,58 +20,68 @@ class Chafer(object):
     主要负责全局的资源管理
     """
 
-    def __init__(self, root, repo_name, versions, install_path,
-                 build_thread_num):
-        register_all()
-        self.repo_name = repo_name
+    def __init__(self, root, build_thread_num, download_thread_num):
+        if not os.path.exists(root):
+            os.makedirs(root)
+
         self.root = root
-        self.install_path = install_path
-        self.logger = logging.getLogger(__name__)
+        self.global_config = register_all()
 
-        self.builder = Builder(root, build_thread_num)
-        self.depender = Depender()
-        self.downloader = Downloader(root)
+        self.builder = Builder(root, self.global_config, build_thread_num)
+        self.downloader = Downloader(root, self.global_config,
+                                     download_thread_num)
+        self.depender = Depender(self.global_config)
 
-        if not os.path.exists(self.root):
-            os.makedirs(self.root)
+        self.install_path = os.path.join(root, "install")
+        self.archive_path = self.downloader.archive_path
 
-        self.target_list = []
-        self.prepare_targets(versions)
+        self.package_list = []
+        self.logger = logging.getLogger("main")
 
-    def prepare_targets(self, versions: dict):
-        repo_names = self.depender.get_deps_list(self.repo_name)
-        for repo_name in repo_names:
-            t = Target(self.root,
-                       repo_name=repo_name,
-                       version=versions.get(repo_name) or
-                       repo_config[repo_name]["version"][0],
-                       install_path=self.install_path,
-                       need_build=True)
-            self.target_list.append(t)
+    def prepare(self, target_infos):
+        self.logger.info("target_infos: %s", target_infos)
+        for target in target_infos:
+            name = target[0]
+            version = target[1]
+            if version is None:
+                version = self.global_config[name]["version"][0]
+            self.package_list.append(
+                Package(root=self.root, repo_name=name, version=version))
 
-    def update(self, update_deps, proxies):
-        if update_deps:
-            need_update_targets = self.target_list
-        else:
-            need_update_targets = self.target_list[-1:]
+    def prepare_deps(self, target_infos):
+        if len(target_infos) != 1:
+            self.logger.critical("auto deps only use for on package")
+        deps_list = self.depender.get_deps_list(target_infos[0][0])[:-1]
+        idx = 0
+        for dep in deps_list:
+            target_infos.insert(idx, [dep, None])
+            idx += 1
 
+    def download(self, update_deps, proxies):
         if proxies:
             self.logger.info("use proxy: %s", str(proxies))
-        self.downloader.downloads(need_update_targets, proxies=proxies)
+        self.downloader.downloads(self.package_list, proxies=proxies)
 
-    def build(self, build_deps):
-        search_paths = [t.install_path for t in self.target_list]
-        search_paths.append(os.path.join(self.root, "install"))
-        search_paths = set(search_paths)
-        if build_deps:
-            need_build_targets = self.target_list
-        else:
-            need_build_targets = self.target_list[-1:]
+    def build(self, build_deps, include_paths):
+        include_paths = set(include_paths)
+        self.logger.info("build: %s", self.package_list)
+        self.builder.build(self.package_list, include_paths)
 
-        self.logger.info("start to build \n\t%s",
-                         str([t.repo_name for t in need_build_targets]))
+    def gen_env(self):
+        paths = os.listdir(self.install_path)
+        path_env = "export PATH=" + ":".join([
+            os.path.join(self.install_path, p) + "/bin" for p in paths
+        ]) + ":$PATH"
+        LD_env = "export LD_LIBRARY_PATH=" + ":".join([
+            os.path.join(self.install_path, p) + "/lib" for p in paths
+        ]) + ":$LD_LIBRARY_PATH"
+        with codecs.open(os.path.join(self.root, "env.sh"), "w", "utf8") as f:
+            f.write(path_env + "\n")
+            f.write(LD_env + "\n")
 
-        for t in need_build_targets:
-            ret = self.builder.build(t, search_paths)
-            if ret != 0:
-                self.logger.critical("build error with %d", ret)
+    def show(self):
+        paths = os.listdir(self.install_path)
+        print ("Already build repos:")
+        for p in paths:
+            info = p.split("_")
+            print("\t%s: %s" % (info[0], info[1]))
