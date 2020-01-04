@@ -5,6 +5,7 @@
 # @desc        : manage mirror file
 
 import os
+import json
 import codecs
 import logging
 
@@ -79,9 +80,19 @@ class Chafer(object):
             f.write(path_env + "\n")
             f.write(LD_env + "\n")
 
-    def show(self):
+    def list(self):
         paths = os.listdir(self.install_path)
-        print ("Already build repos:")
+        print("Already build repos:")
         for p in paths:
             info = p.split("_")
             print("\t%s: %s" % (info[0], info[1]))
+
+    def info(self, target_infos):
+        for target in target_infos:
+            config = self.global_config[target[0]]
+            config.pop("name")
+            config.pop("build")
+            print(json.dumps(config,
+                             sort_keys=True,
+                             indent=4,
+                             separators=(',', ':')))

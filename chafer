@@ -80,8 +80,10 @@ def main():
         gb.download(update_deps=arg.deps, proxies=proxies)
         gb.build(build_deps=arg.deps, include_paths=arg.include_paths)
         gb.gen_env()
-    elif arg.command == "show":
-        gb.show()
+    elif arg.command == "list":
+        gb.list()
+    elif arg.command == "info":
+        gb.info(arg.target)
     else:
         pass
 
