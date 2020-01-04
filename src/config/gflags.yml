@@ -5,18 +5,15 @@ description:
 version:
   - v2.2.0
 
-download:
-  archive-url:
-  git-url: git@github.com:gflags/gflags.git
+archive:
+git: git@github.com:gflags/gflags.git
 
 depend:
-  lib:
-  tool:
 
 build:
   type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DBUILD_SHARED_LIBS=OFF'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "make -j {{thread_num}}"
+    - "make install"

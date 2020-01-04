@@ -5,18 +5,15 @@ description:
 version:
   - 1.8.0
 
-download:
-  archive-url: http://mama.indstate.edu/users/ice/tree/src/tree-{{version}}.tgz
-  git-url:
+archive: http://mama.indstate.edu/users/ice/tree/src/tree-{{version}}.tgz
+git:
 
 depend:
-  lib:
-  tool:
 
 build:
   type: custom
   build_path: .
   step:
-    - 'make'
-    - 'mkdir -p {{install_path}}/bin'
-    - 'cp {{repo_path}}/tree {{install_path}}/bin/tree'
+    - "make"
+    - "mkdir -p {{install_path}}/bin"
+    - "cp {{repo_path}}/tree {{install_path}}/bin/tree"

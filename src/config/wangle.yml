@@ -5,27 +5,24 @@ description:
 version:
   - 2019.07.01.00
 
-download:
-  archive-url: https://github.com/facebook/wangle/archive/v{{version}}.tar.gz
-  git-url: git@github.com:facebook/wangle
+archive: https://github.com/facebook/wangle/archive/v{{version}}.tar.gz
+git: git@github.com:facebook/wangle
 
 depend:
-  lib:
-    - gtest
-    - double-conversion
-    - libevent
-    - gflags
-    - glog
-    - fizz
-    - folly
-    - boost
-    - openssl
-  tool:
+  - gtest
+  - double-conversion
+  - libevent
+  - gflags
+  - glog
+  - fizz
+  - folly
+  - boost
+  - openssl
 
 build:
   type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/wangle -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "make -j {{thread_num}}"
+    - "make install"

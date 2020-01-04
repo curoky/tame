@@ -5,23 +5,19 @@ description:
 version:
   - 5.7.1
 
-download:
-  archive-url: https://jaist.dl.sourceforge.net/project/zsh/zsh/{{version}}/zsh-{{version}}.tar.xz
-  git-url:
+archive: https://jaist.dl.sourceforge.net/project/zsh/zsh/{{version}}/zsh-{{version}}.tar.xz
+git:
 
 depend:
-  lib:
-    - ncurses
-  tool:
+  - ncurses
 
 build:
   type: configure
   build_path: .
   step:
     - '{{repo_path}}/configure --prefix={{install_path}} --with-tcsetpgrp --with-term-lib="ncurses"'
-    - 'make -j {{thread_num}}'
-    - 'make install'
-
+    - "make -j {{thread_num}}"
+    - "make install"
 ### ERROR 1
 # checking if POSIX sigsuspend() works... no
 # checking if tcsetpgrp() actually works... error

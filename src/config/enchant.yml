@@ -5,19 +5,16 @@ description: Generic spell checking library
 version:
   - 2.2.3
 
-download:
-  archive-url: https://github.com/AbiWord/enchant/releases/download/v{{version}}/enchant-{{version}}.tar.gz
-  git-url:
+archive: https://github.com/AbiWord/enchant/releases/download/v{{version}}/enchant-{{version}}.tar.gz
+git:
 
 depend:
-  lib:
-    - glib
-  tool:
+  - glib
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

@@ -5,15 +5,12 @@ description:
 version:
   - 2.61
 
-download:
-  archive-url: https://ftp.gnome.org/pub/gnome/sources/glib/{{version}}/glib-{{version}}.0.tar.xz
-  git-url:
+archive: https://ftp.gnome.org/pub/gnome/sources/glib/{{version}}/glib-{{version}}.0.tar.xz
+git:
 
 depend:
-  lib:
-    - zlib
-    - util-linux
-  tool:
+  - zlib
+  - util-linux
 
 build:
   type: ninja

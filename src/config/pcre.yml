@@ -5,18 +5,15 @@ description:
 version:
   - 8.43
 
-download:
-  archive-url: http://ftp.pcre.org/pub/pcre/pcre-{{version}}.tar.gz
-  git-url:
+archive: http://ftp.pcre.org/pub/pcre/pcre-{{version}}.tar.gz
+git:
 
 depend:
-  lib:
-  tool:
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

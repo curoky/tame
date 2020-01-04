@@ -5,18 +5,15 @@ description:
 version:
   - 1.1.1c
 
-download:
-  archive-url: https://www.openssl.org/source/openssl-{{version}}.tar.gz
-  git-url:
+archive: https://www.openssl.org/source/openssl-{{version}}.tar.gz
+git:
 
 depend:
-  lib:
-  tool:
 
 build:
   type: custom
   build_path: .
   step:
-    - '{{repo_path}}/config --prefix={{install_path}} --openssldir={{install_path}}/ssl'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/config --prefix={{install_path}} --openssldir={{install_path}}/ssl"
+    - "make -j {{thread_num}}"
+    - "make install"

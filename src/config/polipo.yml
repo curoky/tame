@@ -5,17 +5,14 @@ description:
 version:
   - 1.1.1
 
-download:
-  archive-url: https://github.com/jech/polipo/archive/polipo-{{version}}.tar.gz
-  git-url:
+archive: https://github.com/jech/polipo/archive/polipo-{{version}}.tar.gz
+git:
 
 depend:
-  lib:
-  tool:
 
 build:
   type: custom
   build_path: .
   step:
-    - 'make'
-    - 'cp {{repo_path}}/polipo {{install_path}}/bin'
+    - "make"
+    - "cp {{repo_path}}/polipo {{install_path}}/bin"

@@ -5,19 +5,16 @@ description:
 version:
   - 3.7.1
 
-download:
-  archive-url: https://github.com/protocolbuffers/protobuf/releases/download/v{{version}}/protobuf-all-{{version}}.tar.gz
-  git-url: https://github.com/protocolbuffers/protobuf.git
+archive: https://github.com/protocolbuffers/protobuf/releases/download/v{{version}}/protobuf-all-{{version}}.tar.gz
+git: https://github.com/protocolbuffers/protobuf.git
 
 depend:
-  lib:
-    - zlib
-  tool:
+  - zlib
 
 build:
   type: cmake cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/cmake -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "make -j {{thread_num}}"
+    - "make install"

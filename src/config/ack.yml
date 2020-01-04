@@ -5,13 +5,10 @@ description:
 version:
   - v3.0.0
 
-download:
-  archive-url:
-  git-url: git@github.com:beyondgrep/ack3.git
+archive:
+git: git@github.com:beyondgrep/ack3.git
 
 depend:
-  lib:
-  tool:
 
 build:
   type: custom

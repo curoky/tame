@@ -70,7 +70,7 @@ class Downloader(object):
     def _download_one(self, repo_name, download_path, version, proxies):
         config = self.global_config[repo_name]
 
-        raw_url = config["download"].get("archive-url")
+        raw_url = config["archive"]
         url = Template(raw_url).render(version=version)
         self._download_with_tar(url, download_path, version, proxies)
 

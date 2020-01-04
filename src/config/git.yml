@@ -5,21 +5,18 @@ description:
 version:
   - 2.19.2
 
-download:
-  archive-url: https://mirrors.edge.kernel.org/pub/software/scm/git/git-{{version}}.tar.gz
-  git-url:
+archive: https://mirrors.edge.kernel.org/pub/software/scm/git/git-{{version}}.tar.gz
+git:
 
 depend:
-  lib:
-    - curl
-    - zlib
-    - gettext # /bin/sh: msgfmt: command not found
-  tool:
+  - curl
+  - zlib
+  - gettext # /bin/sh: msgfmt: command not found
 
 build:
   type: configure
   build_path: .
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

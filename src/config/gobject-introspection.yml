@@ -5,19 +5,16 @@ description: GObject introspection is a middleware layer between C libraries (us
 version:
   - "1.60"
 
-download:
-  archive-url: http://ftp.gnome.org/pub/gnome/sources/gobject-introspection/{{version}}/gobject-introspection-{{version}}.1.tar.xz
-  git-url:
+archive: http://ftp.gnome.org/pub/gnome/sources/gobject-introspection/{{version}}/gobject-introspection-{{version}}.1.tar.xz
+git:
 
 depend:
-  lib:
-    - glib
-  tool:
+  - glib
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

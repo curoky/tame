@@ -5,25 +5,22 @@ description:
 version:
   - v2019.04.22.00
 
-download:
-  archive-url:
-  git-url: git@github.com:facebookincubator/fizz.git
+archive:
+git: git@github.com:facebookincubator/fizz.git
 
 depend:
-  lib:
-    - zlib
-    - double-conversion
-    - libevent
-    - gflags
-    - openssl
-    - folly
-    - libsodium
-  tool:
+  - zlib
+  - double-conversion
+  - libevent
+  - gflags
+  - openssl
+  - folly
+  - libsodium
 
 build:
   type: cmake fizz
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/fizz -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DBUILD_TESTS=OFF'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "make -j {{thread_num}}"
+    - "make install"

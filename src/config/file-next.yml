@@ -5,13 +5,10 @@ description:
 version:
   - 1.16
 
-download:
-  archive-url:
-  git-url: git@github.com:petdance/file-next.git
+archive:
+git: git@github.com:petdance/file-next.git
 
 depend:
-  lib:
-  tool:
 
 build:
   type: custom

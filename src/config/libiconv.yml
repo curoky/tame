@@ -5,18 +5,15 @@ description:
 version:
   - 1.16
 
-download:
-  archive-url: http://ftp.gnu.org/gnu/libiconv/libiconv-{{version}}.tar.gz
-  git-url:
+archive: http://ftp.gnu.org/gnu/libiconv/libiconv-{{version}}.tar.gz
+git:
 
 depend:
-  lib:
-  tool:
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

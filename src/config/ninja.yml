@@ -4,20 +4,16 @@ description: Ninja is a small build system with a focus on speed.
 
 version:
   - v1.9.0
-
-download:
   # archive-url: https://github.com/ninja-build/ninja/releases/download/{{version}}/ninja-linux.zip binary file
-  archive-url: https://github.com/ninja-build/ninja/archive/v1.9.0.tar.gz
-  git-url:
+archive: https://github.com/ninja-build/ninja/archive/v1.9.0.tar.gz
+git:
 
 depend:
-  lib:
-  tool:
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure.py --bootstrap'
-    - 'mkdir -p {{install_path}}/bin/'
-    - 'cp {{build_path}}/ninja {{install_path}}/bin/ninja'
+    - "{{repo_path}}/configure.py --bootstrap"
+    - "mkdir -p {{install_path}}/bin/"
+    - "cp {{build_path}}/ninja {{install_path}}/bin/ninja"

@@ -5,18 +5,15 @@ description:
 version:
   - 4.25
 
-download:
-  archive-url: http://dist.schmorp.de/libev/libev-{{version}}.tar.gz
-  git-url:
+archive: http://dist.schmorp.de/libev/libev-{{version}}.tar.gz
+git:
 
 depend:
-  lib:
-  tool:
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

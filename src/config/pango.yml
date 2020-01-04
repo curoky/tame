@@ -5,21 +5,17 @@ description: Pango is a library for laying out and rendering of text, with an em
 version:
   - 1.38
 
-download:
-  archive-url: http://ftp.gnome.org/pub/GNOME/sources/pango/{{version}}/pango-{{version}}.1.tar.xz
-  git-url: git://git.gnome.org/pango
+archive: http://ftp.gnome.org/pub/GNOME/sources/pango/{{version}}/pango-{{version}}.1.tar.xz
+git: git://git.gnome.org/pango
 
 depend:
-  lib:
-    - cairo
-    - harfbuzz
-  tool:
-
+  - cairo
+  - harfbuzz
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

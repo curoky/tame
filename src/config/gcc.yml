@@ -5,22 +5,19 @@ description:
 version:
   - 5.5.0
 
-download:
-  archive-url: http://ftp.gnu.org/gnu/gcc/gcc-{{version}}/gcc-{{version}}.tar.xz
-  git-url:
+archive: http://ftp.gnu.org/gnu/gcc/gcc-{{version}}/gcc-{{version}}.tar.xz
+git:
 
 depend:
-  lib:
-    - mpc
-    - gmp
-    - zlib
-    - mpfr
-  tool:
+  - mpc
+  - gmp
+  - zlib
+  - mpfr
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}} --disable-multilib --enable-checking=release --enable-languages=c,c++ --with-system-zlib'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}} --disable-multilib --enable-checking=release --enable-languages=c,c++ --with-system-zlib"
+    - "make -j {{thread_num}}"
+    - "make install"

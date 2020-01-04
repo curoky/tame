@@ -5,22 +5,19 @@ description: Cairo is a 2D graphics library with support for multiple output dev
 version:
   - 1.16.0
 
-download:
-  archive-url: https://cairographics.org/releases/cairo-{{version}}.tar.xz
-  git-url:
+archive: https://cairographics.org/releases/cairo-{{version}}.tar.xz
+git:
 
 depend:
-  lib:
-    - zlib
-    - fontconfig
-    - libpng
-    - pixman
-  tool:
+  - zlib
+  - fontconfig
+  - libpng
+  - pixman
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}' # --enable-egl
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}" # --enable-egl
+    - "make -j {{thread_num}}"
+    - "make install"

@@ -5,20 +5,17 @@ description:
 version:
   - master
 
-download:
-  archive-url:
-  git-url: git@gitlab.com:fcitx/fcitx5-rime.git
+archive:
+git: git@gitlab.com:fcitx/fcitx5-rime.git
 
 depend:
-  lib:
-    - fcitx5
-    # - rime sudo apt install librime-dev
-  tool:
+  - fcitx5
+  # - rime sudo apt install librime-dev
 
 build:
   type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "make -j {{thread_num}}"
+    - "make install"

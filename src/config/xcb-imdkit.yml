@@ -5,25 +5,21 @@ description: input method development support for xcb
 version:
   - master
 
-download:
-  archive-url:
-  git-url: https://gitlab.com/fcitx/xcb-imdkit
+archive:
+git: https://gitlab.com/fcitx/xcb-imdkit
 
 depend:
-  lib:
-    - libxcb
-    - xcb-util
-    - xcb-util-keysyms
-  tool:
+  - libxcb
+  - xcb-util
+  - xcb-util-keysyms
 
 build:
   type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
-
+    - "make -j {{thread_num}}"
+    - "make install"
 # build:
 #   type: configure
 #   build_path: _build

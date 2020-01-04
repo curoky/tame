@@ -19,7 +19,7 @@ class Depender(object):
         self.logger = logging.getLogger("depender")
 
     def _prepare_deps(self, name, all_deps):
-        child_deps = self.global_config[name]["depend"]["lib"] or set()
+        child_deps = self.global_config[name]["depend"] or set()
         all_deps.update(child_deps)
         for dep in child_deps:
             self._prepare_deps(dep, all_deps)
@@ -30,7 +30,7 @@ class Depender(object):
 
         q = queue.Queue()
         for dep in deps:
-            child_deps = cp_repo_config[dep]["depend"]["lib"] or set()
+            child_deps = cp_repo_config[dep]["depend"] or set()
             if len(child_deps) == 0:
                 q.put(dep)
                 ret.append(dep)
@@ -38,10 +38,10 @@ class Depender(object):
         while not q.empty():
             front = q.get()
             for dep in deps:
-                child_deps = cp_repo_config[dep]["depend"]["lib"] or set()
+                child_deps = cp_repo_config[dep]["depend"] or set()
                 if front in child_deps:
-                    cp_repo_config[dep]["depend"]["lib"].remove(front)
-                    if len(cp_repo_config[dep]["depend"]["lib"]) == 0:
+                    cp_repo_config[dep]["depend"].remove(front)
+                    if len(cp_repo_config[dep]["depend"]) == 0:
                         q.put(dep)
                         ret.append(dep)
         return ret

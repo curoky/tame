@@ -5,18 +5,15 @@ description: GdkPixbuf is a library for loading, saving, and transforming image 
 version:
   - 2.38
 
-download:
-  archive-url: https://download.gnome.org/sources/gdk-pixbuf/{{version}}/gdk-pixbuf-2.38.1.tar.xz
-  git-url:
+archive: https://download.gnome.org/sources/gdk-pixbuf/{{version}}/gdk-pixbuf-2.38.1.tar.xz
+git:
 
 depend:
-  lib:
-    - glib
-    - libpng
-    - libtiff
-    - libjpeg
-    - gobject-introspection
-  tool:
+  - glib
+  - libpng
+  - libtiff
+  - libjpeg
+  - gobject-introspection
 
 build:
   type: ninja

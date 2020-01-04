@@ -5,19 +5,16 @@ description: Portable Network Graphics support
 version:
   - v1.6.35
 
-download:
-  archive-url: https://github.com/glennrp/libpng/archive/{{version}}.tar.gz
-  git-url:
+archive: https://github.com/glennrp/libpng/archive/{{version}}.tar.gz
+git:
 
 depend:
-  lib:
-    - zlib
-  tool:
+  - zlib
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

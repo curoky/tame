@@ -5,19 +5,16 @@ description:
 version:
   - v0.4.0
 
-download:
-  archive-url:
-  git-url: git@github.com:google/glog
+archive:
+git: git@github.com:google/glog
 
 depend:
-  lib:
-    - gflags
-  tool:
+  - gflags
 
 build:
   type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DBUILD_SHARED_LIBS=OFF'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "make -j {{thread_num}}"
+    - "make install"

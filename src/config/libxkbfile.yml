@@ -5,18 +5,15 @@ description: libxkbfile is used by the X servers and utilities to parse the XKB 
 version:
   - 1.1.0
 
-download:
-  archive-url: https://www.x.org/archive//individual/lib/libxkbfile-{{version}}.tar.gz
-  git-url: https://gitlab.freedesktop.org/xorg/lib/libxkbfile.git
+archive: https://www.x.org/archive//individual/lib/libxkbfile-{{version}}.tar.gz
+git: https://gitlab.freedesktop.org/xorg/lib/libxkbfile.git
 
 depend:
-  lib:
-  tool:
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

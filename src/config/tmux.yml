@@ -5,21 +5,18 @@ description:
 version:
   - 2.8
 
-download:
-  archive-url: https://github.com/tmux/tmux/releases/download/2.8/tmux-2.8.tar.gz
-  git-url: https://github.com/tmux/tmux.git
+archive: https://github.com/tmux/tmux/releases/download/2.8/tmux-2.8.tar.gz
+git: https://github.com/tmux/tmux.git
 
 depend:
-  lib:
-    - ncurses
-    - libevent
-  tool:
-    - pkg-config
+  - ncurses
+  - libevent
+  - pkg-config
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

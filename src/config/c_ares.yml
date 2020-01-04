@@ -5,18 +5,15 @@ description:
 version:
   - 1.15.0
 
-download:
-  archive-url: https://c-ares.haxx.se/download/c-ares-{{version}}.tar.gz
-  git-url: git@github.com:c-ares/c-ares.git
+archive: https://c-ares.haxx.se/download/c-ares-{{version}}.tar.gz
+git: git@github.com:c-ares/c-ares.git
 
 depend:
-  lib:
-  tool:
 
 build:
   type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "make -j {{thread_num}}"
+    - "make install"

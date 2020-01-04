@@ -5,20 +5,17 @@ description: Qt library and IM module for fcitx5
 version:
   - master
 
-download:
-  archive-url:
-  # git-url: git@gitlab.com:fcitx/fcitx5-qt.git
-  git-url: https://gitlab.com/fcitx/fcitx5-qt.git
+archive:
+# git: git@gitlab.com:fcitx/fcitx5-qt.git
+git: https://gitlab.com/fcitx/fcitx5-qt.git
 
 depend:
-  lib:
-    - fcitx5
-  tool:
+  - fcitx5
 
 build:
   type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DENABLE_QT4=OFF'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "make -j {{thread_num}}"
+    - "make install"

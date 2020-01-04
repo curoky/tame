@@ -2,22 +2,18 @@ name: util-linux
 website: https://en.wikipedia.org/wiki/Util-linux
 description: util-linux is a random collection of Linux utilities
 
-
 version:
   - 2.34
 
-download:
-  archive-url: https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v{{version}}/util-linux-{{version}}-rc2.tar.xz
-  git-url: git@github.com:karelzak/util-linux.git
+archive: https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v{{version}}/util-linux-{{version}}-rc2.tar.xz
+git: git@github.com:karelzak/util-linux.git
 
 depend:
-  lib:
-  tool:
 
 build:
   type: configure
   build_path: .
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}} --disable-makeinstall-chown --disable-makeinstall-setuid --disable-bash-completion'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}} --disable-makeinstall-chown --disable-makeinstall-setuid --disable-bash-completion"
+    - "make -j {{thread_num}}"
+    - "make install"

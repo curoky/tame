@@ -5,19 +5,16 @@ description: D-Bus is a message bus system, a simple way for applications to tal
 version:
   - "1.13.10"
 
-download:
-  archive-url: https://dbus.freedesktop.org/releases/dbus/dbus-{{version}}.tar.xz
-  git-url: git@gitlab.freedesktop.org:dbus/dbus.git
+archive: https://dbus.freedesktop.org/releases/dbus/dbus-{{version}}.tar.xz
+git: git@gitlab.freedesktop.org:dbus/dbus.git
 
 depend:
-  lib:
-    - glib
-  tool:
+  - glib
 
 build:
   type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "make -j {{thread_num}}"
+    - "make install"

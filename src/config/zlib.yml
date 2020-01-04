@@ -5,18 +5,15 @@ description:
 version:
   - 1.2.11
 
-download:
-  archive-url: http://zlib.net/zlib-{{version}}.tar.gz
-  git-url: git@github.com:madler/zlib.git
+archive: http://zlib.net/zlib-{{version}}.tar.gz
+git: git@github.com:madler/zlib.git
 
 depend:
-  lib:
-  tool:
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

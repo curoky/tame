@@ -5,19 +5,16 @@ description: FreeType is a freely available software library to render fonts.
 version:
   - 2.10.0
 
-download:
-  archive-url: https://nchc.dl.sourceforge.net/project/freetype/freetype2/{{version}}/freetype-{{version}}.tar.gz
-  git-url:
+archive: https://nchc.dl.sourceforge.net/project/freetype/freetype2/{{version}}/freetype-{{version}}.tar.gz
+git:
 
 depend:
-  lib:
-    # - harfbuzz # Add arg "--without-harfbuzz" to configure for remove this dep
-  tool:
+  # - harfbuzz # Add arg "--without-harfbuzz" to configure for remove this dep
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}} --without-harfbuzz'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}} --without-harfbuzz"
+    - "make -j {{thread_num}}"
+    - "make install"

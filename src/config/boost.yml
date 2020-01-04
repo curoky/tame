@@ -5,17 +5,14 @@ description:
 version:
   - "1.68.0"
 
-download:
-  archive-url: https://dl.bintray.com/boostorg/release/{{version}}/source/boost_{{version|replace('.','_')}}.tar.gz
-  git-url: https://dl.bintray.com/boostorg/release/{{version}}/source/boost_{{version|replace('.','_')}}.tar.gz.git
+archive: https://dl.bintray.com/boostorg/release/{{version}}/source/boost_{{version|replace('.','_')}}.tar.gz
+git: https://dl.bintray.com/boostorg/release/{{version}}/source/boost_{{version|replace('.','_')}}.tar.gz.git
 
 depend:
-  lib:
-  tool:
 
 build:
   type: custom
   build_path: .
   step:
-    - './bootstrap.sh --prefix={{install_path}}'
-    - './b2 install --prefix={{install_path}} -j{{thread_num}}'
+    - "./bootstrap.sh --prefix={{install_path}}"
+    - "./b2 install --prefix={{install_path}} -j{{thread_num}}"

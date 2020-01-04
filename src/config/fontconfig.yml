@@ -5,22 +5,19 @@ description: Fontconfig is a library for configuring and customizing font access
 version:
   - 2.13.91
 
-download:
-  archive-url: https://www.freedesktop.org/software/fontconfig/release/fontconfig-{{version}}.tar.xz
-  git-url:
+archive: https://www.freedesktop.org/software/fontconfig/release/fontconfig-{{version}}.tar.xz
+git:
 
 depend:
-  lib:
-    - zlib
-    - freetype
-    - json-c
-    - gperf # tool
-  tool:
+  - zlib
+  - freetype
+  - json-c
+  - gperf # tool
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

@@ -5,18 +5,15 @@ description: fmt is an open-source formatting library for C++. It can be used as
 version:
   - "5.3.0"
 
-download:
-  archive-url: https://github.com/fmtlib/fmt/archive/{{version}}.tar.gz
-  git-url:
+archive: https://github.com/fmtlib/fmt/archive/{{version}}.tar.gz
+git:
 
 depend:
-  lib:
-  tool:
 
 build:
   type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "make -j {{thread_num}}"
+    - "make install"

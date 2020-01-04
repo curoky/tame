@@ -5,18 +5,15 @@ description:
 version:
   - master
 
-download:
-  archive-url:
-  git-url: git@github.com:Tencent/rapidjson.git
+archive:
+git: git@github.com:Tencent/rapidjson.git
 
 depend:
-  lib:
-  tool:
 
 build:
   type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DRAPIDJSON_BUILD_DOC=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF -DRAPIDJSON_BUILD_TESTS=OFF'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "make -j {{thread_num}}"
+    - "make install"

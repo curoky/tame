@@ -5,13 +5,10 @@ description: The X protocol C-language Binding (XCB) is a replacement for Xlib f
 version:
   - 0.4.0
 
-download:
-  archive-url: https://xcb.freedesktop.org/dist/xcb-util-{{version}}.tar.gz
-  git-url:
+archive: https://xcb.freedesktop.org/dist/xcb-util-{{version}}.tar.gz
+git:
 
 depend:
-  lib:
-  tool:
 
 build:
   type: configure

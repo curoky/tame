@@ -5,14 +5,11 @@ description:
 version:
   - 3.7.3
 
-download:
-  archive-url: https://www.python.org/ftp/python/{{version}}/Python-{{version}}.tgz
-  git-url:
+archive: https://www.python.org/ftp/python/{{version}}/Python-{{version}}.tgz
+git:
 
 depend:
-  lib:
-    - lzma # option deps
-  tool:
+  - lzma # option deps
 
 build:
   type: configure
@@ -20,6 +17,6 @@ build:
   step:
     # --enable-optimizations will run test, very slow
     # - '{{repo_path}}/configure --prefix={{install_path}} --enable-optimizations'
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

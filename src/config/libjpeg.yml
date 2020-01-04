@@ -5,18 +5,15 @@ description: Libjpeg is a widely used C library for reading and writing JPEG ima
 version:
   - v9c
 
-download:
-  archive-url: https://www.ijg.org/files/jpegsrc.{{version}}.tar.gz
-  git-url:
+archive: https://www.ijg.org/files/jpegsrc.{{version}}.tar.gz
+git:
 
 depend:
-  lib:
-  tool:
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

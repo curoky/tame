@@ -5,22 +5,19 @@ description:
 version:
   - 2.6.4
 
-download:
-  archive-url: https://github.com/westes/flex/releases/download/v{{version}}/flex-{{version}}.tar.gz
-  git-url: https://github.com/westes/flex.git
+archive: https://github.com/westes/flex/releases/download/v{{version}}/flex-{{version}}.tar.gz
+git: https://github.com/westes/flex.git
 
 depend:
-  lib:
-    - gettext
-    - automake
-    - bison
-    - libtool
-  tool:
+  - gettext
+  - automake
+  - bison
+  - libtool
 
 build:
   type: configure
   build_path: _build
   step:
-    - '{{repo_path}}/configure --prefix={{install_path}}'
-    - 'make -j {{thread_num}}'
-    - 'make install'
+    - "{{repo_path}}/configure --prefix={{install_path}}"
+    - "make -j {{thread_num}}"
+    - "make install"

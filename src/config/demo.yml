@@ -11,17 +11,12 @@ description:
 version:
   - 1.0.0
 
-download:
-  archive-url: https://demo.com
-  git-url: git@github.com:xxx/xxx.git
+archive: https://demo.com
+git: git@github.com:xxx/xxx.git
 
 depend:
-  lib:
-    - dep1
-    - dep2
-  tool:
-    - cmake
-    - automake
+  - dep1
+  - dep2
 
 build:
   type: cmake
