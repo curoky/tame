@@ -1,11 +1,11 @@
 name: mstch
-website:
-description:
+website: https://github.com/no1msd/mstch
+description: mstch is a complete implementation of {{mustache}} templates using modern C++
 
 version:
   - 1.0.2
 
-archive:
+archive: https://github.com/no1msd/mstch/archive/{{version}}.tar.gz
 git: git@github.com:no1msd/mstch.git
 
 depend:

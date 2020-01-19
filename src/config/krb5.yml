@@ -3,9 +3,9 @@ website:
 description:
 
 version:
-  - krb5-1.16.1-final
+  - 4.2-beta1
 
-archive:
+archive: https://github.com/krb5/krb5/archive/kfw-{{version}}.tar.gz
 git: git@github.com:krb5/krb5.git
 
 depend:

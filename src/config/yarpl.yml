@@ -9,7 +9,7 @@ archive: https://github.com/rsocket/rsocket-cpp/archive/{{version}}.zip
 git: git@github.com:rsocket/rsocket-cpp.git
 
 depend:
-  - gtest
+  - googletest
   - double-conversion
   - gflags
   - glog

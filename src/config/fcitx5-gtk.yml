@@ -5,7 +5,7 @@ description: gtk im module and glib based dbus client library
 version:
   - master
 
-archive:
+archive: https://gitlab.com/fcitx/fcitx5-gtk/-/archive/master/fcitx5-gtk-master.tar.gz
 # git: git@gitlab.com:fcitx/fcitx5-gtk.git
 git: https://gitlab.com/fcitx/fcitx5-gtk.git
 

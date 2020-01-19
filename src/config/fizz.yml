@@ -1,11 +1,11 @@
 name: fizz
-website:
-description:
+website: https://github.com/facebookincubator/fizz
+description: C++14 implementation of the TLS-1.3 standard
 
 version:
-  - v2019.04.22.00
+  - 2019.07.01.00
 
-archive:
+archive: https://github.com/facebookincubator/fizz/archive/v{{version}}.tar.gz
 git: git@github.com:facebookincubator/fizz.git
 
 depend:

@@ -1,13 +1,13 @@
 name: fcitx5-qt
-website:
+website: https://gitlab.com/fcitx/fcitx5-qt.git
 description: Qt library and IM module for fcitx5
 
 version:
   - master
 
-archive:
+archive: https://gitlab.com/fcitx/fcitx5-qt/-/archive/master/fcitx5-qt-master.tar.gz
 # git: git@gitlab.com:fcitx/fcitx5-qt.git
-git: https://gitlab.com/fcitx/fcitx5-qt.git
+git:
 
 depend:
   - fcitx5

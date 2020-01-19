@@ -3,9 +3,9 @@ website: https://gflags.github.io/gflags/
 description:
 
 version:
-  - v2.2.0
+  - 2.2.2
 
-archive:
+archive: https://github.com/gflags/gflags/archive/v{{version}}.tar.gz
 git: git@github.com:gflags/gflags.git
 
 depend:

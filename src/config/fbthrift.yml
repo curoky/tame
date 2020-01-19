@@ -1,18 +1,18 @@
 name: fbthrift
-website:
-description:
+website: https://github.com/facebook/fbthrift
+description: Facebook's branch of Apache Thrift, including a new C++ server.
 
 version:
-  - v2019.04.22.00
+  - 2019.07.01.00
 
-archive:
+archive: https://github.com/facebook/fbthrift/archive/v{{version}}.tar.gz
 git: git@github.com:facebook/fbthrift.git
 
 depend:
   - zstd
   - zlib
   - bison
-  - gtest
+  - googletest
   - flex
   - mstch
   - yarpl

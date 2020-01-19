@@ -1,12 +1,12 @@
 name: xcb-imdkit
-website:
+website: https://gitlab.com/fcitx/xcb-imdkit
 description: input method development support for xcb
 
 version:
   - master
 
-archive:
-git: https://gitlab.com/fcitx/xcb-imdkit
+archive: https://gitlab.com/fcitx/xcb-imdkit/-/archive/master/xcb-imdkit-master.tar.gz
+git:
 
 depend:
   - libxcb

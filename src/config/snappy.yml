@@ -1,15 +1,15 @@
 name: snappy
-website:
-description:
+website: https://github.com/google/snappy
+description: A fast compressor/decompressor
 
 version:
   - 1.1.7
 
-archive:
+archive: https://github.com/google/snappy/archive/{{version}}.tar.gz
 git: git@github.com:google/snappy.git
 
 depend:
-  - gtest
+  - googletest
 
 build:
   type: cmake

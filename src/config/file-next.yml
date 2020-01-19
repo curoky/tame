@@ -1,11 +1,11 @@
 name: file-next
-website:
-description:
+website: http://search.cpan.org/dist/File-Next
+description: File::Next, a file finding module for Perl 5
 
 version:
   - 1.16
 
-archive:
+archive: https://github.com/petdance/file-next/archive/{{version}}.tar.gz
 git: git@github.com:petdance/file-next.git
 
 depend:

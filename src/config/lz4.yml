@@ -1,11 +1,11 @@
 name: lz4
-website:
-description:
+website: http://www.lz4.org
+description: Extremely Fast Compression algorithm
 
 version:
-  - v1.8.2
+  - 1.9.1
 
-archive:
+archive: https://github.com/lz4/lz4/archive/v{{version}}.tar.gz
 git: git@github.com:lz4/lz4.git
 
 depend:

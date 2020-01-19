@@ -1,11 +1,11 @@
 name: folly
-website:
-description:
+website: https://github.com/facebook/folly
+description: An open-source C++ library developed and used at Facebook.
 
 version:
-  - v2019.04.22.00
+  - 2019.06.17.00
 
-archive:
+archive: https://github.com/facebook/folly/archive/v{{version}}.tar.gz
 git: git@github.com:facebook/folly.git
 
 depend:

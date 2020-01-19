@@ -1,11 +1,12 @@
-name: gtest
+name: googletest
 website:
-description:
+description: Googletest - Google Testing and Mocking Framework
+
 
 version:
-  - release-1.8.1
+  - 1.8.1
 
-archive:
+archive: https://github.com/google/googletest/archive/release-{{version}}.tar.gz
 git: git@github.com:google/googletest.git
 
 depend:

@@ -1,11 +1,11 @@
 name: zstd
-website:
-description:
+website: http://www.zstd.net
+description: Zstandard - Fast real-time compression algorithm
 
 version:
-  - v1.3.5
+  - 1.4.0
 
-archive:
+archive: https://github.com/facebook/zstd/releases/download/v{{version}}/zstd-{{version}}.tar.gz
 git: git@github.com:facebook/zstd.git
 
 depend:
