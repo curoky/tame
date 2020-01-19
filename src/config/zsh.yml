@@ -3,6 +3,7 @@ website: http://www.zsh.org
 description:
 
 version:
+  - 5.6.2
   - 5.7.1
 
 archive: https://jaist.dl.sourceforge.net/project/zsh/zsh/{{version}}/zsh-{{version}}.tar.xz

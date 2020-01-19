@@ -18,3 +18,12 @@ build:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DBUILD_SHARED_LIBS=OFF'
     - "make -j {{thread_num}}"
     - "make install"
+
+# build:
+#   type: cmake
+#   build_path: .
+#   step:
+#     - "{{repo_path}}/autogen.sh"
+#     - "{{repo_path}}/configure --prefix={{install_path}}"
+#     - "make -j {{thread_num}}"
+#     - "make install"

@@ -4,9 +4,11 @@ description:
 
 version:
   - "1.68.0"
+  - "1.69.0"
+  - "1.70.0"
 
 archive: https://dl.bintray.com/boostorg/release/{{version}}/source/boost_{{version|replace('.','_')}}.tar.gz
-git: https://dl.bintray.com/boostorg/release/{{version}}/source/boost_{{version|replace('.','_')}}.tar.gz.git
+git:
 
 depend:
 

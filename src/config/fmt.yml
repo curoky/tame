@@ -14,6 +14,6 @@ build:
   type: cmake
   build_path: _build
   step:
-    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
+    - 'cmake -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DFMT_TEST=OFF'
     - "make -j {{thread_num}}"
     - "make install"

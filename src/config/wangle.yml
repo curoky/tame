@@ -3,7 +3,7 @@ website:
 description:
 
 version:
-  - 2019.07.01.00
+  - 2019.07.08.00
 
 archive: https://github.com/facebook/wangle/archive/v{{version}}.tar.gz
 git: git@github.com:facebook/wangle

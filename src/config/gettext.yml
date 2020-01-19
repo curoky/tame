@@ -3,7 +3,7 @@ website: https://www.gnu.org/software/gettext/
 description:
 
 version:
-  - 0.19.8
+  - 0.20.1
 
 archive: http://ftp.gnu.org/gnu/gettext/gettext-{{version}}.tar.gz
 git:

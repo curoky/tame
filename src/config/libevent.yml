@@ -3,7 +3,7 @@ website: http://libevent.org
 description:
 
 version:
-  - 2.1.8-stable
+  - 2.1.10-stable
 
 archive: https://github.com/libevent/libevent/releases/download/release-{{version}}/libevent-{{version}}.tar.gz
 git: https://github.com/libevent/libevent.git

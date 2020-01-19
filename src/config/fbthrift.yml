@@ -3,7 +3,7 @@ website: https://github.com/facebook/fbthrift
 description: Facebook's branch of Apache Thrift, including a new C++ server.
 
 version:
-  - 2019.07.01.00
+  - 2019.07.08.00
 
 archive: https://github.com/facebook/fbthrift/archive/v{{version}}.tar.gz
 git: git@github.com:facebook/fbthrift.git
@@ -15,7 +15,7 @@ depend:
   - googletest
   - flex
   - mstch
-  - yarpl
+  - rsocket-cpp
   - gflags
   - wangle
   - glog
@@ -24,6 +24,7 @@ depend:
   - folly
   - boost
   - openssl
+  - fmt
 
 build:
   type: cmake

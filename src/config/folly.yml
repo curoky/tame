@@ -4,6 +4,7 @@ description: An open-source C++ library developed and used at Facebook.
 
 version:
   - 2019.06.17.00
+  - 2019.06.10.00
 
 archive: https://github.com/facebook/folly/archive/v{{version}}.tar.gz
 git: git@github.com:facebook/folly.git
@@ -19,6 +20,7 @@ depend:
   - glog
   - boost
   - openssl
+  - bzip2
 
 build:
   type: cmake

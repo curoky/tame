@@ -3,7 +3,7 @@ website: https://gcc.gnu.org
 description:
 
 version:
-  - 5.5.0
+  - 7.4.0
 
 archive: http://ftp.gnu.org/gnu/gcc/gcc-{{version}}/gcc-{{version}}.tar.xz
 git:
@@ -18,6 +18,14 @@ build:
   type: configure
   build_path: _build
   step:
-    - "{{repo_path}}/configure --prefix={{install_path}} --disable-multilib --enable-checking=release --enable-languages=c,c++ --with-system-zlib"
+    - >-
+      {{repo_path}}/configure
+      --prefix={{install_path}}
+      --disable-multilib --enable-checking=release
+      --enable-languages=c,c++
+      --with-system-zlib
+      --with-mpc={{deps_paths.mpc}}
+      --with-gmp={{deps_paths.gmp}}
+      --with-mpfr={{deps_paths.mpfr}}
     - "make -j {{thread_num}}"
     - "make install"
