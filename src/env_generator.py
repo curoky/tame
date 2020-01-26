@@ -65,8 +65,9 @@ tools_lib_list=(
             f.write("""
 )
 for item in ${tools_lib_list[@]}; do
-    export LD_LIBRARY_PATH="${CHAFER_INSTALL_DIR}/${item}/lib:${tools_path}/${item}/lib64:$LD_LIBRARY_PATH"
+    export LD_LIBRARY_PATH="${CHAFER_INSTALL_DIR}/${item}/lib:${CHAFER_INSTALL_DIR}/${item}/lib64:$LD_LIBRARY_PATH"
 done
+export DYLD_LIBRARY_PATH=${LD_LIBRARY_PATH}
 
 all_path_list=(
 """)

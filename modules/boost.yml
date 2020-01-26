@@ -17,5 +17,5 @@ build:
   type: custom
   build_path: .
   step:
-    - "./bootstrap.sh --prefix={{install_path}} --with-toolset=gcc --with-libraries=system,thread,filesystem,regex,context"
+    - "./bootstrap.sh --prefix={{install_path}} --with-toolset=gcc --with-libraries=system,thread,filesystem,regex,context,program_options,date_time,atomic"
     - "./b2 install --prefix={{install_path}} -j{{thread_num}} toolset=gcc"
