@@ -7,7 +7,6 @@
 import argparse
 import logging
 import sys
-import json
 import os
 from src.main import Chafer
 
@@ -45,7 +44,7 @@ def parse_args():
     parser.add_argument("--user", action="store_true")
     parser.add_argument("--update", action="store_true")
 
-    parser.add_argument("--build_thread", default=40)
+    parser.add_argument("--build_thread", default=3)
     parser.add_argument("--download_thread", default=2)
 
     parser.add_argument("--include_paths", default=[])
@@ -67,10 +66,7 @@ def main():
         'http': 'http://10.110.216.52:3128',
         'https': 'http://10.110.216.52:3128',
     }
-    if arg.user:
-        install_path = os.path.expanduser("~/.local/")
-    else:
-        install_path = os.path.join(arg.root, "install")
+
     gb = Chafer(root=arg.root,
                 build_thread_num=arg.build_thread,
                 download_thread_num=arg.download_thread)
@@ -80,10 +76,10 @@ def main():
             gb.prepare_deps(arg.target)
         gb.prepare(arg.target)
         if arg.update:
-            gb.download(update_deps=arg.deps, proxies=proxies)
-        gb.build(build_deps=arg.deps,
-                 include_paths=arg.include_paths,
+            gb.download(proxies=proxies)
+        gb.build(include_paths=arg.include_paths,
                  gcc_path=arg.gcc_path)
+        gb.gen_env()
     elif arg.command == "list":
         gb.list()
     elif arg.command == "info":

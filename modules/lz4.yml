@@ -9,9 +9,10 @@ archive: https://github.com/lz4/lz4/archive/v{{version}}.tar.gz
 git: git@github.com:lz4/lz4.git
 
 depend:
+  - cmake
 
 build:
-  type: cmake contrib/cmake_unofficial
+  type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/contrib/cmake_unofficial -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'

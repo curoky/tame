@@ -18,7 +18,7 @@ depend:
   - libsodium
 
 build:
-  type: cmake fizz
+  type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/fizz -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DBUILD_TESTS=OFF'

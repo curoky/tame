@@ -15,5 +15,6 @@ build:
   build_path: _build
   step:
     - "{{repo_path}}/configure --prefix={{install_path}} --with-ticlib --with-shared --disable-tic-depends --with-pkg-config --with-pkg-config-libdir={{install_path}}/lib/pkgconfig  --enable-pc-files"
+    - "{{repo_path}}/configure --prefix={{install_path}} --enable-pc-files --enable-sigwinch  --with-pkg-config-libdir={{install_path}}/lib/pkgconfig --enable-symlinks --enable-widec --with-shared --with-gpm=no"
     - "make -j {{thread_num}}"
     - "make install"

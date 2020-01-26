@@ -28,10 +28,10 @@ class Builder(object):
     @staticmethod
     def _prepare_env(include_paths, gcc_path):
         env = dict()
-        base_path = "/bin:/usr/bin/:/usr/local/bin:/usr/sbin/"
+        base_path = "/usr/local/bin:/usr/bin/:/usr/sbin/:/bin"
 
         env["PATH"] = ":".join([os.path.join(p, "bin") for p in include_paths
-                               ]) + ":" + base_path
+                                ]) + ":" + base_path
 
         env["PKG_CONFIG_PATH"] = ":".join(
             [os.path.join(p, "lib/pkgconfig") for p in include_paths] +
@@ -39,6 +39,7 @@ class Builder(object):
 
         env["LD_LIBRARY_PATH"] = ":".join(
             [os.path.join(p, "lib") for p in include_paths])
+        env["DYLD_LIBRARY_PATH"] = env["LD_LIBRARY_PATH"]
         # Just use for automake
         dep_libs = ""
         dep_incs = ""
@@ -53,6 +54,8 @@ class Builder(object):
         # for perl
         env["PERL5LIB"] = ":".join(
             [os.path.join(p, "lib/perl5") for p in include_paths])
+        env["CC"] = "gcc-7"
+        env["CXX"] = "g++-7"
         if gcc_path:
             gcc_path = os.path.expanduser(gcc_path)
         if gcc_path:
@@ -60,6 +63,7 @@ class Builder(object):
             env["LD_LIBRARY_PATH"] = gcc_path + "/lib:" + env["LD_LIBRARY_PATH"]
             env["LD_LIBRARY_PATH"] = gcc_path + "/lib64:" + env[
                 "LD_LIBRARY_PATH"]
+
             env["CC"] = gcc_path + "/bin/gcc"
             env["CXX"] = gcc_path + "/bin/g++"
         return env
@@ -68,7 +72,7 @@ class Builder(object):
         deps_paths = {}
         for target in target_infos:
             if os.path.isdir(target.install_path) and os.listdir(
-                    target.install_path):
+                target.install_path):
                 self.logger.info("[%s]: already build", target.dirname)
                 include_paths.add(target.install_path)
                 deps_paths[target.repo_name] = target.install_path

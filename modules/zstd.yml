@@ -9,9 +9,10 @@ archive: https://github.com/facebook/zstd/releases/download/v{{version}}/zstd-{{
 git: git@github.com:facebook/zstd.git
 
 depend:
+  - cmake
 
 build:
-  type: cmake build/cmake
+  type: cmake
   build_path: _build
   step:
     - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/build/cmake -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'

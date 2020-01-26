@@ -1,0 +1,26 @@
+name: abseil-cpp
+website: https://abseil.io/
+description: Abseil Common Libraries (C++)
+
+version:
+  - master
+
+archive: https://github.com/abseil/abseil-cpp/archive/{{version}}.zip
+git: https://github.com/abseil/abseil-cpp.git
+
+depend:
+  - cmake
+
+build:
+  type: cmake
+  build_path: _build
+  step:
+    - 'cmake -S {{repo_path}} -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
+    - "make -j {{thread_num}}"
+    - "make install"
+
+# Problem1: undefined reference to 'FlagRegisterer::FlagRegisterer'
+# solution1: deletefizz/CMakeLists.txt#L60-L72
+##find_package(gflags CONFIG QUIET)
+##...
+##else()
