@@ -43,13 +43,15 @@ def parse_args():
 
     parser.add_argument("--deps", action="store_true")
     parser.add_argument("--user", action="store_true")
+    parser.add_argument("--update", action="store_true")
 
-    parser.add_argument("--build_thread", default=32)
+    parser.add_argument("--build_thread", default=40)
     parser.add_argument("--download_thread", default=2)
 
     parser.add_argument("--include_paths", default=[])
 
     parser.add_argument("--proxy", action="store_true")
+    parser.add_argument("--gcc-path", default=None)
     return parser.parse_args()
 
 
@@ -77,19 +79,23 @@ def main():
         if arg.deps:
             gb.prepare_deps(arg.target)
         gb.prepare(arg.target)
-        gb.download(update_deps=arg.deps, proxies=proxies)
-        gb.build(build_deps=arg.deps, include_paths=arg.include_paths)
-        gb.gen_env()
+        if arg.update:
+            gb.download(update_deps=arg.deps, proxies=proxies)
+        gb.build(build_deps=arg.deps,
+                 include_paths=arg.include_paths,
+                 gcc_path=arg.gcc_path)
     elif arg.command == "list":
         gb.list()
     elif arg.command == "info":
         gb.info(arg.target)
+    elif arg.command == "gen":
+        gb.gen_env()
     else:
         pass
 
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(levelname)s\t:%(name)s: %(message)s',
-                        level=logging.DEBUG)
+                        level=logging.INFO)
     logging.getLogger().addHandler(ShutdownHandler(level=50))
     main()

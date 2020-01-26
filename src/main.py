@@ -63,21 +63,28 @@ class Chafer(object):
             self.logger.info("use proxy: %s", str(proxies))
         self.downloader.downloads(self.package_list, proxies=proxies)
 
-    def build(self, build_deps, include_paths):
+    def build(self, build_deps, include_paths, gcc_path):
         include_paths = set(include_paths)
         self.logger.info("build: %s", self.package_list)
-        self.builder.build(self.package_list, include_paths)
+        self.builder.build(self.package_list, include_paths, gcc_path)
 
     def gen_env(self):
         paths = os.listdir(self.install_path)
-        path_env = "export PATH=" + ":".join([
-            os.path.join(self.install_path, p) + "/bin" for p in paths
-        ]) + ":$PATH"
-        LD_env = "export LD_LIBRARY_PATH=" + ":".join([
-            os.path.join(self.install_path, p) + "/lib" for p in paths
-        ]) + ":$LD_LIBRARY_PATH"
+        bin_path = [os.path.join(self.install_path, p, "bin") for p in paths]
+        lib_path = [os.path.join(self.install_path, p, "lib") for p in paths]
+        lib64_path = [
+            os.path.join(self.install_path, p, "lib64") for p in paths
+        ]
+
+        bin_path = [p for p in bin_path if os.path.exists(p)]
+        lib_path = [p for p in lib_path if os.path.exists(p)]
+        lib64_path = [p for p in lib64_path if os.path.exists(p)]
+
+        path_env = "export PATH=" + ":".join(bin_path) + ":$PATH"
+        LD_env = "export LD_LIBRARY_PATH=" + ":".join(
+            lib_path + lib64_path) + ":$LD_LIBRARY_PATH"
         with codecs.open(os.path.join(self.root, "env.sh"), "w", "utf8") as f:
-            f.write(path_env + "\n")
+            f.write(path_env + "\n\n")
             f.write(LD_env + "\n")
 
     def list(self):

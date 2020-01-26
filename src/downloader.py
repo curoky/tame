@@ -21,18 +21,15 @@ import requests
 import requests_ftp
 
 from . import Package
+from .tool.extractor import Extractor
 
 global_mirror = {
     "ftp.gnu.org": [
         "mirrors.cloud.tencent.com",
         "mirrors.tuna.tsinghua.edu.cn",
     ],
-    "www.python.org/ftp": [
-        "npm.taobao.org/mirrors",
-    ],
-    "ftp.gnome.org/pub/gnome/": [
-        "mirrors.ustc.edu.cn/gnome/",
-    ],
+    "www.python.org/ftp": ["npm.taobao.org/mirrors",],
+    "ftp.gnome.org/pub/gnome/": ["mirrors.ustc.edu.cn/gnome/",],
     "www.openssl.org": ["mirrors.cloud.tencent.com/openssl"]
 }
 
@@ -72,33 +69,25 @@ class Downloader(object):
 
         raw_url = config["archive"]
         url = Template(raw_url).render(version=version)
-        self._download_with_tar(url, download_path, version, proxies)
+        self._download_with_tar(repo_name, url, download_path, version, proxies)
 
-    def _download_with_tar(self, url, download_path, version, proxies):
+    def _download_with_tar(self, repo_name, url, download_path, version,
+                           proxies):
         # check for mirror
         for k in global_mirror:
             if k in url:
                 url = url.replace(k, global_mirror[k][0])
         self.logger.debug("real download url %s", url)
-        file_name = os.path.basename(url)
+        file_name = repo_name + "-" + os.path.basename(url)
         f = self._get_cache(file_name)
         if f is None:
             f = BytesIO()
             f.write(self.session.get(url, proxies=proxies).content)
             self.logger.info("success to download file %s", file_name)
             self._set_cache(file_name, f)
-        mode = file_name.split(".")[-1]
-        if mode == "tgz":
-            mode = "gz"
-        if mode in ("gz", "bz2", "xz"):
-            t = tarfile.open(fileobj=f, mode="r:" + mode)
-            for m in t.getmembers():
-                m.path = "/".join(m.path.split('/')[1:])
-            shutil.rmtree(download_path, ignore_errors=True)
-            t.extractall(download_path)
-        elif mode in ("zip"):
-            t = zipfile.ZipFile(f, mode="r")
-            t.extractall(download_path)
+
+        extractor = Extractor(f, mode=file_name.split(".")[-1])
+        extractor.extract_to(download_path)
 
     def _get_cache(self, file_name):
         rio = BytesIO()
