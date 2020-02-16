@@ -1,4 +1,3 @@
-name: libsodium
 website: https://libsodium.org
 description:
 
@@ -8,12 +7,5 @@ version:
 archive: https://github.com/jedisct1/libsodium/releases/download/{{version}}/libsodium-{{version}}.tar.gz
 git: https://github.com/jedisct1/libsodium.git
 
-depend:
-
-build:
+compile:
   type: configure
-  build_path: _build
-  step:
-    - "{{repo_path}}/configure --prefix={{install_path}}"
-    - "make -j {{thread_num}}"
-    - "make install"

@@ -1,22 +1,11 @@
-name: llvm
 website: http://llvm.org/
 description: The LLVM Project is a collection of modular and reusable compiler and toolchain technologies.
 
 version:
-  - 7.0.1 
+  - 7.0.1
   - 8.0.0 # need gcc 5.1+
 
 archive: http://releases.llvm.org/{{version}}/llvm-{{version}}.src.tar.xz
-git:
 
-depend:
-  - cmake
-  # - gcc
-
-build:
+compile:
   type: cmake
-  build_path: _build
-  step:
-    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
-    - "make -j {{thread_num}}"
-    - "make install"

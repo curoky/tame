@@ -1,4 +1,3 @@
-name: wayland-protocols
 website:
 description: Wayland protocol development
 
@@ -6,15 +5,10 @@ version:
   - 1.17
 
 archive: https://wayland.freedesktop.org/releases/wayland-protocols-{{version}}.tar.xz
-git:
 
 depend:
   - wayland
 
-build:
+compile:
   type: configure
-  build_path: _build
-  step:
-    - "{{repo_path}}/configure --prefix={{install_path}} --disable-documentation"
-    - "make -j {{thread_num}}"
-    - "make install"
+  args: --disable-documentation

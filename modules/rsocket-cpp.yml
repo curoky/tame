@@ -1,12 +1,11 @@
-name: rsocket-cpp
 website: http://rsocket.io/
 description:
 
 version:
   - master
 
-archive: https://github.com/rsocket/rsocket-cpp/archive/{{version}}.zip
 git: git@github.com:rsocket/rsocket-cpp.git
+archive: https://github.com/rsocket/rsocket-cpp/archive/{{version}}.zip
 
 depend:
   - googletest
@@ -16,14 +15,12 @@ depend:
   - folly
   - boost
 
-build:
-  type: cmake
-  build_path: _build
-  step:
-    - 'cmake -S {{repo_path}}/ -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DBUILD_TESTS=OFF -DBUILD_EXAMPLES= -DBUILD_BENCHMARKS=OFF'
-    - "make -j {{thread_num}}"
-    - "make install"
-
 # problem1: [-Werror=attributes]
 # solutsion: delete https://github.com/rsocket/rsocket-cpp/blob/master/CMakeLists.txt#L174
 ## set(EXTRA_CXX_FLAGS ${EXTRA_CXX_FLAGS} -Werror)
+compile:
+  type: cmake
+  args:
+    - -DBUILD_TESTS=OFF
+    - -DBUILD_EXAMPLES=OFF
+    - -DBUILD_BENCHMARKS=OFF

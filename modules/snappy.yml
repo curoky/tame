@@ -1,20 +1,19 @@
-name: snappy
 website: https://github.com/google/snappy
 description: A fast compressor/decompressor
 
 version:
   - 1.1.7
 
-archive: https://github.com/google/snappy/archive/{{version}}.tar.gz
 git: git@github.com:google/snappy.git
+archive: https://github.com/google/snappy/archive/{{version}}.tar.gz
 
 depend:
   - googletest
 
-build:
+compile:
   type: cmake
-  build_path: _build
-  step:
-    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DSNAPPY_BUILD_TESTS=OFF'
-    - "make -j {{thread_num}}"
-    - "make install"
+  args: -DSNAPPY_BUILD_TESTS=OFF
+
+# problem1: undefined reference to `testing::Message::Message()
+# solution1.1: https://github.com/google/snappy/pull/73
+# solution1.2: -DSNAPPY_BUILD_TESTS=OFF

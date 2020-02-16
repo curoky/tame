@@ -1,4 +1,3 @@
-name: vim
 website: https://www.vim.org/
 description:
 
@@ -6,17 +5,14 @@ version:
   # - 8.1.1640
   - 8.1.0996
 
-archive: https://github.com/vim/vim/archive/v{{version}}.tar.gz
 git: git@github.com:vim/vim.git
+archive: https://github.com/vim/vim/archive/v{{version}}.tar.gz
 
 depend:
   - ncurses
   - libiconv # vim error: cannot compute sizeof (off_t) , need export to LD_LIBRARY_PATH
 
-build:
+compile:
   type: configure
   build_path: .
-  step:
-    - '{{repo_path}}/configure --prefix={{install_path}} --with-tlib="ncurses" '
-    - "make -j {{thread_num}}"
-    - "make install"
+  args: --with-tlib="ncurses"

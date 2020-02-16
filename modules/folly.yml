@@ -1,13 +1,13 @@
-name: folly
 website: https://github.com/facebook/folly
 description: An open-source C++ library developed and used at Facebook.
 
 version:
+  - 2019.07.29.00
   - 2019.06.17.00
   - 2019.06.10.00
 
-archive: https://github.com/facebook/folly/archive/v{{version}}.tar.gz
 git: git@github.com:facebook/folly.git
+archive: https://github.com/facebook/folly/archive/v{{version}}.tar.gz
 
 depend:
   - zstd
@@ -22,10 +22,17 @@ depend:
   - openssl
   - bzip2
 
-build:
+compile:
   type: cmake
-  build_path: _build
-  step:
-    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
-    - "make -j {{thread_num}}"
-    - "make install"
+  args: -DBUILD_TESTS=OFF
+
+# problem1: error: declaration of ‘bit_count’ shadows a previous local
+# solution1.0: https://github.com/facebook/folly/issues
+# solution1.1: with boost 1.69.0 ? 1.68.0
+# solution1.2: ignore it ?
+
+# problem2: Portability.h:222:10: fatal error: __config: No such file or directory
+#           #include <__config> // @manual
+#                     ^~~~~~~~~~
+#           compilation terminated.
+# solution2: compile must use same, all gcc or all clang

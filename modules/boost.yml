@@ -1,21 +1,18 @@
-name: boost
 website: https://www.boost.org/
 description:
 
 version:
-  - "1.69.0"
-  - "1.70.0"
-  - "1.68.0"
+  - 1.69.0
+  - 1.70.0
+  - 1.68.0
 
 archive: https://dl.bintray.com/boostorg/release/{{version}}/source/boost_{{version|replace('.','_')}}.tar.gz
-git:
-
 depend:
 #  - icu4c
 
-build:
+compile:
   type: custom
   build_path: .
   step:
-    - "./bootstrap.sh --prefix={{install_path}} --with-toolset=gcc --with-libraries=system,thread,filesystem,regex,context,program_options,date_time,atomic,chrono"
-    - "./b2 install --prefix={{install_path}} -j{{thread_num}} toolset=gcc"
+    - ./bootstrap.sh --prefix={{install_path}} --with-toolset=gcc --with-libraries=system,thread,filesystem,regex,context,program_options,date_time,atomic,chrono
+    - ./b2 install --prefix={{install_path}} -j{{thread_num}} toolset=gcc

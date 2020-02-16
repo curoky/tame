@@ -1,19 +1,11 @@
-name: mbedtls
 website: https://tls.mbed.org
 description: An open source, portable, easy to use, readable and flexible SSL library
 
 version:
   - 2.18.0
 
-archive: https://github.com/ARMmbed/mbedtls/archive/mbedtls-{{version}}.tar.gz
 git: git@github.com:ARMmbed/mbedtls.git
+archive: https://github.com/ARMmbed/mbedtls/archive/mbedtls-{{version}}.tar.gz
 
-depend:
-
-build:
+compile:
   type: cmake
-  build_path: _build
-  step:
-    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
-    - "make -j {{thread_num}}"
-    - "make install"

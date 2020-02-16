@@ -1,19 +1,15 @@
-name: rapidjson
 website: http://rapidjson.org/
 description: A fast JSON parser/generator for C++ with both SAX/DOM style API
 
 version:
   - 1.1.0
 
-archive: https://github.com/Tencent/rapidjson/archive/v{{version}}.tar.gz
 git: git@github.com:Tencent/rapidjson.git
+archive: https://github.com/Tencent/rapidjson/archive/v{{version}}.tar.gz
 
-depend:
-
-build:
+compile:
   type: cmake
-  build_path: _build
-  step:
-    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DRAPIDJSON_BUILD_DOC=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF -DRAPIDJSON_BUILD_TESTS=OFF'
-    - "make -j {{thread_num}}"
-    - "make install"
+  args:
+    - -DRAPIDJSON_BUILD_DOC=OFF
+    - -DRAPIDJSON_BUILD_EXAMPLES=OFF
+    - -DRAPIDJSON_BUILD_TESTS=OFF

@@ -1,4 +1,3 @@
-name: gcc
 website: https://gcc.gnu.org
 description:
 
@@ -6,7 +5,6 @@ version:
   - 7.4.0
 
 archive: http://ftp.gnu.org/gnu/gcc/gcc-{{version}}/gcc-{{version}}.tar.xz
-git:
 
 depend:
   - mpc
@@ -14,18 +12,24 @@ depend:
   - zlib
   - mpfr
 
-build:
+compile:
   type: configure
-  build_path: _build
-  step:
-    - >-
-      {{repo_path}}/configure
-      --prefix={{install_path}}
-      --disable-multilib --enable-checking=release
-      --enable-languages=c,c++
-      --with-system-zlib
-      --with-mpc={{deps_paths.mpc}}
-      --with-gmp={{deps_paths.gmp}}
-      --with-mpfr={{deps_paths.mpfr}}
-    - "make -j {{thread_num}}"
-    - "make install"
+  args:
+    - --prefix={{install_path}}
+    - --disable-multilib
+    - --enable-checking=release
+    - --enable-languages=c,c++
+    - --with-system-zlib
+    - --with-mpc={{inc_map.mpc}}
+    - --with-gmp={{inc_map.gmp}}
+    - --with-mpfr={{inc_map.mpfr}}
+
+# build:
+#   type: configure
+#   build_path: _build
+#   step:
+#     - >-
+#     {{repo_path}}/configure
+
+#     - make -j {{thread_num}}
+#     - make install

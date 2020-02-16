@@ -1,4 +1,3 @@
-name: libtiff
 website: https://libtiff.gitlab.io/libtiff/
 description: TIFF Library and Utilities
 
@@ -6,15 +5,9 @@ version:
   - 4.0.10
 
 archive: http://download.osgeo.org/libtiff/tiff-{{version}}.tar.gz
-git:
 
 depend:
   - zlib
 
-build:
+compile:
   type: cmake
-  build_path: _build
-  step:
-    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
-    - "make -j {{thread_num}}"
-    - "make install"

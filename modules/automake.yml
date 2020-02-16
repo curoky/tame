@@ -1,4 +1,3 @@
-name: automake
 website:
 description:
 
@@ -6,15 +5,8 @@ version:
   - 1.16.1
 
 archive: http://ftp.gnu.org/gnu/automake/automake-{{version}}.tar.gz
-git:
-
 depend:
   - autoconf
 
-build:
+compile:
   type: configure
-  build_path: _build
-  step:
-    - "{{repo_path}}/configure --prefix={{install_path}}"
-    - "make -j {{thread_num}}"
-    - "make install"

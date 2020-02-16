@@ -1,19 +1,10 @@
-name: curl
 website: https://curl.haxx.se/
 description:
 
 version:
-  - "7.64.0"
+  - 7.64.0
 
 archive: http://curl.haxx.se/download/curl-{{version}}.tar.gz
-git:
 
-depend:
-
-build:
+compile:
   type: configure
-  build_path: _build
-  step:
-    - "{{repo_path}}/configure --prefix={{install_path}}"
-    - "make -j {{thread_num}}"
-    - "make install"

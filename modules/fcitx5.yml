@@ -1,12 +1,11 @@
-name: fcitx5
 website:
 description: Fcitx 5 is a generic input method framework released under LGPL-2.1+.
 
 version:
   - master
 
-archive: https://gitlab.com/fcitx/fcitx5/-/archive/master/fcitx5-{{version}}.tar.gz
 git: git@gitlab.com:fcitx/fcitx5.git
+archive: https://gitlab.com/fcitx/fcitx5/-/archive/master/fcitx5-{{version}}.tar.gz
 
 depend:
   # - ecm  sudo apt install extra-cmake-modules
@@ -24,10 +23,5 @@ depend:
   - xcb-util-wm
   - xcb-imdkit
 
-build:
+compile:
   type: cmake
-  build_path: _build
-  step:
-    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}}'
-    - "make -j {{thread_num}}"
-    - "make install"

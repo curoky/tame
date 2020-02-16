@@ -1,20 +1,12 @@
-name: file-next
 website: http://search.cpan.org/dist/File-Next
 description: File::Next, a file finding module for Perl 5
 
 version:
   - 1.16
 
-archive: https://github.com/petdance/file-next/archive/{{version}}.tar.gz
 git: git@github.com:petdance/file-next.git
+archive: https://github.com/petdance/file-next/archive/{{version}}.tar.gz
 
-depend:
-
-build:
-  type: custom
+compile:
+  type: perl
   build_path: .
-  step:
-    - perl Makefile.PL INSTALL_BASE={{install_path}}
-    - make
-    - make test
-    - make install

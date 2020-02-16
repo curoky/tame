@@ -1,4 +1,3 @@
-name: ack
 website: https://beyondgrep.com/
 description:
 
@@ -8,15 +7,7 @@ version:
 archive: https://github.com/beyondgrep/ack3/archive/v{{version}}.tar.gz
 git: git@github.com:beyondgrep/ack3.git
 
-depend:
-
-build:
-  type: custom
+compile:
+  type: perl
   build_path: .
-  step:
-    # - "perl -V"
-    - "perl Makefile.PL"
-    - "make ack-standalone"
-    - "mkdir -p {{install_path}}/bin"
-    - "cp {{repo_path}}/ack-standalone {{install_path}}/bin/ack"
-    # - 'chmod 0755 {{install_path}}/bin/ack'
+  # make ack-standalone

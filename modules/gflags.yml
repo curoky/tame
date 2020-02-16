@@ -1,4 +1,3 @@
-name: gflags
 website: https://gflags.github.io/gflags/
 description:
 
@@ -8,16 +7,6 @@ version:
 archive: https://github.com/gflags/gflags/archive/v{{version}}.tar.gz
 git: git@github.com:gflags/gflags.git
 
-depend:
-  - cmake
-
-build:
+compile:
   type: cmake
-  build_path: _build
-  step:
-    - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DBUILD_SHARED_LIBS=OFF'
-    - "make -j {{thread_num}}"
-    - "make install"
-    # - 'cmake -B {{repo_path}}/_build -S {{repo_path}}/. -DCMAKE_PREFIX_PATH="{{cmake_prefix}}" -DCMAKE_INSTALL_PREFIX={{install_path}} -DBUILD_SHARED_LIBS=OFF'
-    # - "make -j {{thread_num}}"
-    # - "make install"
+  args: -DBUILD_SHARED_LIBS=OFF

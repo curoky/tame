@@ -1,5 +1,4 @@
 # not complete!!!
-name: libxml
 website: http://www.xmlsoft.org
 description: The XML C parser and toolkit of Gnome
 
@@ -7,14 +6,7 @@ version:
   - 2.9.9
 
 archive: ftp://xmlsoft.org/libxml2/libxml2-{{version}}.tar.gz
-git:
 
-depend:
-
-build:
+compile:
   type: configure
-  build_path: _build
-  step:
-    - "{{repo_path}}/configure --prefix={{install_path}} --with-python=no"
-    - "make -j {{thread_num}}"
-    - "make install"
+  args: --with-python=no

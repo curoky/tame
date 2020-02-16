@@ -1,4 +1,3 @@
-name: libjpeg
 website: https://www.ijg.org/
 description: Libjpeg is a widely used C library for reading and writing JPEG image files.
 
@@ -6,14 +5,6 @@ version:
   - v9c
 
 archive: https://www.ijg.org/files/jpegsrc.{{version}}.tar.gz
-git:
 
-depend:
-
-build:
+compile:
   type: configure
-  build_path: _build
-  step:
-    - "{{repo_path}}/configure --prefix={{install_path}}"
-    - "make -j {{thread_num}}"
-    - "make install"

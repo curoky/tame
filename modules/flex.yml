@@ -1,12 +1,11 @@
-name: flex
 website: https://www.gnu.org/software/flex/
 description:
 
 version:
   - 2.6.4
 
-archive: https://github.com/westes/flex/releases/download/v{{version}}/flex-{{version}}.tar.gz
 git: https://github.com/westes/flex.git
+archive: https://github.com/westes/flex/releases/download/v{{version}}/flex-{{version}}.tar.gz
 
 depend:
   - gettext
@@ -14,10 +13,5 @@ depend:
   - bison
   - libtool
 
-build:
+compile:
   type: configure
-  build_path: _build
-  step:
-    - "{{repo_path}}/configure --prefix={{install_path}}"
-    - "make -j {{thread_num}}"
-    - "make install"

@@ -1,4 +1,3 @@
-name: openssl
 website: https://www.openssl.org
 description:
 
@@ -6,14 +5,11 @@ version:
   - 1.1.1c
 
 archive: https://www.openssl.org/source/openssl-{{version}}.tar.gz
-git:
 
-depend:
+compile:
+  type: configure
+  index: ./config
+  args: --openssldir={{install_path}}/ssl
 
-build:
-  type: custom
-  build_path: .
-  step:
-    - "{{repo_path}}/config --prefix={{install_path}} --openssldir={{install_path}}/ssl"
-    - "make -j {{thread_num}}"
-    - "make install"
+# export OPENSSL_ROOT_DIR=xxx/openssl/1.0.2p/
+# export OPENSSL_INCLUDE_DIR=xxx/openssl/1.0.2p/include/

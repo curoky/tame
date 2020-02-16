@@ -1,0 +1,27 @@
+website: https://thrift.apache.org/
+description:
+
+version:
+  - 0.12.0
+
+git: git@github.com:apache/thrift.git
+# archive: https://www-us.apache.org/dist/thrift/{{version}}/thrift-{{version}}.tar.gz
+archive: https://github.com/apache/thrift/archive/v{{version}}.tar.gz
+
+depend:
+  # - boost
+  - libevent
+  - zlib
+  - openssl
+  - flex
+
+compile:
+  type: cmake
+  args:
+    - -DBUILD_TESTING=OFF
+    - -DBUILD_EXAMPLES=OFF
+    - -DBUILD_TUTORIALS=OFF
+    - -DWITH_C_GLIB=OFF
+    - -DWITH_JAVA=OFF
+    - -DWITH_PYTHON=OFF
+    - -DWITH_HASKELL=OFF

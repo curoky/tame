@@ -1,4 +1,3 @@
-name: cmake
 website: https://cmake.org/
 description:
 
@@ -6,15 +5,8 @@ version:
   - 3.15.0-rc4
   - 3.15.0-rc3
 
-archive: https://github.com/Kitware/CMake/releases/download/v{{version}}/cmake-{{version}}.tar.gz
 git: git@github.com:Kitware/CMake.git
+archive: https://github.com/Kitware/CMake/releases/download/v{{version}}/cmake-{{version}}.tar.gz
 
-depend:
-
-build:
+compile:
   type: configure
-  build_path: _build
-  step:
-    - "{{repo_path}}/configure --prefix={{install_path}}"
-    - "make -j {{thread_num}}"
-    - "make install"

@@ -1,4 +1,3 @@
-name: zsh
 website: http://www.zsh.org
 description:
 
@@ -7,21 +6,17 @@ version:
   - 5.7.1
 
 archive: https://jaist.dl.sourceforge.net/project/zsh/zsh/{{version}}/zsh-{{version}}.tar.xz
-git:
 
 depend:
   - ncurses
 
-build:
-  type: configure
-  build_path: .
-  step:
-    - '{{repo_path}}/configure --prefix={{install_path}} --with-tcsetpgrp --with-term-lib="ncurses"'
-    - "make -j {{thread_num}}"
-    - "make install"
 ### ERROR 1
 # checking if POSIX sigsuspend() works... no
 # checking if tcsetpgrp() actually works... error
 # configure: error: unexpected return status
 # CRITICAL	:builder: build error with 1
 # slove : add arg `--with-tcsetpgrp` to configure
+compile:
+  type: configure
+  build_path: .
+  args: --with-tcsetpgrp --with-term-lib="ncurses"

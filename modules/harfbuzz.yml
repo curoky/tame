@@ -1,4 +1,3 @@
-name: harfbuzz
 website: https://wiki.freedesktop.org/www/Software/HarfBuzz
 description:
 
@@ -6,14 +5,6 @@ version:
   - 2.5.1
 
 archive: https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-{{version}}.tar.xz
-git:
 
-depend:
-
-build:
+compile:
   type: configure
-  build_path: _build
-  step:
-    - "{{repo_path}}/configure --prefix={{install_path}}"
-    - "make -j {{thread_num}}"
-    - "make install"
