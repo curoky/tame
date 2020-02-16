@@ -20,8 +20,9 @@ class EnvGenerator(object):
 
     def __init__(self, root):
         self.root = root
-        self.install_path = os.path.join(self.root, "install")
-        self.env_file_path = os.path.join(self.root, "main.sh")
+        self.install_path = os.path.join(self.root, 'install')
+        self.env_file_path = os.path.join(self.root, 'main.sh')
+        self.cmake_file_path = os.path.join(self.root, 'FindCmakePrefixConfig.cmake')
 
     def collect_install_dirs(self):
         install_dirs = set()
@@ -31,7 +32,7 @@ class EnvGenerator(object):
                 install_dirs.add(full_path)
         return install_dirs
 
-    def gen(self, ):
+    def gen(self):
         install_dirs = self.collect_install_dirs()
         bin_name_list = set()
         lib_name_list = set()
@@ -68,15 +69,10 @@ for item in ${tools_lib_list[@]}; do
     export LD_LIBRARY_PATH="${CHAFER_INSTALL_DIR}/${item}/lib:${CHAFER_INSTALL_DIR}/${item}/lib64:$LD_LIBRARY_PATH"
 done
 export DYLD_LIBRARY_PATH=${LD_LIBRARY_PATH}
-
-all_path_list=(
 """)
+
+        with codecs.open(self.cmake_file_path, 'w', 'utf8') as f:
+            f.write('set(CmakePrefixConfig_FOUND TRUE)\n\n')
             for p in lib_name_list:
-                f.write("     '%s'\n" % p)
-            f.write("""
-)
-for item in ${all_path_list[@]}; do
-    export CMAKE_PREFIX_PATH="${CHAFER_INSTALL_DIR}/${item}:$CMAKE_PREFIX_PATH"
-done
-
-""")
+                f.write('list(APPEND CMAKE_PREFIX_PATH %s)\n' % os.path.join(self.install_path, p))
+            f.write('\n')

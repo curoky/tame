@@ -21,7 +21,7 @@ depend:
   - gdk-pixbuf # sudo apt install libgdk-pixbuf2.0-dev
   - xkbcommon
   - libxcb
-  - xcb-util-vm
+  - xcb-util-wm
   - xcb-imdkit
 
 build:
