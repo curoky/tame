@@ -24,10 +24,11 @@ class EnvGenerator(object):
         self.env_file_path = os.path.join(self.root, 'main.sh')
         self.cmake_file_path = os.path.join(self.root, 'FindCmakePrefixConfig.cmake')
 
-    def collect_install_dirs(self):
+    @staticmethod
+    def collect_install_dirs(self, path):
         install_dirs = set()
-        for p in os.listdir(self.install_path):
-            full_path = (os.path.join(self.install_path, p))
+        for p in os.listdir(path):
+            full_path = (os.path.join(path, p))
             if os.path.isdir(full_path):
                 install_dirs.add(full_path)
         return install_dirs

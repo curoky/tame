@@ -5,53 +5,44 @@
 # @desc        :
 
 import logging
-import sys
-if sys.version_info < (3, 4):
-    import Queue as queue
-else:
-    import queue
 
 
 class Depender(object):
 
-    def __init__(self, global_config):
-        self.global_config = global_config
-        self.logger = logging.getLogger("depender")
+    def __init__(self, modules):
+        self.modules = modules
+        self.logger = logging.getLogger('Depender')
 
-    def _prepare_deps(self, name, all_deps):
-        child_deps = self.global_config[name]["depend"] or set()
-        all_deps.update(child_deps)
-        for dep in child_deps:
-            self._prepare_deps(dep, all_deps)
-
-    def _sort_deps(self, deps):
-        ret = []
-        cp_repo_config = self.global_config.copy()
-
+    def get_deps(self, name) -> {str}:
+        # bfs search for all deps
+        all_deps = {name}
         q = queue.Queue()
-        for dep in deps:
-            child_deps = cp_repo_config[dep]["depend"] or set()
-            if len(child_deps) == 0:
-                q.put(dep)
-                ret.append(dep)
+        q.put(name)
+        while not q.empty():
+            node = q.get()
+            all_deps.add(node)
+            deps = self.modules[node].get('depend', [])
+            for d in deps:
+                q.put(d)
+        return all_deps
+
+    def sort_deps(self, deps) -> [str]:
+        # topological sorting for deps
+        sorted_deps = []
+        q = queue.Queue()
+        graph = {}
+        for d in deps:
+            graph[d] = set(self.modules[d].get('depend', []))
+            if len(graph[d]) == 0:
+                sorted_deps.append(d)
+                q.put(d)
 
         while not q.empty():
-            front = q.get()
-            for dep in deps:
-                child_deps = cp_repo_config[dep]["depend"] or set()
-                if front in child_deps:
-                    cp_repo_config[dep]["depend"].remove(front)
-                    if len(cp_repo_config[dep]["depend"]) == 0:
-                        q.put(dep)
-                        ret.append(dep)
-        return ret
-
-    def get_deps_list(self, name):
-        all_deps = set()
-        self._prepare_deps(name, all_deps)
-        sorted_deps = self._sort_deps(all_deps)
-        sorted_deps.append(name)
+            node = q.get()
+            for d in deps:
+                if node in graph[d]:
+                    graph[d].remove(node)
+                    if len(graph[d]) == 0:
+                        q.put(d)
+                        sorted_deps.append(d)
         return sorted_deps
-
-    def get_deps_map(self, name):
-        pass
