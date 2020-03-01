@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
+# @Author      : IceCory(icecory520@gmail.com)
+# @Copyright(C): GPL 3.0
+# @desc        :
+
+import argparse
+import codecs
+import json
+import logging
+import os
+import sys
+from multiprocessing import cpu_count
+from pathlib import Path
+
+from src.chafer import Chafer
+
+
+class ShutdownHandler(logging.Handler):
+
+    def emit(self, record):
+        logging.shutdown()
+        sys.exit(1)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('command', nargs='*', help='update/install')
+    # parser.add_argument("command[1]", help="repo name")
+    parser.add_argument("--root", default=os.path.expanduser("~/.cache/chafer"))
+    parser.add_argument("--deps", action="store_true")
+    parser.add_argument("--update", action="store_true")
+    parser.add_argument("--verbose", action="store_true")
+    parser.add_argument("--build_thread", default=cpu_count() - 1)
+    parser.add_argument("--include_paths", default=[])
+    return parser.parse_args()
+
+
+def set_log(verbose):
+    if verbose:
+        logging.basicConfig(format='%(levelname)s\t:%(name)s: %(message)s',
+                            level=logging.DEBUG)
+    else:
+        logging.basicConfig(format='%(levelname)s\t:%(name)s: %(message)s',
+                            level=logging.INFO)
+
+    logging.getLogger().addHandler(ShutdownHandler(level=50))
+
+
+def main():
+    chafer_config = os.environ.get("CHAFER_CONFIG",
+                                   os.path.join(Path.home(), ".chafer.conf"))
+    config = {}
+    if os.path.exists(chafer_config):
+        with codecs.open(chafer_config, "r", "utf8") as f:
+            config = json.load(f.read())
+
+    arg = parse_args()
+    set_log(arg.verbose)
+
+    cha = Chafer(root=arg.root,
+                 build_thread_num=arg.build_thread,
+                 proxies=config.get("proxies"),
+                 verbose=arg.verbose)
+    if arg.command[0] in ("u", "up", "update"):
+        cha.prepare(arg.command[1], arg.deps)
+        cha.download()
+    elif arg.command[0] in ('i', 'ins', 'install'):
+        if arg.update:
+            cha.prepare(arg.command[1], arg.deps)
+            cha.download()
+        cha.prepare(arg.command[1], True)
+        cha.build()
+    elif arg.command[0] == 'list':
+        cha.list()
+    elif arg.command[0] == 'info':
+        cha.show(arg.command[1])
+    elif arg.command[0] == 'gen':
+        cha.gen()
+    else:
+        pass
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
