@@ -1,0 +1,14 @@
+website: https://www.openssl.org
+description:
+
+version:
+  - 1.1.1c
+
+archive: https://www.openssl.org/source/openssl-{{version}}.tar.gz
+
+compile:
+  type: configure
+  index: ./config
+  args: --openssldir={{install_path}}/ssl
+# export OPENSSL_ROOT_DIR=xxx/openssl/1.0.2p/
+# export OPENSSL_INCLUDE_DIR=xxx/openssl/1.0.2p/include/

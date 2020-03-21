@@ -1,0 +1,18 @@
+website: https://github.com/google/snappy
+description: A fast compressor/decompressor
+
+version:
+  - 1.1.7
+
+git: git@github.com:google/snappy.git
+archive: https://github.com/google/snappy/archive/{{version}}.tar.gz
+
+depend:
+  - googletest
+
+compile:
+  type: cmake
+  args: -DSNAPPY_BUILD_TESTS=OFF
+# problem1: undefined reference to `testing::Message::Message()
+# solution1.1: https://github.com/google/snappy/pull/73
+# solution1.2: -DSNAPPY_BUILD_TESTS=OFF
