@@ -30,4 +30,4 @@ compile:
 # solution2: add `include_directories(${zlib_path})` to CmakeList.txt
 
 # problem3: zlib library not link
-# solution3: `list(APPEND FIZZ_LINK_LIBRARIES /home/icecory/Cpp3rdlib/lib/libz.a)`
+# solution3: `list(APPEND FIZZ_LINK_LIBRARIES xxx/lib/libz.a)`

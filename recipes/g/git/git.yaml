@@ -13,3 +13,4 @@ depend:
 
 compile:
   type: configure
+  build_path: .

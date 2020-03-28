@@ -1,8 +1,16 @@
-#!/usr/bin/env python
-# -*- coding:utf-8 -*-
-# @Author      : IceCory(icecory520@gmail.com)
-# @Copyright(C): GPL 3.0
-# @desc        :
+# Copyright 2021 curoky(cccuroky@gmail.com).
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 import codecs
 import logging
@@ -39,6 +47,8 @@ class Downloader(object):
     def download_one(self, pkg: Package):
         self.logger.info('download %s with url %s', pkg.dirname, pkg.mirror)
         f = self._get_cache(pkg.archive_path)
+        if self.proxies:
+            self.logger.info('use proxies: %s', str(self.proxies))
         if f is None:
             f = BytesIO()
             f.write(self.session.get(pkg.mirror, proxies=self.proxies).content)

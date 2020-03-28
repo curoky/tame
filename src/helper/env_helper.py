@@ -96,6 +96,14 @@ class EnvHelper(object):
             )
             f.write('export DYLD_LIBRARY_PATH=${LD_LIBRARY_PATH}\n')
 
+            f.write('perl_lib_list=(\n')
+            for d in lib_list:
+                dd = os.path.join(d, 'perl5')
+                if os.path.isdir(dd):
+                    f.write("   '%s'\n" % dd)
+            f.write(')\n\n')
+            f.write('for item in ${perl_lib_list[@]}; do export PERL5LIB=${item}:$PERL5LIB ;done\n')
+
     @staticmethod
     def generator_cmake_file(path, file):
         dirs = EnvHelper.collect_dirs(path)
