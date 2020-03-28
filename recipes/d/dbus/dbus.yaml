@@ -4,8 +4,8 @@ description: D-Bus is a message bus system, a simple way for applications to tal
 version:
   - 1.13.10
 
-archive: https://dbus.freedesktop.org/releases/dbus/dbus-{{version}}.tar.xz
 git: git@gitlab.freedesktop.org:dbus/dbus.git
+archive: https://dbus.freedesktop.org/releases/dbus/dbus-{{version}}.tar.xz
 
 depend:
   - glib

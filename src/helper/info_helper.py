@@ -27,8 +27,9 @@ class InfoHelper(object):
         print(json.dumps(config, sort_keys=True, indent=4, separators=(',', ':')))
 
     def list(self, path):
-        paths = os.listdir(self.install_prefix)
-        print("Already build repos:")
+        print('\tAlready build repos:')
+        paths = os.listdir(path)
+        paths.sort()
         for p in paths:
-            info = p.split("_")
-            print("\t%s:\t%s" % (info[0], info[1]))
+            info = p.rsplit('-', 1)
+            print('{:20}  {}'.format(info[0], info[1]))

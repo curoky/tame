@@ -16,6 +16,24 @@ from pathlib import Path
 from src.chafer import Chafer
 
 
+class CustomStreamHandler(logging.StreamHandler):
+
+    def __init__(self, stream=None):
+        return super().__init__(stream)
+
+    def emit(self, record):
+        try:
+            msg = self.format(record)
+            stream = self.stream
+            msg = msg.replace(os.path.realpath(os.path.expanduser('~')), '~')
+            # msg = msg.replace(os.path.expanduser('~'), "~")
+            stream.write(msg)
+            stream.write(self.terminator)
+            self.flush()
+        except Exception:
+            self.handleError(record)
+
+
 class ShutdownHandler(logging.Handler):
 
     def emit(self, record):
@@ -31,7 +49,7 @@ def parse_args():
     parser.add_argument("--deps", action="store_true")
     parser.add_argument("--update", action="store_true")
     parser.add_argument("--verbose", action="store_true")
-    parser.add_argument("--build_thread", default=cpu_count() - 1)
+    parser.add_argument("--thread", default=cpu_count() - 1)
     parser.add_argument("--include_paths", default=[])
     return parser.parse_args()
 
@@ -39,17 +57,19 @@ def parse_args():
 def set_log(verbose):
     if verbose:
         logging.basicConfig(format='%(levelname)s\t:%(name)s: %(message)s',
-                            level=logging.DEBUG)
+                            level=logging.DEBUG,
+                            handlers=[CustomStreamHandler()])
     else:
         logging.basicConfig(format='%(levelname)s\t:%(name)s: %(message)s',
-                            level=logging.INFO)
+                            level=logging.INFO,
+                            handlers=[CustomStreamHandler()])
 
     logging.getLogger().addHandler(ShutdownHandler(level=50))
 
 
 def main():
-    chafer_config = os.environ.get("CHAFER_CONFIG",
-                                   os.path.join(Path.home(), ".chafer.conf"))
+    chafer_config = os.environ.get(
+        "CHAFER_CONFIG", os.path.join(os.path.expanduser("~"), ".chafer.conf"))
     config = {}
     if os.path.exists(chafer_config):
         with codecs.open(chafer_config, "r", "utf8") as f:
@@ -59,7 +79,7 @@ def main():
     set_log(arg.verbose)
 
     cha = Chafer(root=arg.root,
-                 build_thread_num=arg.build_thread,
+                 thread_num=arg.thread,
                  proxies=config.get("proxies"),
                  verbose=arg.verbose)
     if arg.command[0] in ("u", "up", "update"):
@@ -77,6 +97,8 @@ def main():
         cha.show(arg.command[1])
     elif arg.command[0] == 'gen':
         cha.gen()
+    elif arg.command[0] == 'new':
+        cha.new(name=arg.command[1])
     else:
         pass
     return 0

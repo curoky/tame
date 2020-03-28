@@ -130,7 +130,6 @@ class Package(object):
     def debug(self):
         output = "name: %s\nenv: %s\nbuild_path: %s\nindex_path:%s\n" % (
             self.dirname, self.env, self.build_path, self.index_path)
-        output = output.replace(os.path.expanduser('~'), "~")
         return output
 
     @staticmethod

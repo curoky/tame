@@ -16,7 +16,7 @@ from .helper import ConfigHelper, EnvHelper, InfoHelper
 
 class Chafer(object):
 
-    def __init__(self, root, build_thread_num, proxies, verbose):
+    def __init__(self, root, thread_num, proxies, verbose):
         if not os.path.exists(root):
             os.makedirs(root)
 
@@ -30,15 +30,18 @@ class Chafer(object):
         os.makedirs(self.install_prefix, exist_ok=True)
 
         self.pkg_list = []
-        self.modules = ConfigHelper().get_modules()
+        self.config_helper = ConfigHelper()
+        self.modules = self.config_helper.get_modules()
+        self.info_helper = InfoHelper(self.modules)
+
         self.depender = Depender(self.modules)
         self.downloader = Downloader(proxies)
         self.builder = Builder()
-        self.info_helper = InfoHelper(self.modules)
 
+        self.proxies = proxies
         self.verbose = verbose
-        self.build_thread_num = build_thread_num
-        self.logger = logging.getLogger("main")
+        self.thread_num = thread_num
+        self.logger = logging.getLogger('main')
         self.debug()
 
     def prepare(self, name, with_deps, inc_list: [str] = None):
@@ -59,7 +62,7 @@ class Chafer(object):
                           verbose=self.verbose)
             inc_map[d] = pkg.install_path
             inc_list.append(pkg.install_path)
-            pkg.prepare_build_opt(inc_list, inc_map, self.build_thread_num)
+            pkg.prepare_build_opt(inc_list, inc_map, self.thread_num)
             self.pkg_list.append(pkg)
 
         self.logger.info('build target list: %s', [p.name for p in self.pkg_list])
@@ -83,8 +86,11 @@ class Chafer(object):
         self.info_helper.show(name)
 
     def debug(self):
-        self.logger.debug("with proxies: %s", self.proxies)
-        self.logger.debug("with thread_num: %d", self.thread_num)
-        self.logger.debug("with archive_prefix: %d", self.archive_prefix)
-        self.logger.debug("with extract_prefix: %d", self.extract_prefix)
-        self.logger.debug("with install_prefix: %d", self.install_prefix)
+        self.logger.debug('with proxies: %s', self.proxies)
+        self.logger.debug('with thread_num: %d', self.thread_num)
+        self.logger.debug('with archive_prefix: %d', self.archive_prefix)
+        self.logger.debug('with extract_prefix: %d', self.extract_prefix)
+        self.logger.debug('with install_prefix: %d', self.install_prefix)
+
+    def new(self, name):
+        self.config_helper.new(name)

@@ -69,8 +69,7 @@ class EnvHelper(object):
     @staticmethod
     def generator_bash_file(path, file):
         dirs = EnvHelper.collect_dirs(path)
-        logging.info("collect dirs(%d) in install path %s", len(dirs),
-                     path.replace(os.path.expanduser('~'), '~', 1))
+        logging.info('collect dirs(%d) in install path %s', len(dirs), path)
         bin_list = []
         lib_list = []
         for d in dirs:
