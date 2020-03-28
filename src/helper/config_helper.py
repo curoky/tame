@@ -28,10 +28,10 @@ class ConfigHelper(object):
                 self.logging.debug('read file %s', f)
                 with codecs.open(f, 'r', 'utf8') as target:
                     content = YAML().load(target.read())
-                    if "depend" in content and content["depend"] is None:
-                        content.pop("depend")
-                    modules[f[:-4]] = content
-        logging.info("load modules size %d", len(modules))
+                    if 'depend' in content and content['depend'] is None:
+                        content.pop('depend')
+                    modules[os.path.basename(f)[:-4]] = content
+        logging.info('load modules size %d', len(modules))
         return modules
 
     def new(self, name):

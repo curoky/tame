@@ -14,7 +14,6 @@ from .build import BuilderOptions
 from .helper import EnvHelper, MirrorHelper
 
 
-
 class Package(object):
 
     def __init__(self,
@@ -70,7 +69,7 @@ class Package(object):
 
         self.logger = logging.getLogger(self.name)
 
-    def prepare_build_opt(self, inc_list, inc_map, thread_num):
+    def prepare_build_opt(self, inc_list, inc_map):
         self.env = EnvHelper.get_env_from_path(inc_list)
         compile = self.module['compile']
         self.type = compile['type']
@@ -108,8 +107,10 @@ class Package(object):
                                                      install_path=self.install_path,
                                                      thread_num=self.thread_num)
         else:
-            self.logger.critical("compile type %s is not support!!!", self.type)
-        print(self.debug())
+            self.logger.critical('compile type %s is not support!!!', self.type)
+
+        self.debug()
+
         self.build_options = BuilderOptions(
             self.name,
             self.env,
@@ -128,9 +129,14 @@ class Package(object):
         )
 
     def debug(self):
-        output = "name: %s\nenv: %s\nbuild_path: %s\nindex_path:%s\n" % (
-            self.dirname, self.env, self.build_path, self.index_path)
-        return output
+        output = 'name: %s\nenv: %s\nbuild_path: %s\nindex_path: %s\nthread_num: %d\n' % (
+            self.dirname,
+            self.env,
+            self.build_path,
+            self.index_path,
+            self.thread_num,
+        )
+        return self.logger.info(output)
 
     @staticmethod
     def get_archive_suffix(url):

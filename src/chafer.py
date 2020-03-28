@@ -59,10 +59,11 @@ class Chafer(object):
                           self.extract_prefix,
                           self.install_prefix,
                           self.modules[d],
+                          thread_num=self.thread_num,
                           verbose=self.verbose)
             inc_map[d] = pkg.install_path
             inc_list.append(pkg.install_path)
-            pkg.prepare_build_opt(inc_list, inc_map, self.thread_num)
+            pkg.prepare_build_opt(inc_list, inc_map)
             self.pkg_list.append(pkg)
 
         self.logger.info('build target list: %s', [p.name for p in self.pkg_list])

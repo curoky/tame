@@ -77,7 +77,6 @@ def main():
 
     arg = parse_args()
     set_log(arg.verbose)
-
     cha = Chafer(root=arg.root,
                  thread_num=arg.thread,
                  proxies=config.get("proxies"),
