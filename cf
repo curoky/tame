@@ -64,21 +64,25 @@ def set_log(verbose):
 
 
 def main():
-    chafer_config = os.environ.get(
-        "CHAFER_CONFIG", os.path.join(os.path.expanduser("~"), ".chafer.conf"))
-    config = {}
-    if os.path.exists(chafer_config):
-        print (chafer_config)
-        with codecs.open(chafer_config, "r", "utf8") as f:
-            config = json.loads(f.read())
+    # chafer_config = os.environ.get(
+    #     "CHAFER_CONFIG", os.path.join(os.path.expanduser("~"), ".chafer.conf"))
+    # config = {}
+    # if os.path.exists(chafer_config):
+    #     print(chafer_config)
+    #     with codecs.open(chafer_config, "r", "utf8") as f:
+    #         config = json.loads(f.read())
+
+    proxies = os.environ.get('CHAFER_PROXY', None)
+    if proxies:
+        proxies = {
+            'http': proxies,
+            'https': proxies,
+        }
 
     arg = parse_args()
     set_log(arg.verbose)
-    cha = Chafer(root=arg.root,
-                 thread_num=arg.thread,
-                 proxies=config.get("proxies"),
-                 verbose=arg.verbose)
-    if arg.command[0] in ("u", "up", "update"):
+    cha = Chafer(root=arg.root, thread_num=arg.thread, proxies=proxies, verbose=arg.verbose)
+    if arg.command[0] in ('u', 'up', 'update'):
         cha.prepare(arg.command[1], arg.deps)
         cha.download()
     elif arg.command[0] in ('i', 'ins', 'install'):

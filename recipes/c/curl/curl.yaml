@@ -6,5 +6,8 @@ version:
 
 archive: http://curl.haxx.se/download/curl-{{version}}.tar.gz
 
+depend:
+  - openssl
+
 compile:
   type: configure

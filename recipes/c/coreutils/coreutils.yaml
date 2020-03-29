@@ -1,0 +1,10 @@
+website: http://www.gnu.org/software/coreutils/
+description:
+version:
+  - 8.31
+
+git:
+archive: https://ftp.gnu.org/gnu/coreutils/coreutils-{{version}}.tar.xz
+
+compile:
+  type: configure

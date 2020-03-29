@@ -1,0 +1,16 @@
+website: http://geoff.greer.fm/ag/
+description: A code-searching tool similar to ack, but faster.
+version:
+  - 2.2.0
+
+git: git@github.com:ggreer/the_silver_searcher.git
+archive: https://github.com/ggreer/the_silver_searcher/archive/2.2.0.tar.gz
+depend:
+  - pcre
+  - lzma
+  - zlib
+
+compile:
+  type: configure
+  build_path: .
+  autoreconf: True
