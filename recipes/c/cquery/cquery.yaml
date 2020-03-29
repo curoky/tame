@@ -1,0 +1,12 @@
+website: https://github.com/cquery-project/cquery
+description:
+version:
+  - master
+
+git: git@github.com:cquery-project/cquery.git
+archive: https://github.com/cquery-project/cquery/archive/{{version}}.zip
+depend:
+  - clang
+
+compile:
+  type: cmake
