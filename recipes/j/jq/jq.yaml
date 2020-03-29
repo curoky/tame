@@ -1,0 +1,12 @@
+website: http://stedolan.github.io/jq/
+description: Command-line JSON processor
+version:
+  - 1.6
+
+git:
+archive: https://github.com/stedolan/jq/releases/download/jq-{{version}}/jq-{{version}}.tar.gz
+depend:
+  - oniguruma
+
+compile:
+  type: configure
