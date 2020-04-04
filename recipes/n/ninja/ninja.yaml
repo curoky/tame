@@ -6,19 +6,13 @@ version:
   # archive-url: https://github.com/ninja-build/ninja/releases/download/{{version}}/ninja-linux.zip binary file
 archive: https://github.com/ninja-build/ninja/archive/v1.9.0.tar.gz
 
-# TODO:
-build:
-  type: configure
-  build_path: _build
-  step:
-    - "{{repo_path}}/configure.py --bootstrap"
-    - mkdir -p {{install_path}}/bin/
-    - cp {{build_path}}/ninja {{install_path}}/bin/ninja
+depend:
+  - re2c
 
 compile:
   type: custom
   build_path: .
   step:
-    - "{{repo_path}}/configure.py --bootstrap"
+    - ./configure.py --bootstrap
     - mkdir -p {{install_path}}/bin/
-    - cp {{build_path}}/ninja {{install_path}}/bin/ninja
+    - cp ninja {{install_path}}/bin/ninja
