@@ -1,0 +1,16 @@
+website:
+description: htop is an interactive text-mode process viewer for Unix systems. It aims to be a better 'top'.
+version:
+  - 3.0.0beta5
+
+git:
+archive: https://github.com/hishamhm/htop/archive/{{version}}.tar.gz
+
+depend:
+  - ncurses
+
+compile:
+  type: configure
+  args: --disable-unicode
+  build_path: .
+  autoreconf: True

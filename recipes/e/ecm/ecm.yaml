@@ -12,5 +12,5 @@ git: git://anongit.kde.org/extra-cmake-modules.git
 depend:
   # - opengl sudo apt install libglu1-mesa-dev freeglut3-dev mesa-common-dev
 
-build:
+compile:
   type: custom

@@ -2,6 +2,7 @@ website: https://github.com/facebook/folly
 description: An open-source C++ library developed and used at Facebook.
 
 version:
+  - 2019.09.02.00
   - 2019.07.29.00
   - 2019.06.17.00
   - 2019.06.10.00

@@ -32,3 +32,21 @@ compile:
   args:
     - -DBUILD_SHARED_LIBS=OFF
     - -Dthriftpy3=OFF
+# problem1
+# dyld: Library not loaded: /opt/local/lib/libcompiler_generators.dylib
+# Referenced from: ..../build/thrift/lib/thrift/../../../bin/thrift1
+# Reason: image not found
+# solution1
+#--- ThriftLibrary.cmake.orig	2018-06-03 15:53:33.000000000 -0500
+# +++ ThriftLibrary.cmake	2018-06-09 14:55:30.000000000 -0500
+# @@ -210,7 +210,7 @@
+#  endif()
+#  add_custom_command(
+#    OUTPUT ${${file_name}-${language}-HEADERS} ${${file_name}-${language}-SOURCES}
+# -  COMMAND ${THRIFT1}
+# +  COMMAND env DYLD_LIBRARY_PATH="${CMAKE_BINARY_DIR}/lib" "${CMAKE_BINARY_DIR}/bin/${THRIFT1}"
+#      --gen "${gen_language}:${options}${include_prefix_text}"
+#      -o ${output_path}
+#      --templates ${THRIFT_TEMPLATES}
+# reference1
+# https://github.com/facebook/fbthrift/issues/276
