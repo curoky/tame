@@ -1,0 +1,12 @@
+conan
+jinja2
+GitPython
+requests
+PySocks
+ruamel.yaml
+requests-ftp
+giturlparse
+pydantic
+pydantic_yaml
+cmakelang
+yapf
