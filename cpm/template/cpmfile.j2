@@ -1,0 +1,13 @@
+from cpm.recipes import add_cmake_recipe, GitOptions
+
+add_cmake_recipe(
+    name="{{ name }}",
+    git_options=GitOptions(
+        url="{{ url }}",
+    ),
+    include_dirs=[
+        ".",
+    ],
+    link_libraries=[
+    ],
+)
