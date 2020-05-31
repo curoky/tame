@@ -28,13 +28,16 @@ class CpmApp(object):
     def __init__(self):
         super().__init__()
 
-        self.prefix = '/home/curoky/repos/taro/third_party2'
+        self.prefix = os.path.join(os.getcwd(), 'cpm')
         self.recipes_manager = RecipesManeger()
 
-        with codecs.open(os.path.join(TEMPLATE_PATH, 'cmake.j2'), 'r', 'utf8') as f:
-            self.cmake_template = jinja2.Template(f.read())
+        with codecs.open(os.path.join(TEMPLATE_PATH, 'cmake.recipe.j2'), 'r', 'utf8') as f:
+            self.cmake_recipe_template = jinja2.Template(f.read())
+        with codecs.open(os.path.join(TEMPLATE_PATH, 'cmake.config.j2'), 'r', 'utf8') as f:
+            self.cmake_config_template = jinja2.Template(f.read())
         with codecs.open(os.path.join(TEMPLATE_PATH, 'cpmfile.j2'), 'r', 'utf8') as f:
             self.cpmfile_template = jinja2.Template(f.read())
+        self.cmake_config_path = os.path.join(self.prefix, 'cpm_config.cmake')
 
 
 class Cpm(object):
@@ -53,7 +56,15 @@ class Cpm(object):
         for r in result:
             print('"{}"'.format(r))
 
-    def install(self, name):
+    def _gen_cmake_config(self):
+        config = self.app.cmake_config_template.render(
+            cpm_source_dir=self.app.prefix,
+            cpm_binary_dir='${CMAKE_BINARY_DIR}/cpm',
+        )
+        with codecs.open(self.app.cmake_config_path, 'w', 'utf8') as f:
+            f.write(config)
+
+    def _install_one(self, name):
         recipe = self.app.recipes_manager.get_recipe(name)
 
         recipe.init_root_path(self.app.prefix)

@@ -9,7 +9,11 @@ list(APPEND CPM_INCLUDE_DIRS {{ dir }})
 {% else %}
 
 {% for opt in cmake_options %}
+{% if opt.mode == 'CACHE' %}
 set({{ opt.key }} {{ opt.value }} CACHE {{ opt.type }} "" FORCE)
+{% else %}
+set({{ opt.key }} {{ opt.value }})
+{% endif %}
 {% endfor %}
 
 add_subdirectory({{ cmake_path }} cpm/{{ name }})
@@ -17,6 +21,10 @@ add_subdirectory({{ cmake_path }} cpm/{{ name }})
 {% for opt in cmake_target_properties %}
 set_target_properties({{ name }} PROPERTIES {{ opt.key }} {{ opt.value }})
 {% endfor %}
+
+{% if cmake_extras %}
+{{ cmake_extras }}
+{% endif %}
 
 {% for dir in include_dirs %}
 list(APPEND CPM_INCLUDE_DIRS {{ dir }})
