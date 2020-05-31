@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d8dd862c..4d81c3d3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -9,7 +9,7 @@ endif()
+ 
+ # Determine if fmt is built as a subproject (using add_subdirectory)
+ # or if it is the master project.
+-set(MASTER_PROJECT OFF)
++set(MASTER_PROJECT ON)
+ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+   set(MASTER_PROJECT ON)
+   message(STATUS "CMake version: ${CMAKE_VERSION}")

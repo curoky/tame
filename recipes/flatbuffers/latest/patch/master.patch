@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1525115..76aa9f5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -537,7 +537,7 @@ if(FLATBUFFERS_BUILD_GRPCTEST)
+   endif()
+ endif()
+ 
+-include(CMake/Version.cmake)
++# include(CMake/Version.cmake)
+ 
+ if(FLATBUFFERS_INSTALL)
+   include(GNUInstallDirs)

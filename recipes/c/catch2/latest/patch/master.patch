@@ -1,0 +1,27 @@
+diff --git a/single_include/catch2/catch.hpp b/single_include/catch2/catch.hpp
+index f64422ae..d3b77e63 100644
+--- a/single_include/catch2/catch.hpp
++++ b/single_include/catch2/catch.hpp
+@@ -17403,7 +17403,7 @@ int main (int argc, char * const argv[]) {
+ // If CATCH_CONFIG_PREFIX_ALL is not defined then the CATCH_ prefix is not required
+ #else
+ 
+-#define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
++// #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+ #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+ 
+ #define REQUIRE_THROWS( ... ) INTERNAL_CATCH_THROWS( "REQUIRE_THROWS", Catch::ResultDisposition::Normal, __VA_ARGS__ )
+@@ -17414,7 +17414,7 @@ int main (int argc, char * const argv[]) {
+ #endif // CATCH_CONFIG_DISABLE_MATCHERS
+ #define REQUIRE_NOTHROW( ... ) INTERNAL_CATCH_NO_THROW( "REQUIRE_NOTHROW", Catch::ResultDisposition::Normal, __VA_ARGS__ )
+ 
+-#define CHECK( ... ) INTERNAL_CATCH_TEST( "CHECK", Catch::ResultDisposition::ContinueOnFailure, __VA_ARGS__ )
++#define REQUIRE( ... ) INTERNAL_CATCH_TEST( "CHECK", Catch::ResultDisposition::ContinueOnFailure, __VA_ARGS__ )
+ #define CHECK_FALSE( ... ) INTERNAL_CATCH_TEST( "CHECK_FALSE", Catch::ResultDisposition::ContinueOnFailure | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+ #define CHECKED_IF( ... ) INTERNAL_CATCH_IF( "CHECKED_IF", Catch::ResultDisposition::ContinueOnFailure, __VA_ARGS__ )
+ #define CHECKED_ELSE( ... ) INTERNAL_CATCH_ELSE( "CHECKED_ELSE", Catch::ResultDisposition::ContinueOnFailure, __VA_ARGS__ )
+@@ -17703,4 +17703,3 @@ using Catch::Detail::Approx;
+ // end catch_reenable_warnings.h
+ // end catch.hpp
+ #endif // TWOBLUECUBES_SINGLE_INCLUDE_CATCH_HPP_INCLUDED
+-

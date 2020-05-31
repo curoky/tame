@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 888b8e0..57e42b9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -564,11 +564,11 @@ if (INSTALL_HEADERS)
+     NAMESPACE ${PACKAGE_NAME}::
+     DESTINATION ${CONFIG_INSTALL_DIR}
+   )
+-  install (
+-    EXPORT ${EXPORT_NAME}
+-    FILE ${PACKAGE_NAME}-nonamespace-targets.cmake
+-    DESTINATION ${CONFIG_INSTALL_DIR}
+-  )
++  # install (
++  #   EXPORT ${EXPORT_NAME}
++  #   FILE ${PACKAGE_NAME}-nonamespace-targets.cmake
++  #   DESTINATION ${CONFIG_INSTALL_DIR}
++  # )
+   if (UNIX)
+     install (PROGRAMS src/gflags_completions.sh DESTINATION ${RUNTIME_INSTALL_DIR})
+   endif ()

@@ -1,0 +1,16 @@
+diff --git a/Release/CMakeLists.txt b/Release/CMakeLists.txt
+index 13a3f01..ee40040 100644
+--- a/Release/CMakeLists.txt
++++ b/Release/CMakeLists.txt
+@@ -262,9 +262,9 @@ endfunction()
+ add_subdirectory(src)
+ 
+ if(BUILD_TESTS)
+-  add_subdirectory(tests)
++  # add_subdirectory(tests)
+ endif()
+ 
+ if(BUILD_SAMPLES)
+-  add_subdirectory(samples)
++  # add_subdirectory(samples)
+ endif()
