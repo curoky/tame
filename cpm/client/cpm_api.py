@@ -17,6 +17,9 @@ import codecs
 import concurrent.futures
 import os
 import sys
+from sys import version
+
+import jinja2
 from conans.client.output import ConanOutput, colorama_initialize
 
 from cpm.recipes import RECIPES_PATH, RecipesManeger
@@ -71,7 +74,16 @@ class Cpm(object):
         recipe.download()
         recipe.apply_patch()
         recipe.copy_assets()
-        recipe.generate(self.app.cmake_template)
+        recipe.generate(self.app.cmake_recipe_template)
+
+    def install(self, name):
+        if name and name != "all":
+            self._install_one(name)
+        else:
+            names = self.app.recipes_manager.recipe_list.keys()
+            with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+                executor.map(self._install_one, names)
+        self._gen_cmake_config()
 
     def create(self, name, github_path):
         recipe_dir = os.path.join(RECIPES_PATH, name, 'latest')
