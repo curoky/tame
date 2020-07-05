@@ -36,6 +36,7 @@ class CmakeOption:
     key: str
     value: str = None
     type: str = 'BOOL'
+    mode: str = 'CACHE' # OR NORMAL
 
 
 @dataclass
@@ -63,6 +64,7 @@ class CmakeRecipe(object):
                  cmake_path='.',
                  cmake_options=[],
                  cmake_target_properties=[],
+                 cmake_extras='',
                  header_only=False):
         super().__init__()
         self.name = name
@@ -76,6 +78,7 @@ class CmakeRecipe(object):
         self.cmake_path = cmake_path
         self.cmake_options = cmake_options
         self.cmake_target_properties = cmake_target_properties
+        self.cmake_extras = cmake_extras
         self.header_only = header_only
         self.logger = logging.getLogger(name)
 
@@ -158,8 +161,9 @@ class CmakeRecipe(object):
             link_libraries=self.link_libraries,
             cmake_path=self.cmake_path,
             cmake_options=self.cmake_options,
-            header_only=self.header_only,
             cmake_target_properties=self.cmake_target_properties,
+            cmake_extras=self.cmake_extras,
+            header_only=self.header_only,
         )
         if render_content:
             with codecs.open(self.gen_path, 'w', 'utf8') as f:
@@ -194,6 +198,7 @@ def add_cmake_recipe(
     cmake_path='.',
     cmake_options=[],
     cmake_target_properties=[],
+    cmake_extras='',
     header_only=False,
 ):
     RecipesManeger.recipe_list[name] = CmakeRecipe(
@@ -206,5 +211,6 @@ def add_cmake_recipe(
         cmake_path=cmake_path,
         cmake_options=cmake_options,
         cmake_target_properties=cmake_target_properties,
+        cmake_extras=cmake_extras,
         header_only=header_only,
     )
