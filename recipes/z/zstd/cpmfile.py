@@ -12,13 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cpm.recipes import add_cmake_recipe, GitOption
+from cpm.recipes import CmakeOption, GitOption, add_cmake_recipe
 
 add_cmake_recipe(
     name='zstd',
     git_options=GitOption(url='https://github.com/facebook/zstd',),
     include_dirs=[
-        ".",
+        'lib',
     ],
-    link_libraries=[],
+    link_libraries=['zstd'],
+    cmake_path='build/cmake',
+    cmake_options=[
+        CmakeOption(key='BUILD_TESTING', value='OFF'),
+    ],
 )

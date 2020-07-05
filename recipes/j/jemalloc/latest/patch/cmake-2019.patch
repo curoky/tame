@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 49d5439..5e1c4ec 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25,7 +25,7 @@ include_directories(${PROJECT_BINARY_DIR}/include/jemalloc)
+ include(${PROJECT_SOURCE_DIR}/build-aux/UserCompileOptions.cmake)
+ 
+ # Enable smallocx by default too
+-set(JEMALLOC_EXPERIMENTAL_SMALLOCX_API 1)
++set(JEMALLOC_EXPERIMENTAL_SMALLOCX_API 0)
+ 
+ include(CheckCCompilerFlag)
+ include(CheckCXXCompilerFlag)
+@@ -368,7 +368,7 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
+     # want to conflict with any other 'check' targets
+     add_custom_target(${PROJECT_NAME}-check COMMAND ${CMAKE_CTEST_COMMAND})
+ 
+-    add_subdirectory(test)
++    # add_subdirectory(test)
+ endif()
+ 
+ add_subdirectory(src)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index a3cceb4..c028182 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -42,10 +42,6 @@ endif()
+ 
+ # These objects only have code in debug builds (due to macros)
+ if(CMAKE_BUILD_TYPE MATCHES Debug)
+-    list(APPEND JEMALLOC_CMAKE_SOURCES
+-        hash.c
+-        prng.c
+-        ticker.c)
+     # No symbols even in debug mode
+     # mb.c
+ 

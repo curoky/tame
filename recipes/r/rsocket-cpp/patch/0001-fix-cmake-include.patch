@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f69e907..ce150bb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -129,7 +129,7 @@ enable_testing()
+ include(ExternalProject)
+ include(CTest)
+ 
+-include(${CMAKE_SOURCE_DIR}/cmake/InstallFolly.cmake)
++include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/InstallFolly.cmake)
+ 
+ if(BUILD_TESTS)
+   # gmock

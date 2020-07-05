@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cpm.recipes import add_cmake_recipe, GitOption
+from cpm.recipes import add_cmake_recipe, GitOption,CmakeOption
 
 add_cmake_recipe(
     name='grpc',
@@ -20,5 +20,29 @@ add_cmake_recipe(
     include_dirs=[
         '.',
     ],
-    link_libraries=[],
+    link_libraries=['grpc','grpc++',],
+    cmake_options=[
+        CmakeOption(key='gRPC_BUILD_TESTS', value='OFF'),
+        CmakeOption(key='gRPC_BUILD_CSHARP_EXT', value='OFF'),
+        CmakeOption(key='gRPC_BUILD_GRPC_CSHARP_PLUGIN', value='OFF'),
+        CmakeOption(key='gRPC_BUILD_GRPC_NODE_PLUGIN', value='OFF'),
+        CmakeOption(key='gRPC_BUILD_GRPC_OBJECTIVE_C_PLUGIN', value='OFF'),
+        CmakeOption(key='gRPC_BUILD_GRPC_PHP_PLUGIN', value='OFF'),
+        CmakeOption(key='gRPC_BUILD_GRPC_PYTHON_PLUGIN', value='OFF'),
+        CmakeOption(key='gRPC_BUILD_GRPC_RUBY_PLUGIN', value='OFF'),
+
+        CmakeOption(key='gRPC_ZLIB_PROVIDER', value='package', type='STRING'),
+        CmakeOption(key='gRPC_SSL_PROVIDER', value='package', type='STRING'),
+        CmakeOption(key='gRPC_CARES_PROVIDER', value='package', type='STRING'),
+
+        CmakeOption(key='gRPC_PROTOBUF_PROVIDER', value='none', type='STRING'),
+        CmakeOption(key='gRPC_ABSL_PROVIDER', value='none', type='STRING'),
+        CmakeOption(key='gRPC_BENCHMARK_PROVIDER', value='none', type='STRING'),
+        CmakeOption(key='gRPC_GFLAGS_PROVIDER', value='none', type='STRING'),
+
+        CmakeOption(key='_gRPC_PROTOBUF_PROTOC_EXECUTABLE', value='$<TARGET_FILE:protoc>', mode='NORMAL'),
+        CmakeOption(key='_gRPC_PROTOBUF_LIBRARIES', value='libprotobuf libprotoc', mode='NORMAL'),
+        CmakeOption(key='_gRPC_PROTOBUF_PROTOC', value='protoc', mode='NORMAL'),
+        CmakeOption(key='_gRPC_PROTOBUF_WELLKNOWN_INCLUDE_DIR', value='${CPM_SOURCE_DIR}/protobuf/protobuf/src', mode='NORMAL'),
+    ],
 )

@@ -1,0 +1,13 @@
+diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
+index d20f03de1..413144522 100644
+--- a/CMake/folly-deps.cmake
++++ b/CMake/folly-deps.cmake
+@@ -229,7 +230,7 @@ endif()
+ target_link_libraries(folly_deps INTERFACE fmt::fmt)
+
+ list(REMOVE_DUPLICATES FOLLY_INCLUDE_DIRECTORIES)
+-target_include_directories(folly_deps INTERFACE ${FOLLY_INCLUDE_DIRECTORIES})
++# target_include_directories(folly_deps INTERFACE ${FOLLY_INCLUDE_DIRECTORIES})
+ target_link_libraries(folly_deps INTERFACE
+   ${FOLLY_LINK_LIBRARIES}
+   ${FOLLY_SHINY_DEPENDENCIES}

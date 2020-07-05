@@ -26,7 +26,7 @@ add_cmake_recipe(
         CmakeOption(key='FMT_TEST', value='OFF'),
     ],
     patches=[
-        "master.patch",
+        '0001-enable-master-project.patch',
     ],
     link_libraries=[
         'fmt',

@@ -12,13 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cpm.recipes import add_cmake_recipe, GitOption
+from cpm.recipes import CmakeOption, GitOption, add_cmake_recipe
 
 add_cmake_recipe(
     name='thrift',
     git_options=GitOption(url='https://github.com/apache/thrift',),
     include_dirs=[
-        ".",
+        'lib/cpp/src',
+        '@.',
     ],
-    link_libraries=[],
+    link_libraries=['thrift'],
+    cmake_options=[
+        CmakeOption(key='BUILD_TESTING', value='OFF'),
+        CmakeOption(key='BUILD_TUTORIALS', value='OFF'),
+        CmakeOption(key='WITH_AS3', value='OFF'),
+        CmakeOption(key='WITH_JAVA', value='OFF'),
+        CmakeOption(key='WITH_JAVASCRIPT', value='OFF'),
+        CmakeOption(key='WITH_NODEJS', value='OFF'),
+        CmakeOption(key='BUILD_NODEJS', value='OFF'),
+        CmakeOption(key='WITH_HASKELL', value='OFF'),
+        CmakeOption(key='WITH_PYTHON', value='OFF'),
+        CmakeOption(key='BUILD_PYTHON', value='OFF'),
+        CmakeOption(key='WITH_C_GLIB', value='OFF'),
+    ],
 )

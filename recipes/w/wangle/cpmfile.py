@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cpm.recipes import add_cmake_recipe, GitOption
+from cpm.recipes import CmakeOption, GitOption, add_cmake_recipe
 
 add_cmake_recipe(
     name='wangle',
@@ -20,5 +20,29 @@ add_cmake_recipe(
     include_dirs=[
         '.',
     ],
-    link_libraries=[],
+    link_libraries=['wangle'],
+    cmake_path='wangle',
+    cmake_options=[
+        CmakeOption(key='BUILD_TESTS', value='OFF'),
+    ],
+    cmake_extras='''
+target_include_directories(wangle
+  PUBLIC
+    $<BUILD_INTERFACE:${CPM_SOURCE_DIR}/wangle/wangle>
+  PRIVATE
+    ${CPM_SOURCE_DIR}/double-conversion/double-conversion
+    ${CPM_SOURCE_DIR}/fizz/fizz
+    ${CPM_SOURCE_DIR}/folly/folly
+    ${CPM_BINARY_DIR}/folly
+    ${CPM_BINARY_DIR}/glog
+    ${CPM_SOURCE_DIR}/glog/glog/src
+    ${CPM_BINARY_DIR}/gflags/include
+)
+target_link_libraries(wangle
+  PUBLIC
+    fizz
+    gflags_nothreads_static
+)
+add_library(wangle::wangle ALIAS wangle)
+''',
 )

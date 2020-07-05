@@ -1,0 +1,84 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cfdc52f..bfb6f2c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -74,16 +74,16 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
+ find_package(GFLAGS REQUIRED)
+
+-execute_process(
+-    COMMAND bash -c "grep \"namespace [_A-Za-z0-9]\\+ {\" ${GFLAGS_INCLUDE_PATH}/gflags/gflags_declare.h | head -1 | awk '{print $2}' | tr -d '\n'"
+-    OUTPUT_VARIABLE GFLAGS_NS
+-)
+-if(${GFLAGS_NS} STREQUAL "GFLAGS_NAMESPACE")
+-    execute_process(
+-        COMMAND bash -c "grep \"#define GFLAGS_NAMESPACE [_A-Za-z0-9]\\+\" ${GFLAGS_INCLUDE_PATH}/gflags/gflags_declare.h | head -1 | awk '{print $3}' | tr -d '\n'"
+-        OUTPUT_VARIABLE GFLAGS_NS
+-    )
+-endif()
++# execute_process(
++#     COMMAND bash -c "grep \"namespace [_A-Za-z0-9]\\+ {\" ${GFLAGS_INCLUDE_PATH}/gflags/gflags_declare.h | head -1 | awk '{print $2}' | tr -d '\n'"
++#     OUTPUT_VARIABLE GFLAGS_NS
++# )
++# if(${GFLAGS_NS} STREQUAL "GFLAGS_NAMESPACE")
++#     execute_process(
++#         COMMAND bash -c "grep \"#define GFLAGS_NAMESPACE [_A-Za-z0-9]\\+\" ${GFLAGS_INCLUDE_PATH}/gflags/gflags_declare.h | head -1 | awk '{print $3}' | tr -d '\n'"
++#         OUTPUT_VARIABLE GFLAGS_NS
++#     )
++# endif()
+
+ include_directories(
+     ${PROJECT_SOURCE_DIR}/src
+@@ -199,15 +199,14 @@ set(DYNAMIC_LIB
+     ${CMAKE_THREAD_LIBS_INIT}
+     ${THRIFT_LIB}
+     ${THRIFTNB_LIB}
+-    ${OPENSSL_CRYPTO_LIBRARY}
+-    dl
+-    z)
++    )
+
+ if(WITH_MESALINK)
+     list(APPEND DYNAMIC_LIB ${MESALINK_LIB})
+ else()
+     list(APPEND DYNAMIC_LIB ${OPENSSL_SSL_LIBRARY})
+ endif()
++list(APPEND DYNAMIC_LIB ${OPENSSL_CRYPTO_LIBRARY} dl z)
+
+ set(BRPC_PRIVATE_LIBS "-lgflags -lprotobuf -lleveldb -lprotoc -lssl -lcrypto -ldl -lz")
+
+@@ -434,7 +433,7 @@ if(BUILD_UNIT_TESTS)
+     enable_testing()
+     add_subdirectory(test)
+ endif()
+-add_subdirectory(tools)
++# add_subdirectory(tools)
+
+ file(COPY ${CMAKE_CURRENT_BINARY_DIR}/brpc/
+         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/output/include/brpc/
+diff --git a/cmake/CompileProto.cmake b/cmake/CompileProto.cmake
+index d4e2440..e6fa51d 100644
+--- a/cmake/CompileProto.cmake
++++ b/cmake/CompileProto.cmake
+@@ -26,7 +26,7 @@ function(compile_proto OUT_HDRS OUT_SRCS DESTDIR HDR_OUTPUT_DIR PROTO_DIR PROTO_
+       OUTPUT ${HDR} ${SRC}
+       COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} ${PROTOC_FLAGS} -I${PROTO_DIR} --cpp_out=${DESTDIR} ${PROTO_DIR}/${P}
+       COMMAND ${CMAKE_COMMAND} -E copy ${HDR} ${HDR_OUTPUT_DIR}/${HDR_RELATIVE}
+-      DEPENDS ${PROTO_DIR}/${P}
++      DEPENDS ${PROTO_DIR}/${P} protoc
+     )
+   endforeach()
+   set(${OUT_HDRS} ${HDRS} PARENT_SCOPE)
+diff --git a/src/brpc/policy/thrift_protocol.cpp b/src/brpc/policy/thrift_protocol.cpp
+index eae081a..815e71c 100755
+--- a/src/brpc/policy/thrift_protocol.cpp
++++ b/src/brpc/policy/thrift_protocol.cpp
+@@ -45,7 +45,7 @@
+  #if defined(_THRIFT_STDCXX_H_)
+  # define THRIFT_STDCXX apache::thrift::stdcxx
+  #else
+- # define THRIFT_STDCXX boost
++ # define THRIFT_STDCXX std
+  # include <boost/make_shared.hpp>
+  #endif
+ #endif

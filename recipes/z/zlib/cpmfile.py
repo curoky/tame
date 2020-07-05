@@ -20,5 +20,5 @@ add_cmake_recipe(
     include_dirs=[
         '.',
     ],
-    link_libraries=[],
+    link_libraries=['zlib::zlib'],
 )

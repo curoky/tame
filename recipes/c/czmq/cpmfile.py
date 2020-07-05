@@ -12,13 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cpm.recipes import add_cmake_recipe, GitOption
+from cpm.recipes import CmakeOption, GitOption, add_cmake_recipe
 
 add_cmake_recipe(
     name='czmq',
     git_options=GitOption(url='https://github.com/zeromq/czmq',),
     include_dirs=[
-        ".",
+        'include',
     ],
-    link_libraries=[],
+    link_libraries=['czmq::czmq'],
+    cmake_options=[
+        CmakeOption(key='ENABLE_DRAFTS', value='OFF'),
+    ],
 )

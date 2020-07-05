@@ -12,13 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cpm.recipes import add_cmake_recipe, GitOption
+from cpm.recipes import CmakeOption, GitOption, add_cmake_recipe
 
 add_cmake_recipe(
     name='glog',
     git_options=GitOption(url='https://github.com/google/glog',),
     include_dirs=[
-        ".",
+        'src',
+        '@.',
     ],
-    link_libraries=[],
+    link_libraries=['glog'],
+    cmake_options=[
+        CmakeOption(key='WITH_GFLAGS', value='OFF'),
+        CmakeOption(key='HAVE_LIB_GFLAGS', value='ON'),
+        CmakeOption(key='WITH_UNWIND', value='OFF'),
+        CmakeOption(key='UNWIND_LIBRARY', value='OFF'),
+        CmakeOption(key='HAVE_PWD_H', value='OFF'),
+        CmakeOption(key='BUILD_TESTING', value='OFF'),
+    ],
+    cmake_extras='''
+target_include_directories(glog
+  PRIVATE
+    $<BUILD_INTERFACE:${CPM_BINARY_DIR}/gflags/include>
+)
+    ''',
 )

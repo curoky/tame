@@ -12,13 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cpm.recipes import add_cmake_recipe, GitOption
+from cpm.recipes import CmakeOption, GitOption, add_cmake_recipe
 
 add_cmake_recipe(
-    name="rsocket",
-    git_options=GitOption(url="https://github.com/rsocket/rsocket-cpp",),
+    name='rsocket',
+    git_options=GitOption(url='https://github.com/rsocket/rsocket-cpp',),
+    patches=['0001-fix-cmake-include.patch'],
     include_dirs=[
         '.',
     ],
-    link_libraries=[],
+    link_libraries=['yarpl', 'ReactiveSocket'],
+    cmake_options=[
+        CmakeOption(key='BUILD_BENCHMARKS', value='OFF'),
+        CmakeOption(key='BUILD_EXAMPLES', value='OFF'),
+        CmakeOption(key='BUILD_TESTS', value='OFF'),
+        CmakeOption(key='RSOCKET_INSTALL_DEPS', value='OFF'),
+        CmakeOption(key='FOLLY_VERSION', value='ON'),
+    ],
+    cmake_extras='add_library(rsocket::ReactiveSocket ALIAS ReactiveSocket)',
 )

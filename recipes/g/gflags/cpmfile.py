@@ -21,7 +21,7 @@ add_cmake_recipe(
         '@include',
     ],
     patches=[
-        'master.patch',
+        '0001-ignore-install.patch',
     ],
     cmake_options=[
         CmakeOption(key='INSTALL_HEADERS', value='ON'),

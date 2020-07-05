@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cpm.recipes import add_cmake_recipe, GitOption
+from cpm.recipes import CmakeOption, GitOption, add_cmake_recipe
 
 add_cmake_recipe(
     name='fizz',
@@ -20,5 +20,29 @@ add_cmake_recipe(
     include_dirs=[
         '.',
     ],
-    link_libraries=[],
+    link_libraries=['fizz'],
+    cmake_path='fizz',
+    cmake_options=[
+        CmakeOption(key='BUILD_TESTS', value='OFF'),
+        CmakeOption(key='BUILD_EXAMPLES', value='OFF'),
+    ],
+    cmake_extras='''
+target_include_directories(fizz
+  PUBLIC
+    $<BUILD_INTERFACE:${CPM_SOURCE_DIR}/fizz/fizz>
+  PRIVATE
+    ${CPM_SOURCE_DIR}/folly/folly
+    ${CPM_BINARY_DIR}/folly
+    ${CPM_BINARY_DIR}/glog
+    ${CPM_SOURCE_DIR}/glog/glog/src
+    ${CPM_BINARY_DIR}/gflags/include
+    ${CPM_SOURCE_DIR}/double-conversion/double-conversion
+)
+target_link_libraries(fizz
+  PRIVATE
+    folly
+)
+
+add_library(fizz::fizz ALIAS fizz)
+''',
 )

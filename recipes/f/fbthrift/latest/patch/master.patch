@@ -1,0 +1,104 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9ae4691db..a934f9315 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -110,7 +110,7 @@ if(lib_only OR build_all)
+   find_package(fmt CONFIG REQUIRED)
+   find_package(wangle CONFIG REQUIRED)
+   find_package(Zlib REQUIRED)
+-  find_package(Zstd REQUIRED)
++  # find_package(Zstd REQUIRED)
+   # https://cmake.org/cmake/help/v3.9/module/FindThreads.html
+   set(THREADS_PREFER_PTHREAD_FLAG ON)
+   find_package(Threads)
+diff --git a/thrift/lib/cpp/CMakeLists.txt b/thrift/lib/cpp/CMakeLists.txt
+index 9f5cd272c..97cd6f9fc 100644
+--- a/thrift/lib/cpp/CMakeLists.txt
++++ b/thrift/lib/cpp/CMakeLists.txt
+@@ -129,11 +129,11 @@ target_link_libraries(
+ )
+
+ add_library(
+-  thrift
++  thrift2
+   INTERFACE
+ )
+ target_link_libraries(
+-  thrift
++  thrift2
+   INTERFACE
+     async
+     concurrency
+@@ -164,7 +164,7 @@ install(
+     protocol
+     transport
+     async
+-    thrift
++    thrift2
+   EXPORT fbthrift-exports
+   DESTINATION ${LIB_INSTALL_DIR}
+ )
+diff --git a/thrift/lib/cpp/concurrency/ThreadManager-inl.h b/thrift/lib/cpp/concurrency/ThreadManager-inl.h
+index 5ffefa7c1..62d283bc1 100644
+--- a/thrift/lib/cpp/concurrency/ThreadManager-inl.h
++++ b/thrift/lib/cpp/concurrency/ThreadManager-inl.h
+@@ -533,14 +533,14 @@ void ThreadManager::ImplT<SemType>::reportTaskStats(
+   // nanoseconds. We explicitly do not perform any unit conversions to avoid
+   // unneccessary costs and leave it to consumers of this data to know what
+   // effective clock resolution is.
+-  FOLLY_SDT(
+-      thrift,
+-      thread_manager_task_stats,
+-      namePrefix_.c_str(),
+-      task.getContext() ? task.getContext()->getRootId() : 0,
+-      queueBegin.time_since_epoch().count(),
+-      waitTime.count(),
+-      runTime.count());
++  // FOLLY_SDT(
++  //     thrift,
++  //     thread_manager_task_stats,
++  //     namePrefix_.c_str(),
++  //     task.getContext() ? task.getContext()->getRootId() : 0,
++  //     queueBegin.time_since_epoch().count(),
++  //     waitTime.count(),
++  //     runTime.count());
+
+   if (enableTaskStats_) {
+     folly::MSLGuard g(statsLock_);
+diff --git a/thrift/lib/cpp2/CMakeLists.txt b/thrift/lib/cpp2/CMakeLists.txt
+index 90efa356f..065c177b4 100644
+--- a/thrift/lib/cpp2/CMakeLists.txt
++++ b/thrift/lib/cpp2/CMakeLists.txt
+@@ -78,7 +78,7 @@ add_library(
+ target_link_libraries(
+   thriftprotocol
+   PUBLIC
+-    thrift
++    thrift2
+     Folly::folly
+     wangle::wangle
+ )
+@@ -157,7 +157,7 @@ add_dependencies(
+ target_link_libraries(
+   thriftcpp2
+   PUBLIC
+-    thrift
++    thrift2
+     thriftmetadata
+     thriftfrozen2
+     thriftprotocol
+diff --git a/thrift/lib/cpp2/transport/rocket/framing/Util.h b/thrift/lib/cpp2/transport/rocket/framing/Util.h
+index 49c3a3d72..8de6681ec 100644
+--- a/thrift/lib/cpp2/transport/rocket/framing/Util.h
++++ b/thrift/lib/cpp2/transport/rocket/framing/Util.h
+@@ -51,7 +51,9 @@ inline size_t readFrameOrMetadataSize(folly::io::Cursor& cursor) {
+ inline std::pair<uint8_t, Flags> readFrameTypeAndFlagsUnsafe(
+     folly::io::Cursor& cursor) {
+   const uint16_t frameTypeAndFlags = cursor.readBE<uint16_t>();
+-  const uint8_t frameType = frameTypeAndFlags >> Flags::frameTypeOffset();
++  // const uint8_t frameType = frameTypeAndFlags >> Flags::frameTypeOffset();
++  uint8_t frameType = frameTypeAndFlags >> 10;
++
+   const Flags flags(frameTypeAndFlags & Flags::mask());
+   return {frameType, flags};
+ }

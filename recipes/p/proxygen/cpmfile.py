@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cpm.recipes import add_cmake_recipe, GitOption
+from cpm.recipes import CmakeOption, GitOption, add_cmake_recipe
 
 add_cmake_recipe(
     name='proxygen',
@@ -20,5 +20,8 @@ add_cmake_recipe(
     include_dirs=[
         '.',
     ],
-    link_libraries=[],
+    link_libraries=['proxygen'],
+    cmake_options=[
+        CmakeOption(key='BUILD_TESTS', value='OFF'),
+    ],
 )

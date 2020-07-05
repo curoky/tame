@@ -1,0 +1,87 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9ae4691db..3c1582766 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -53,6 +53,18 @@ set(CMAKE_MODULE_PATH
+ # Find required dependencies
+ find_package(OpenSSL REQUIRED)
+ 
++find_package(
++  Boost 1.73.0 REQUIRED #1.54.0 or greater
++  COMPONENTS
++    context
++    filesystem
++    program_options
++    regex
++    system
++    thread
++)
++include_directories(${Boost_INCLUDE_DIRS})
++
+ # Provide an option to control the -std argument for the C++ compiler.
+ # We don't use CMAKE_CXX_STANDARD since it requires at least CMake 3.8
+ # to support C++17.
+diff --git a/thrift/lib/cpp/CMakeLists.txt b/thrift/lib/cpp/CMakeLists.txt
+index a0dbefbf2..5bcc00727 100644
+--- a/thrift/lib/cpp/CMakeLists.txt
++++ b/thrift/lib/cpp/CMakeLists.txt
+@@ -122,11 +122,11 @@ target_link_libraries(
+ )
+ 
+ add_library(
+-  thrift
++  thrift2
+   INTERFACE
+ )
+ target_link_libraries(
+-  thrift
++  thrift2
+   INTERFACE
+     async
+     concurrency
+@@ -157,7 +157,7 @@ install(
+     protocol
+     transport
+     async
+-    thrift
++    thrift2
+   EXPORT fbthrift-exports
+   DESTINATION ${LIB_INSTALL_DIR}
+ )
+diff --git a/thrift/lib/cpp2/CMakeLists.txt b/thrift/lib/cpp2/CMakeLists.txt
+index 62d7729f3..fa5096c18 100644
+--- a/thrift/lib/cpp2/CMakeLists.txt
++++ b/thrift/lib/cpp2/CMakeLists.txt
+@@ -78,7 +78,7 @@ add_library(
+ target_link_libraries(
+   thriftprotocol
+   PUBLIC
+-    thrift
++    thrift2
+     Folly::folly
+     wangle::wangle
+ )
+@@ -153,7 +153,7 @@ add_dependencies(
+ target_link_libraries(
+   thriftcpp2
+   PUBLIC
+-    thrift
++    thrift2
+     thriftmetadata
+     thriftfrozen2
+     thriftprotocol
+diff --git a/thrift/lib/cpp2/transport/rocket/framing/Util.h b/thrift/lib/cpp2/transport/rocket/framing/Util.h
+index 49c3a3d72..8de6681ec 100644
+--- a/thrift/lib/cpp2/transport/rocket/framing/Util.h
++++ b/thrift/lib/cpp2/transport/rocket/framing/Util.h
+@@ -51,7 +51,9 @@ inline size_t readFrameOrMetadataSize(folly::io::Cursor& cursor) {
+ inline std::pair<uint8_t, Flags> readFrameTypeAndFlagsUnsafe(
+     folly::io::Cursor& cursor) {
+   const uint16_t frameTypeAndFlags = cursor.readBE<uint16_t>();
+-  const uint8_t frameType = frameTypeAndFlags >> Flags::frameTypeOffset();
++  // const uint8_t frameType = frameTypeAndFlags >> Flags::frameTypeOffset();
++  uint8_t frameType = frameTypeAndFlags >> 10;
++
+   const Flags flags(frameTypeAndFlags & Flags::mask());
+   return {frameType, flags};
+ }

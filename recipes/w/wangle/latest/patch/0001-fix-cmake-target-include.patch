@@ -1,0 +1,15 @@
+diff --git a/wangle/CMakeLists.txt b/wangle/CMakeLists.txt
+index a0445e60..0a773aaf 100644
+--- a/wangle/CMakeLists.txt
++++ b/wangle/CMakeLists.txt
+@@ -141,8 +141,9 @@ endif()
+ target_include_directories(
+   wangle
+   PUBLIC
+-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/..>
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+     $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>
++  PRIVATE
+     ${FIZZ_INCLUDE_DIR}
+     ${FOLLY_INCLUDE_DIR}
+     ${Boost_INCLUDE_DIR}
