@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cpm.recipes import add_cmake_recipe, GitOption,CmakeOption
+from cpm.recipes import CmakeOption, GitOption, add_cmake_recipe
 
 add_cmake_recipe(
     name='brpc',
@@ -28,16 +28,23 @@ add_cmake_recipe(
         # CmakeOption(key='WITH_GLOG', value='ON'),
         # CmakeOption(key='GLOG_INCLUDE_PATH', value='${CPM_BINARY_DIR}/glog/glog', mode='NORMAL'),
         # CmakeOption(key='GLOG_LIB', value='glog', mode='NORMAL'),
-
         CmakeOption(key='PROTOC_LIB', value='libprotoc', mode='NORMAL'),
         CmakeOption(key='PROTOBUF_PROTOC_EXECUTABLE', value='$<TARGET_FILE:protoc>', mode='NORMAL'),
-        CmakeOption(key='PROTOBUF_INCLUDE_DIR', value='${CPM_SOURCE_DIR}/protobuf/protobuf/src', mode='NORMAL'),
-        CmakeOption(key='PROTOBUF_INCLUDE_DIRS', value='${CPM_SOURCE_DIR}/protobuf/protobuf/src', mode='NORMAL'),
+        CmakeOption(key='PROTOBUF_INCLUDE_DIR',
+                    value='${CPM_SOURCE_DIR}/protobuf/protobuf/src',
+                    mode='NORMAL'),
+        CmakeOption(key='PROTOBUF_INCLUDE_DIRS',
+                    value='${CPM_SOURCE_DIR}/protobuf/protobuf/src',
+                    mode='NORMAL'),
         CmakeOption(key='PROTOBUF_LIBRARIES', value='libprotobuf', mode='NORMAL'),
-        CmakeOption(key='LEVELDB_INCLUDE_PATH', value='${CPM_SOURCE_DIR}/leveldb/leveldb/include', mode='NORMAL'),
+        CmakeOption(key='LEVELDB_INCLUDE_PATH',
+                    value='${CPM_SOURCE_DIR}/leveldb/leveldb/include',
+                    mode='NORMAL'),
         CmakeOption(key='LEVELDB_LIB', value='leveldb', mode='NORMAL'),
         CmakeOption(key='GFLAGS_NS', value='gflags', mode='NORMAL'),
-        CmakeOption(key='GFLAGS_INCLUDE_PATH', value='${CPM_BINARY_DIR}/gflags/include', mode='NORMAL'),
+        CmakeOption(key='GFLAGS_INCLUDE_PATH',
+                    value='${CPM_BINARY_DIR}/gflags/include',
+                    mode='NORMAL'),
         CmakeOption(key='GFLAGS_LIBRARY', value='gflags', mode='NORMAL'),
     ],
     cmake_extras='''
@@ -49,5 +56,4 @@ target_include_directories(SOURCES_LIB
     ${CPM_SOURCE_DIR}/glog/glog/src
     ${CPM_BINARY_DIR}/gflags/include
 )
-'''
-)
+''')

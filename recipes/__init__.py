@@ -36,7 +36,7 @@ class CmakeOption:
     key: str
     value: str = None
     type: str = 'BOOL'
-    mode: str = 'CACHE' # OR NORMAL
+    mode: str = 'CACHE'  # OR NORMAL
 
 
 @dataclass

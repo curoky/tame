@@ -38,6 +38,7 @@ USER_CTRL_BREAK = 4  # 4: Ctrl+Break
 ERROR_SIGTERM = 5  # 5: SIGTERM
 ERROR_INVALID_CONFIGURATION = 6  # 6: Invalid configuration (done)
 
+
 class Command(object):
     """A single command of the conan application, with all the first level commands. Manages the
     parsing of parameters and delegates functionality in collaborators. It can also show the
