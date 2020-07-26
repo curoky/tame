@@ -15,8 +15,8 @@
 from cpm.recipes import GitOption, add_cmake_recipe
 
 add_cmake_recipe(
-    name="jemalloc",
-    git_options=GitOption(url="https://github.com/leezu/jemalloc", branch='cmake-2019'),
+    name='jemalloc',
+    git_options=GitOption(url='https://github.com/leezu/jemalloc', branch='add/cmake-2019'),
     include_dirs=[
         'include',
     ],
