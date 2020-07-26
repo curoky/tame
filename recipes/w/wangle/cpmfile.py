@@ -37,6 +37,8 @@ target_include_directories(wangle
     ${CPM_BINARY_DIR}/glog
     ${CPM_SOURCE_DIR}/glog/glog/src
     ${CPM_BINARY_DIR}/gflags/include
+    ${CPM_SOURCE_DIR}/libevent/libevent/include
+    ${CPM_BINARY_DIR}/libevent/include
 )
 target_link_libraries(wangle
   PUBLIC

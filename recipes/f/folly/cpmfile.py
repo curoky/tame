@@ -38,12 +38,15 @@ target_include_directories(folly_deps
     $<BUILD_INTERFACE:${CPM_BINARY_DIR}/gflags/include>
     $<BUILD_INTERFACE:${CPM_BINARY_DIR}/glog/glog>
     $<BUILD_INTERFACE:${CPM_SOURCE_DIR}/double-conversion/double-conversion>
+    $<BUILD_INTERFACE:${CPM_SOURCE_DIR}/libevent/libevent/include>
+    $<BUILD_INTERFACE:${CPM_BINARY_DIR}/libevent/include>
     $<BUILD_INTERFACE:/usr/include/libiberty>
 )
 target_link_libraries(folly_deps
   INTERFACE
     glog
     double-conversion
+    event_core_shared
 )
 target_link_libraries(logging_example
     glog double-conversion gflags_nothreads_static

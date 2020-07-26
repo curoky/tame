@@ -20,11 +20,19 @@ add_cmake_recipe(
     include_dirs=[
         'include',
     ],
-    link_libraries=['libevent::libevent'],
+    # link_libraries=['libevent::libevent'],
     cmake_options=[
         CmakeOption(key='EVENT__DISABLE_TESTS', value='ON'),
         CmakeOption(key='EVENT__DISABLE_BENCHMARK', value='ON'),
         CmakeOption(key='EVENT__DISABLE_SAMPLES', value='ON'),
         CmakeOption(key='EVENT__ENABLE_VERBOSE_DEBUG', value='ON'),
     ],
+    cmake_extras='''
+#TODO: export event_static/event_shared
+#export(TARGETS "event_shared"
+#    NAMESPACE ""
+#    FILE "${PROJECT_BINARY_DIR}/LibeventTargets-${TYPE}.cmake"
+#    APPEND
+#)
+'''
 )
