@@ -18,7 +18,7 @@ add_cmake_recipe(
     name='oneDPL',
     git_options=GitOption(url='https://github.com/oneapi-src/oneDPL',),
     include_dirs=[
-        ".",
+        'include',
     ],
-    link_libraries=[],
+    header_only=True,
 )

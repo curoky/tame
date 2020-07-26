@@ -18,7 +18,7 @@ add_cmake_recipe(
     name='pybind11',
     git_options=GitOption(url='https://github.com/pybind/pybind11',),
     include_dirs=[
-        ".",
+        'include',
     ],
-    link_libraries=[],
+    header_only=True,
 )

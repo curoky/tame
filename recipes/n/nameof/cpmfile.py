@@ -18,7 +18,7 @@ add_cmake_recipe(
     name='nameof',
     git_options=GitOption(url='https://github.com/Neargye/nameof',),
     include_dirs=[
-        ".",
+        'include',
     ],
-    link_libraries=[],
+    header_only=True,
 )
