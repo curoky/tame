@@ -1,8 +1,8 @@
-from cpm.recipes import add_cmake_recipe, GitOptions
+from cpm.recipes import add_cmake_recipe, GitOption
 
 add_cmake_recipe(
     name="{{ name }}",
-    git_options=GitOptions(
+    git_options=GitOption(
         url="{{ url }}",
     ),
     include_dirs=[
