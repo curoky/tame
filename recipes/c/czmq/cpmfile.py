@@ -20,8 +20,24 @@ add_cmake_recipe(
     include_dirs=[
         'include',
     ],
-    link_libraries=['czmq::czmq'],
+    # link_libraries=['czmq::czmq'],
     cmake_options=[
         CmakeOption(key='ENABLE_DRAFTS', value='OFF'),
+        CmakeOption(key='LIBZMQ_FOUND', value='ON'),
+        CmakeOption(key='LIBZMQ_LIBRARIES', value='libzmq-static', mode='NORMAL'),
     ],
+    cmake_extras='''
+target_include_directories(czmq_objects
+  PRIVATE
+    $<BUILD_INTERFACE:${CPM_SOURCE_DIR}/libzmq/libzmq/include>
+)
+target_include_directories(zmakecert
+  PRIVATE
+    $<BUILD_INTERFACE:${CPM_SOURCE_DIR}/libzmq/libzmq/include>
+)
+target_include_directories(czmq_selftest
+  PRIVATE
+    $<BUILD_INTERFACE:${CPM_SOURCE_DIR}/libzmq/libzmq/include>
+)
+''',
 )
