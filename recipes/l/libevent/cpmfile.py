@@ -34,5 +34,4 @@ add_cmake_recipe(
 #    FILE "${PROJECT_BINARY_DIR}/LibeventTargets-${TYPE}.cmake"
 #    APPEND
 #)
-'''
-)
+''')
