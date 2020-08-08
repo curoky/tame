@@ -26,6 +26,11 @@ add_cmake_recipe(
         CmakeOption(key='BUILD_TESTING', value='OFF'),
         CmakeOption(key='BUILD_CURL_EXE', value='OFF'),
         CmakeOption(key='ENABLE_MANUAL', value='OFF'),
+
+        # FIXME: remove this
+        # why add this? hostip.h:140:24: error: unknown type name 'GETNAMEINFO_QUAL_ARG1'
+        # who define HAVE_GETNAMEINFO? cares define it
+        CmakeOption(key='HAVE_GETNAMEINFO', value='OFF'),
     ],
     link_libraries=['libcurl'],
 )
