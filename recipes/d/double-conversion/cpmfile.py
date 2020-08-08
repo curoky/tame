@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cpm.recipes import add_cmake_recipe, GitOption
+from cpm.recipes import CmakeOption, GitOption, add_cmake_recipe
 
 add_cmake_recipe(
     name='double-conversion',
@@ -21,4 +21,7 @@ add_cmake_recipe(
         '.',
     ],
     link_libraries=['double-conversion'],
+    cmake_options=[
+        CmakeOption(key='BUILD_TESTING', value='OFF'),
+    ],
 )
