@@ -57,7 +57,7 @@ class Cpm(object):
     def list(self):
         result = sorted(self.app.recipes_manager.recipe_list.keys())
         for r in result:
-            print('"{}"'.format(r))
+            print('include(cpm/{}/cpm.cmake)'.format(r))
 
     def _gen_cmake_config(self):
         config = self.app.cmake_config_template.render(
