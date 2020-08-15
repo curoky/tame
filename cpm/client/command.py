@@ -50,6 +50,17 @@ class Command(object):
         self._cpm = cpm_api
         self._out = cpm_api.out
 
+    def freeze(self, *args):
+        """
+        Output installed packages in requirements format.
+        """
+        parser = argparse.ArgumentParser(description=self.create.__doc__,
+                                         prog='cpm freeze',
+                                         formatter_class=SmartFormatter)
+        parser.add_argument('path', type=str, help='dump path')
+        args = parser.parse_args(*args)
+        self._cpm.freeze(path=args.path)
+
     def install(self, *args):
         """
         Installs the requirements specified in a recipe (cpmfile.py).
@@ -58,10 +69,15 @@ class Command(object):
         parser = argparse.ArgumentParser(description=self.install.__doc__,
                                          prog='cpm install',
                                          formatter_class=SmartFormatter)
-        parser.add_argument("name", help='name of package')
+        parser.add_argument('name', help='name of package')
+        parser.add_argument(
+            '-r',
+            '--requirement',
+            help='Install from the given requirements file. This option can be used multiple times.'
+        )
         args = parser.parse_args(*args)
 
-        self._cpm.install(name=args.name)
+        self._cpm.install(name=args.name, requirement=args.requirement)
 
     def list(self, *args):
         """

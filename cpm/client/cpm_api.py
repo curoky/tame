@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import jinja2
 import codecs
 import concurrent.futures
 import os
@@ -67,22 +66,40 @@ class Cpm(object):
         with codecs.open(self.app.cmake_config_path, 'w', 'utf8') as f:
             f.write(config)
 
-    def _install_one(self, name):
-        recipe = self.app.recipes_manager.get_recipe(name)
-
-        recipe.init_root_path(self.app.prefix)
+    def _install_one(self, recipe):
+        recipe.set_root_path(self.app.prefix)
         recipe.download()
         recipe.apply_patch()
         recipe.copy_assets()
         recipe.generate(self.app.cmake_recipe_template)
 
-    def install(self, name):
-        if name and name != "all":
+    def install(self, name, requirement):
+        if name and name != 'all':
             self._install_one(name)
+        elif requirement:
+            if not os.path.isfile(requirement):
+                self.out.error('file {} not exits'.format(requirement))
+                return
+            names = set(self.app.recipes_manager.recipe_list.keys())
+            recipes = []
+            lines = []
+            with codecs.open(requirement, 'r', 'utf8') as f:
+                lines = f.readlines()
+            self.out.info('install package {}'.format(len(lines)))
+            for line in lines:
+                name, commit = line.split('==')
+                commit = commit.strip()
+                if name in names:
+                    recipe = self.app.recipes_manager.get_recipe(name)
+                    recipe.git_options.commit = commit
+                    recipes.append(recipe)
+            with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+                executor.map(self._install_one, recipes)
         else:
             names = self.app.recipes_manager.recipe_list.keys()
+            recipes = [self.app.recipes_manager.get_recipe(name) for name in names]
             with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
-                executor.map(self._install_one, names)
+                executor.map(self._install_one, recipes)
         self._gen_cmake_config()
 
     def create(self, name, github_path):
@@ -92,3 +109,17 @@ class Cpm(object):
         with codecs.open(recipe_path, 'w', 'utf8') as f:
             url = 'https://github.com/{}'.format(github_path)
             f.write(self.app.cpmfile_template.render(name=name, url=url))
+
+    def freeze(self, path):
+        names = self.app.recipes_manager.recipe_list.keys()
+        versions = []
+        for name in names:
+            recipe = self.app.recipes_manager.get_recipe(name)
+            recipe.set_root_path(self.app.prefix)
+            commit = recipe.freeze()
+            if commit:
+                versions.append([name, commit])
+                self.out.info('freeze {} -> {}'.format(name, commit))
+        with codecs.open(path, 'w', 'utf8') as f:
+            for v in versions:
+                f.write('{name}=={commit}\n'.format(name=v[0], commit=v[1]))

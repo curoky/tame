@@ -82,7 +82,7 @@ class CmakeRecipe(object):
         self.header_only = header_only
         self.logger = logging.getLogger(name)
 
-    def init_root_path(self, root):
+    def set_root_path(self, root):
         root = os.path.join(root, self.name)
 
         # root
@@ -102,6 +102,15 @@ class CmakeRecipe(object):
             else:
                 self.include_dirs.append(os.path.normpath(os.path.join(self.source_path, inc)))
 
+    def freeze(self):
+        try:
+            if os.path.exists(self.source_path):
+                repo = git.Repo(self.source_path)
+                return repo.head.object.hexsha
+        except Exception as e:
+            logging.error(str(e))
+        return None
+
     def download(self, clear=False):
         self.logger.info('fetch to %s', self.source_path)
         if clear:
@@ -109,17 +118,21 @@ class CmakeRecipe(object):
         try:
             if os.path.exists(self.source_path):
                 repo = git.Repo(self.source_path)
+                repo.git.reset('--hard')
+                repo.git.clean('-df')
+                repo.git.checkout('.')
+            elif self.git_options.commit:
+                # https://stackoverflow.com/questions/3489173/how-to-clone-git-repository-with-specific-revision-changeset/3489576#3489576
+                repo = git.Repo.init(self.source_path)
+                repo.create_remote('origin', url=self.git_options.url)
             else:
                 repo = git.Repo.clone_from(self.git_options.url,
                                            branch=self.git_options.branch,
                                            to_path=self.source_path,
                                            depth=1)
-            repo.git.reset('--hard')
-            repo.git.clean('-df')
-            repo.git.checkout('.')
 
             if self.git_options.commit:
-                repo.git.fetch('origin', '{}'.format(self.git_options.commit))
+                repo.git.fetch('origin', '{}'.format(self.git_options.commit), '--depth=1')
                 repo.git.reset('--hard', '{}'.format(self.git_options.commit))
 
             logging.info('downlaod to %s, %s', self.source_path, repo.active_branch)
