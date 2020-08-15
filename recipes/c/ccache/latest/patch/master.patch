@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d5e0247..3296e3a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -38,8 +38,7 @@ endif()
+ # Third party
+ #
+ option(ZSTD_FROM_INTERNET "Download and use libzstd from the Internet" OFF)
+-find_package(zstd 1.1.2 REQUIRED)
+-
++find_package(zstd CONFIG REQUIRED)
+ #
+ # Special flags
+ #
+diff --git a/cmake/GenerateConfigurationFile.cmake b/cmake/GenerateConfigurationFile.cmake
+index 0ef5507..14f8b79 100644
+--- a/cmake/GenerateConfigurationFile.cmake
++++ b/cmake/GenerateConfigurationFile.cmake
+@@ -66,5 +66,5 @@ endif()
+ # alias
+ set(MTR_ENABLED "${ENABLE_TRACING}")
+ 
+-configure_file(${CMAKE_SOURCE_DIR}/cmake/config.h.in
++configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
+                ${CMAKE_BINARY_DIR}/config.h @ONLY)
+diff --git a/cmake/GenerateVersionFile.cmake b/cmake/GenerateVersionFile.cmake
+index 83b9558..939eee9 100644
+--- a/cmake/GenerateVersionFile.cmake
++++ b/cmake/GenerateVersionFile.cmake
+@@ -52,7 +52,7 @@ if(VERSION_ERROR)
+   message(STATUS "Not within git repository")
+ else()
+   configure_file(
+-    ${CMAKE_SOURCE_DIR}/cmake/version.cpp.in
+-    ${CMAKE_SOURCE_DIR}/src/version.cpp
++    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/version.cpp.in
++    ${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp
+     @ONLY)
+ endif()

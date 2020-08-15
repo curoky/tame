@@ -21,4 +21,7 @@ add_cmake_recipe(
         '.',
     ],
     link_libraries=[],
+    patches=[
+        'master.patch',
+    ],
 )

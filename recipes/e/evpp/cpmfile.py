@@ -26,18 +26,18 @@ add_cmake_recipe(
         CmakeOption(key='HTTPS', value='OFF'),
     ],
     cmake_extras='''
-target_include_directories(evmc PRIVATE ${TARO_INCLUDE_DIRS})
-target_include_directories(evmc_static PRIVATE ${TARO_INCLUDE_DIRS})
+target_include_directories(evmc PRIVATE ${TARO_INCLUDE_DIRS} ${CPM_BINARY_DIR}/gflags/include)
+target_include_directories(evmc_static PRIVATE ${TARO_INCLUDE_DIRS} ${CPM_BINARY_DIR}/gflags/include)
 
-target_include_directories(evnsq PRIVATE ${TARO_INCLUDE_DIRS})
-target_include_directories(evnsq_static PRIVATE ${TARO_INCLUDE_DIRS})
+target_include_directories(evnsq PRIVATE ${TARO_INCLUDE_DIRS} ${CPM_BINARY_DIR}/gflags/include)
+target_include_directories(evnsq_static PRIVATE ${TARO_INCLUDE_DIRS} ${CPM_BINARY_DIR}/gflags/include)
 
-target_include_directories(evpp PRIVATE ${TARO_INCLUDE_DIRS})
-target_include_directories(evpp_static PRIVATE ${TARO_INCLUDE_DIRS})
-target_include_directories(evpp_boost PRIVATE ${TARO_INCLUDE_DIRS})
-target_include_directories(evpp_boost_static PRIVATE ${TARO_INCLUDE_DIRS})
-target_include_directories(evpp_concurrentqueue PRIVATE ${TARO_INCLUDE_DIRS})
-target_include_directories(evpp_concurrentqueue_static PRIVATE ${TARO_INCLUDE_DIRS})
-target_include_directories(evpp_lite_static PRIVATE ${TARO_INCLUDE_DIRS})
+target_include_directories(evpp PRIVATE ${TARO_INCLUDE_DIRS} ${CPM_BINARY_DIR}/gflags/include)
+target_include_directories(evpp_static PRIVATE ${TARO_INCLUDE_DIRS} ${CPM_BINARY_DIR}/gflags/include)
+target_include_directories(evpp_boost PRIVATE ${TARO_INCLUDE_DIRS} ${CPM_BINARY_DIR}/gflags/include /opt/vcpkg/installed/x64-linux/include)
+target_include_directories(evpp_boost_static PRIVATE ${TARO_INCLUDE_DIRS} ${CPM_BINARY_DIR}/gflags/include /opt/vcpkg/installed/x64-linux/include)
+target_include_directories(evpp_concurrentqueue PRIVATE ${TARO_INCLUDE_DIRS} ${CPM_BINARY_DIR}/gflags/include ${CPM_SOURCE_DIR}/concurrentqueue)
+target_include_directories(evpp_concurrentqueue_static PRIVATE ${TARO_INCLUDE_DIRS} ${CPM_BINARY_DIR}/gflags/include ${CPM_SOURCE_DIR}/concurrentqueue)
+target_include_directories(evpp_lite_static PRIVATE ${TARO_INCLUDE_DIRS} ${CPM_BINARY_DIR}/gflags/include)
 ''',
 )

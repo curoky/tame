@@ -15,8 +15,9 @@
 from cpm.recipes import GitOption, add_cmake_recipe
 
 add_cmake_recipe(
-    name="lz4",
-    git_options=GitOption(url="https://github.com/lz4/lz4",),
+    name='lz4',
+    git_options=GitOption(url='https://github.com/lz4/lz4',),
+    cmake_path='contrib/cmake_unofficial',
     include_dirs=[
         '.',
     ],

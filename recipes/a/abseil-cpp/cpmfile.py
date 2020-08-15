@@ -21,6 +21,8 @@ add_cmake_recipe(
         '.',
     ],
     link_libraries=[
-        "absl_int128",
+        'absl_int128',
+        'absl_debugging_internal',
+        'absl_demangle_internal',
     ],
 )
