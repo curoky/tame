@@ -82,6 +82,8 @@ load("@com_curoky_rules_pkg//:recipes/fizz/config.bzl", fizz_config = "config")
 load("@com_curoky_rules_pkg//:recipes/brotli/config.bzl", brotli_config = "config")
 load("@com_curoky_rules_pkg//:recipes/rules_go/config.bzl", rules_go_config = "config")
 load("@com_curoky_rules_pkg//:recipes/smhasher/config.bzl", smhasher_config = "config")
+load("@com_curoky_rules_pkg//:recipes/xxhash/config.bzl", xxhash_config = "config")
+load("@com_curoky_rules_pkg//:recipes/hiredis/config.bzl", hiredis_config = "config")
 load("@com_curoky_rules_pkg//:recipes/liburing/config.bzl", liburing_config = "config")
 load("@com_curoky_rules_pkg//:recipes/cjson/config.bzl", cjson_config = "config")
 
@@ -126,6 +128,7 @@ configs = {
     "cpr": cpr_config,
     "nameof": nameof_config,
     "cpp-httplib": cpp_httplib_config,
+    "wolic": wolic_config,
     "taskflow": taskflow_config,
     "rules_foreign_cc": rules_foreign_cc_config,
     "gflags": gflags_config,
@@ -156,6 +159,8 @@ configs = {
     "brotli": brotli_config,
     "rules_go": rules_go_config,
     "smhasher": smhasher_config,
+    "xxhash": xxhash_config,
+    "hiredis": hiredis_config,
     "liburing": liburing_config,
     "cjson": cjson_config,
 }
