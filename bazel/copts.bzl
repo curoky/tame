@@ -49,6 +49,7 @@ IGNORED_COPTS = [
     "-Wno-unused-function",
     "-Wno-unused-value",
     "-Wno-unused-variable",
+    "-Wno-unused-local-typedefs",
     "-Wno-maybe-uninitialized",
 ]
 

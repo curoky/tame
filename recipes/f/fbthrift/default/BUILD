@@ -137,6 +137,7 @@ cc_library(
             "thrift/lib/cpp*/**/test/**",
             "thrift/lib/cpp*/**/tests/**",
             "thrift/lib/cpp*/**/testutil/**",
+            "thrift/lib/cpp*/**/*Test.cpp",
             "thrift/conformance/**/*Test.cpp",
             "thrift/conformance/cpp2/ConformanceServer.cpp",
             "thrift/conformance/cpp2/ConformanceHandler.h",
