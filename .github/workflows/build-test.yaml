@@ -1,0 +1,38 @@
+name: Build Test
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu21.04]
+        recipe:
+          - '@com_github_facebook_fbthrift//:fbthrift'
+          - '@com_github_apache_thrift//:thrift'
+
+    container:
+      image: curoky/compile:${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libdwarf-dev
+
+      - name: bazel build
+        run: |
+          cd test
+          bazel build ${{ matrix.recipe }}
+
+      - uses: mxschmitt/action-tmate@v3
+        if: ${{ failure() }}
+        timeout-minutes: 30
