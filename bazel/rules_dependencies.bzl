@@ -58,7 +58,7 @@ def _get_versioned_config(config, version = ""):
     versioned_config.pop("used_version")
     return versioned_config
 
-def pkg_rules_dependencies(ignored_pkgs_list):
+def pkg_rules_dependencies(ignored_pkgs_list = []):
     """register all rules"""
     for key in configs:
         config = _get_versioned_config(configs[key])
