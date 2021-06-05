@@ -99,6 +99,12 @@ def fbthrift_library(
 
     # -gen mstch_cpp2:include_prefix=thrift/lib/thrift -o $(@D)/thrift/lib/thrift $<
     genrule_cmd = " ".join([
+        # because thriftc can't static link with libunwind, so it depends on libunwind.so.
+        # although bazel use rpath to tell thriftc where to find libunwind.so, the rpath
+        # in local host is not the same as the rpath in remote host.
+        # so we need to use LD_LIBRARY_PATH to tell thriftc where to find libunwind.so.
+        # TODO(curoky): replace follow path with $(location xxx).
+        "export LD_LIBRARY_PATH=bazel-out/host/bin/external/libunwind/libunwind/lib;",
         "mkdir -p $(@D)/%s;" % (out_prefix),
         # "SRCS=($(SRCS));",
         "SRCS=($(location %s)); " % (") $(location ".join(srcs)),
@@ -117,7 +123,7 @@ def fbthrift_library(
         srcs = srcs + incs,
         outs = output_files,
         output_to_bindir = False,
-        tools = [thriftc_path],
+        tools = [thriftc_path, "@libunwind"],
         cmd = genrule_cmd,
         message = "Generating fbthrift files for %s:" % (name),
         visibility = visibility,
