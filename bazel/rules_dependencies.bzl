@@ -84,10 +84,12 @@ def pkg_rules_dependencies(ignored_pkgs_list = []):
         if repo_type == "git_repository":
             git_repository(**config)
         elif repo_type == "new_local_repository":
-            config.pop("branch")
+            if "branch" in config:
+                config.pop("branch")
             native.new_local_repository(**config)
         elif repo_type == "new_git_repository":
             new_git_repository(**config)
         elif repo_type == "http_archive":
-            config.pop("branch")
+            if "branch" in config:
+                config.pop("branch")
             http_archive(**config)
