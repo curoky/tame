@@ -1,8 +1,12 @@
 name: Pre Commit
 
 on:
-  pull_request:
   push:
+    tags:
+      - v*
+    branches:
+      - master
+  pull_request:
 
 jobs:
   pre-commit:
