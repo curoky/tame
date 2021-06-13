@@ -22,7 +22,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y gcc-10 g++10
+          sudo apt-get install -y gcc-10 g++10 gperf
 
       - name: bazel build
         run: |
