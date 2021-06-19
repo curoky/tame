@@ -29,6 +29,7 @@ configure_make(
     configure_options = [
         "--enable-install-libiberty",
     ],
+    includes = ["libiberty"],
     lib_source = "@libiberty//:all",
     out_static_libs = ["libiberty.a"],
     visibility = ["//visibility:public"],
