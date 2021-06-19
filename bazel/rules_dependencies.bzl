@@ -63,6 +63,9 @@ def pkg_rules_dependencies(ignored_pkgs_list = []):
     for key in configs:
         config = _get_versioned_config(configs[key])
 
+        if "disable" in config and config["disable"] == True:
+            continue
+
         config["name"] = _get_namespace(config, key)
 
         if config["name"] in ignored_pkgs_list:
