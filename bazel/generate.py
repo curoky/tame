@@ -21,7 +21,7 @@ def main():
     configs_path = recipes_path / 'configs.bzl'
     lines = []
     map_lines = []
-    for f in recipes_path.glob('**/config.bzl'):
+    for f in sorted(recipes_path.glob('**/config.bzl')):
         sub_path = f.parent.relative_to(recipes_path)
         name = sub_path.name.replace('-', '_')
         print(f.parent.relative_to(recipes_path))
