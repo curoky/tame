@@ -22,15 +22,15 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y gcc-10 g++10 gperf
+          sudo apt-get install -y gcc-11 g++11 gperf
 
       - name: bazel build
         run: |
           cd test
           bazel build ${{ matrix.recipe }}
         env:
-          CC: gcc-10
-          CXX: g++-10
+          CC: gcc-11
+          CXX: g++-11
 
       - uses: mxschmitt/action-tmate@v3
         if: ${{ failure() }}
