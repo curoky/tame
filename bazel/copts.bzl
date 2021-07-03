@@ -22,6 +22,7 @@ BASE_COPTS = [
     "-fno-omit-frame-pointer",
     "-gno-statement-frontiers",
     "-gno-variable-location-views",
+    "-Wall",
     # "-rdynamic",
 
     # for lldb
