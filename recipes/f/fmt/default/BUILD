@@ -13,11 +13,16 @@
 # limitations under the License.
 
 load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@com_curoky_tame//bazel:copts.bzl", "DEFAULT_CPP_COPTS")
 
 cc_library(
     name = "fmt",
+    srcs = glob(
+        ["src/*.cc"],
+        exclude = ["src/fmt.cc"],
+    ),
     hdrs = glob(["include/fmt/*.h"]),
-    defines = ["FMT_HEADER_ONLY"],
+    copts = DEFAULT_CPP_COPTS,
     includes = ["include"],
     visibility = ["//visibility:public"],
 )
