@@ -22,7 +22,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y gcc-11 g++-11 gperf build-essential
+          sudo apt-get install -y gcc-11 g++-11 gperf build-essential lld
 
       - name: bazel build
         run: |
