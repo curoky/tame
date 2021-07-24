@@ -37,9 +37,7 @@ jobs:
         run: bazel sync
 
       - name: bazel build
-        run: |
-          cd test
-          bazel build ${{ matrix.recipe }}
+        run: bazel build ${{ matrix.recipe }}
         env:
           CC: gcc-11
           CXX: g++-11

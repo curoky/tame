@@ -12,4 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-workspace(name = "com_curoky_rules_pkg")
+workspace(name = "com_curoky_tame")
+
+load("@com_curoky_tame//:rules_dependencies.bzl", "pkg_rules_dependencies")
+
+pkg_rules_dependencies()
+
+load("@com_curoky_tame//:register_toolchains.bzl", "pkg_register_toolchains")
+
+pkg_register_toolchains()
