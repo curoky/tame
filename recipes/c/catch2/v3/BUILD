@@ -14,7 +14,7 @@
 load("@rules_cc//cc:defs.bzl", "cc_library")
 load("@com_curoky_tame//bazel:copts.bzl", "DEFAULT_CPP_COPTS")
 
-defines = ["CATCH_CONFIG_CPP17_STRING_VIEW"]
+# defines = ["CATCH_CONFIG_CPP17_STRING_VIEW"]
 
 cc_library(
     name = "catch2",
@@ -24,17 +24,16 @@ cc_library(
     ),
     hdrs = glob(["src/catch2/**/*.hpp"]),
     copts = DEFAULT_CPP_COPTS,
-    defines = defines,
     includes = ["src/"],
     linkstatic = True,
     visibility = ["//visibility:public"],
+    deps = ["@com_curoky_tame//recipes/c/catch2/v3/extra:config"],
 )
 
 cc_library(
     name = "catch2_main",
     srcs = ["src/catch2/internal/catch_main.cpp"],
     copts = DEFAULT_CPP_COPTS,
-    defines = defines,
     includes = ["src/"],
     linkstatic = True,
     visibility = ["//visibility:public"],
