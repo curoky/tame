@@ -1,117 +1,18 @@
 diff --git a/m4/internal/repository.bzl b/m4/internal/repository.bzl
-index c668d8c..ec8e792 100644
+index c668d8c..89bff4c 100644
 --- a/m4/internal/repository.bzl
 +++ b/m4/internal/repository.bzl
-@@ -25,26 +25,27 @@ load(
- )
- 
- _M4_BUILD = """
--cc_library(
--    name = "m4_lib",
--    srcs = glob([
--        "src/*.c",
--        "src/*.h",
--    ], exclude = ["src/stackovf.c"]),
--    copts = ["-DHAVE_CONFIG_H", "-UDEBUG"] + {EXTRA_COPTS},
--    visibility = ["//bin:__pkg__"],
--    deps = [
--        "//gnulib:config_h",
--        "//gnulib",
--    ],
-+load("@rules_foreign_cc//foreign_cc:defs.bzl", "configure_make")
-+filegroup(
-+    name = "all",
-+    srcs = glob(["**"]),
-+    visibility = ["//visibility:public"],
-+)
-+configure_make(
-+    name = "libm4",
-+    visibility = ["//visibility:public"],
-+    configure_in_place = True,
-+    out_binaries = ["m4"],
-+    lib_source = ":all",
- )
+@@ -41,10 +41,11 @@ cc_library(
  """
  
  _M4_BIN_BUILD = """
 -cc_binary(
 +filegroup(
      name = "m4",
-+    srcs = ["@m4_v1.4.19//:libm4"],
++    srcs = ["@org_gnu_m4//:m4"],
 +    output_group = "m4",
      visibility = ["//visibility:public"],
 -    deps = ["//:m4_lib"],
  )
  """
  
-@@ -60,11 +61,12 @@ def _m4_repository(ctx):
-     )
- 
-     extra_copts = ctx.attr.extra_copts
--    _gnulib_overlay(ctx, m4_version = version, extra_copts = extra_copts)
-+    # _gnulib_overlay(ctx, m4_version = version, extra_copts = extra_copts)
- 
-     ctx.file("WORKSPACE", "workspace(name = {name})\n".format(name = repr(ctx.name)))
-     ctx.file("BUILD.bazel", _M4_BUILD.format(EXTRA_COPTS = extra_copts))
-     ctx.file("bin/BUILD.bazel", _M4_BIN_BUILD)
-+    return
- 
-     # Let M4 v1.4.15 build with contemporary Gnulib.
-     ctx.template("src/builtin.c", "src/builtin.c", substitutions = {
-@@ -130,21 +132,21 @@ m4_repository = repository_rule(
-     attrs = {
-         "version": attr.string(mandatory = True),
-         "extra_copts": attr.string_list(),
--        "_gnulib_build": attr.label(
--            default = "@rules_m4//m4/internal:gnulib/gnulib.BUILD",
--            allow_single_file = True,
--        ),
--        "_gnulib_config_darwin_h": attr.label(
--            default = "//m4/internal:gnulib/config-darwin.h",
--            allow_single_file = True,
--        ),
--        "_gnulib_config_linux_h": attr.label(
--            default = "//m4/internal:gnulib/config-linux.h",
--            allow_single_file = True,
--        ),
--        "_gnulib_config_windows_h": attr.label(
--            default = "//m4/internal:gnulib/config-windows.h",
--            allow_single_file = True,
--        ),
-+        # "_gnulib_build": attr.label(
-+        #     default = "@rules_m4//m4/internal:gnulib/gnulib.BUILD",
-+        #     allow_single_file = True,
-+        # ),
-+        # "_gnulib_config_darwin_h": attr.label(
-+        #     default = "//m4/internal:gnulib/config-darwin.h",
-+        #     allow_single_file = True,
-+        # ),
-+        # "_gnulib_config_linux_h": attr.label(
-+        #     default = "//m4/internal:gnulib/config-linux.h",
-+        #     allow_single_file = True,
-+        # ),
-+        # "_gnulib_config_windows_h": attr.label(
-+        #     default = "//m4/internal:gnulib/config-windows.h",
-+        #     allow_single_file = True,
-+        # ),
-     },
- )
-diff --git a/m4/internal/versions.bzl b/m4/internal/versions.bzl
-index 0138562..eb4d4a6 100644
---- a/m4/internal/versions.bzl
-+++ b/m4/internal/versions.bzl
-@@ -23,9 +23,13 @@ _MIRRORS = [
- def _urls(filename):
-     return [m + filename for m in _MIRRORS]
- 
--DEFAULT_VERSION = "1.4.18"
-+DEFAULT_VERSION = "1.4.19"
- 
- VERSION_URLS = {
-+    "1.4.19": {
-+        "urls": _urls("m4-1.4.19.tar.xz"),
-+        "sha256": "",
-+    },
-     "1.4.18": {
-         "urls": _urls("m4-1.4.18.tar.xz"),
-         "sha256": "f2c1e86ca0a404ff281631bdc8377638992744b175afb806e25871a24a934e07",
