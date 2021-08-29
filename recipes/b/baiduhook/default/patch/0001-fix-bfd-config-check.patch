@@ -1,0 +1,9 @@
+13a14,21
+> #ifndef PACKAGE
+> #define PACKAGE "my-own-x"
+> #endif
+>
+> #ifndef PACKAGE_VERSION
+> #define PACKAGE_VERSION "1.0.0"
+> #endif
+>

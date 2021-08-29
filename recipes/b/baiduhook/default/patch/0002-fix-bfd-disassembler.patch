@@ -1,0 +1,15 @@
+diff --git a/src/AsmHelper.cpp b/src/AsmHelper.cpp
+index 819652a..bcdf04a 100644
+--- a/src/AsmHelper.cpp
++++ b/src/AsmHelper.cpp
+@@ -28,7 +28,9 @@ int AsmHelper::Copy(bfd_byte *buf, int bufsize, bfd *abfd, void *src, unsigned i
+ 	disasm_info.read_memory_func = buffer_read_memory;
+ 	disasm_info.print_address_func = print_address;
+
+-	disassembler_ftype print_insn = disassembler(abfd);
++	disassembler_ftype print_insn = disassembler(bfd_get_arch (abfd),
++                                              bfd_big_endian (abfd),
++                                              bfd_get_mach (abfd), abfd);
+ 	int count;
+ 	bfd_byte *pc = (bfd_byte *)src;
+ 	bfd_byte *curdst = (bfd_byte *)buf;
