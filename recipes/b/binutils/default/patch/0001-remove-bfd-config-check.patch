@@ -1,0 +1,30 @@
+diff --git a/bfd/bfd-in.h b/bfd/bfd-in.h
+index a1c4bf13..a0b2438d 100644
+--- a/bfd/bfd-in.h
++++ b/bfd/bfd-in.h
+@@ -23,10 +23,6 @@
+ #ifndef __BFD_H_SEEN__
+ #define __BFD_H_SEEN__
+ 
+-/* PR 14072: Ensure that config.h is included first.  */
+-#if !defined PACKAGE && !defined PACKAGE_VERSION
+-#error config.h must be included before this header
+-#endif
+ 
+ #ifdef __cplusplus
+ extern "C" {
+diff --git a/bfd/bfd-in2.h b/bfd/bfd-in2.h
+index 8e815bab..99119953 100644
+--- a/bfd/bfd-in2.h
++++ b/bfd/bfd-in2.h
+@@ -30,10 +30,6 @@
+ #ifndef __BFD_H_SEEN__
+ #define __BFD_H_SEEN__
+ 
+-/* PR 14072: Ensure that config.h is included first.  */
+-#if !defined PACKAGE && !defined PACKAGE_VERSION
+-#error config.h must be included before this header
+-#endif
+ 
+ #ifdef __cplusplus
+ extern "C" {
