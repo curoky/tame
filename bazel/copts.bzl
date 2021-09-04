@@ -30,16 +30,6 @@ BASE_COPTS = [
     # "-fstandalone-debug",
 ]
 
-BASE_C_COPTS = BASE_COPTS + [
-    # "--std=gnu89",
-    "-std=gnu11",
-    "-D_GNU_SOURCE",
-]
-
-BASE_CPP_COPTS = BASE_COPTS + [
-    "-std=c++20",
-]
-
 IGNORED_COPTS = [
     # Note: We cannot require external libraries to conform to specifications
     "-Wno-deprecated-declarations",
@@ -54,18 +44,26 @@ IGNORED_COPTS = [
     "-Wno-maybe-uninitialized",
 ]
 
-DEFAULT_C_COPTS = BASE_C_COPTS + IGNORED_COPTS + ["-Wno-implicit-function-declaration"]
-DEFAULT_CPP_COPTS = BASE_CPP_COPTS + IGNORED_COPTS
+DEFAULT_C_COPTS = BASE_COPTS + IGNORED_COPTS + [
+    # "--std=gnu89",
+    "-std=gnu11",
+    "-D_GNU_SOURCE",
+    "-Wno-implicit-function-declaration",
+]
+
+DEFAULT_CPP_COPTS = BASE_COPTS + IGNORED_COPTS + [
+    "-std=c++20",
+]
+
+TEST_CPP_COPTS = DEFAULT_CPP_COPTS + [
+    "-fsanitize=address",
+]
 
 DEFAULT_LINKOPTS = [
     "-latomic",
     "-lpthread",
     "-ldl",
     "-fuse-ld=lld",
-]
-
-TEST_CPP_COPTS = DEFAULT_CPP_COPTS + [
-    "-fsanitize=address",
 ]
 
 TEST_LINKOPTS = DEFAULT_LINKOPTS + [
