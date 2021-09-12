@@ -34,7 +34,7 @@ def fbthrift_library(
         include_prefix = ".",
         include_paths = [],
         args = [],
-        lang_options = ",json,reflection",
+        lang_options = ",json,deprecated_tag_incompatible",  # reflection not available
         visibility = ["//visibility:public"]):
     output_headers = []
     output_srcs = []

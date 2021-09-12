@@ -89,7 +89,7 @@ cc_binary(
             "thrift/compiler/generate/build_templates.cc",
         ],
     ) + [
-        ":thriftl",
+        # ":thriftl",
         ":thrifty",
         ":templates_cc",
     ],
@@ -104,9 +104,29 @@ cc_binary(
 )
 
 fbthrift_library(
+    name = "annotation_files",
+    srcs = glob([
+        "thrift/annotation/*.thrift",
+    ]),
+    include_paths = ["external/com_github_facebook_fbthrift"],
+    include_prefix = "thrift/annotation",
+    out_prefix = "thrift/annotation",
+    services = [
+        # "ThriftMetadataService",
+        # "RocketUpgrade",
+    ],
+)
+
+fbthrift_library(
     name = "thrift_files",
-    srcs = glob(["thrift/lib/thrift/*.thrift"]),
+    srcs = glob([
+        "thrift/lib/thrift/*.thrift",
+    ]),
+    include_paths = ["external/com_github_facebook_fbthrift"],
     include_prefix = "thrift/lib/thrift",
+    incs = glob([
+        "thrift/annotation/*.thrift",
+    ]),
     out_prefix = "thrift/lib/thrift",
     services = [
         "ThriftMetadataService",
@@ -143,9 +163,13 @@ cc_library(
             "thrift/conformance/cpp2/ConformanceHandler.h",
             "thrift/conformance/cpp2/ConformanceHandler.cpp",
             "thrift/conformance/data/GenRoundTrip.cpp",
+            "thrift/conformance/data/GenCompatibility.cpp",
+            "thrift/conformance/data/TestGenerator.cpp",
+            "thrift/conformance/data/CompatibilityGenerator.cpp",
         ],
     ) + [
         ":thrift_files",
+        ":annotation_files",
         ":conformance_files",
     ],
     hdrs = glob([
