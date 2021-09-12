@@ -1,0 +1,13 @@
+target:
+  - type: bazel
+    bazel_type: new_git_repository
+    bazel_build: cmake/BUILD
+    retriever: &default-retriever
+      type: git
+      url: https://github.com/oneapi-src/oneTBB
+      ref: heads/master
+  - type: cmake
+    option:
+      - SNAPPY_BUILD_TESTS OFF
+    retriever:
+      <<: *default-retriever

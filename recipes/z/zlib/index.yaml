@@ -1,0 +1,9 @@
+target:
+  - type: bazel
+    bazel_name: net_zlib_zlib
+    bazel_type: new_git_repository
+    bazel_build: default/BUILD
+    retriever:
+      type: git
+      url: https://github.com/madler/zlib
+      ref: heads/master

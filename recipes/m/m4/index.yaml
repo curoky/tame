@@ -1,0 +1,9 @@
+target:
+  - type: bazel
+    bazel_name: org_gnu_m4
+    bazel_type: http_archive
+    bazel_build: default/BUILD
+    bazel_strip_prefix: m4-1.4.19
+    retriever:
+      type: http
+      url: https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.xz

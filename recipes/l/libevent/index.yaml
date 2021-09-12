@@ -1,0 +1,8 @@
+target:
+  - type: bazel
+    bazel_type: new_git_repository
+    bazel_build: cmake/BUILD
+    retriever:
+      type: git
+      url: https://github.com/libevent/libevent
+      ref: heads/master

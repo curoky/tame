@@ -1,0 +1,7 @@
+target:
+  - type: bazel
+    bazel_type: git_repository
+    retriever:
+      type: git
+      url: https://github.com/arximboldi/immer
+      ref: heads/master

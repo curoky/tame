@@ -1,0 +1,9 @@
+target:
+  - type: bazel
+    bazel_type: http_archive
+    bazel_name: libiberty
+    bazel_build: default/BUILD
+    bazel_strip_prefix: gcc-11.2.0
+    retriever:
+      type: http
+      url: https://ftpmirror.gnu.org/gcc/gcc-11.2.0/gcc-11.2.0.tar.xz

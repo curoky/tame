@@ -1,0 +1,18 @@
+target:
+  - type: bazel
+    bazel_type: new_git_repository
+    bazel_build: default/BUILD
+    retriever: &default-retriever
+      type: git
+      url: https://github.com/rttrorg/rttr
+      ref: heads/master
+  - type: cmake
+    option:
+      - BUILD_UNIT_TESTS OFF
+      - BUILD_EXAMPLES OFF
+      - BUILD_DOCUMENTATION OFF
+      - CUSTOM_DOXYGEN_STYLE OFF
+      - BUILD_INSTALLER OFF
+      - BUILD_PACKAGE OFF
+    retriever:
+      <<: *default-retriever

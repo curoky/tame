@@ -1,0 +1,8 @@
+target:
+  - type: bazel
+    bazel_name: com_grail_bazel_compdb
+    bazel_type: git_repository
+    retriever:
+      type: git
+      url: https://github.com/grailbio/bazel-compilation-database
+      ref: heads/master

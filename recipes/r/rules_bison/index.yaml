@@ -1,0 +1,12 @@
+target:
+  - type: bazel
+    bazel_name: rules_bison
+    bazel_type: git_repository
+    retriever:
+      type: git
+      url: https://github.com/jmillikin/rules_bison
+      ref: tags/v0.2
+      patch:
+        type: cmd
+        cmd:
+          - sed -i '83d' bison/bison.bzl

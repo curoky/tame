@@ -1,0 +1,8 @@
+target:
+  - type: bazel
+    bazel_name: com_github_google_brotli
+    bazel_type: git_repository
+    retriever:
+      type: git
+      url: https://github.com/google/brotli
+      ref: heads/master

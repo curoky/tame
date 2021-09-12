@@ -1,0 +1,8 @@
+target:
+  - type: bazel
+    bazel_name: envoy_api
+    bazel_type: git_repository
+    retriever:
+      type: git
+      url: https://github.com/envoyproxy/data-plane-api
+      ref: heads/main

@@ -1,0 +1,9 @@
+target:
+  - type: bazel
+    bazel_name: libunwind
+    bazel_type: new_git_repository
+    bazel_build: autotools/BUILD
+    retriever:
+      type: git
+      url: https://github.com/libunwind/libunwind
+      ref: tags/v1.6.2

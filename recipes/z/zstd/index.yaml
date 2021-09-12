@@ -1,0 +1,13 @@
+target:
+  - type: bazel
+    bazel_type: new_git_repository
+    bazel_build: default/BUILD
+    retriever: &default-retriever
+      type: git
+      url: https://github.com/facebook/zstd
+      ref: tags/v1.5.0
+  - type: cmake
+    option:
+      - BUILD_TESTING OFF
+    retriever:
+      <<: *default-retriever

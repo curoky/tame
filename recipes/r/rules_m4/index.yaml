@@ -1,0 +1,16 @@
+target:
+  - type: bazel
+    bazel_name: rules_m4
+    bazel_type: git_repository
+    retriever:
+      type: git
+      url: https://github.com/jmillikin/rules_m4
+      ref: heads/trunk
+
+      # Patch 1
+      # before v0.2.1, build failure for m4 1.4.18 and GNU libc >= v2.34
+      # https://github.com/jmillikin/rules_m4/issues/9
+      # patch:
+      #   type: file
+      #   file:
+      #     - patches/use-m4-1.4.19.patch

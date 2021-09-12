@@ -1,0 +1,12 @@
+target:
+  - type: bazel
+    bazel_name: rules_flex
+    bazel_type: git_repository
+    retriever:
+      type: git
+      url: https://github.com/jmillikin/rules_flex
+      ref: tags/v0.2
+      patch:
+        type: cmd
+        cmd:
+          - sed -i '76d' flex/flex.bzl

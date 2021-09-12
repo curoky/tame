@@ -1,0 +1,24 @@
+target:
+  - type: bazel
+    bazel_name: org_openssl
+    bazel_type: new_git_repository
+    bazel_build: default/BUILD
+    retriever: &default-retriever
+      type: git
+      url: https://github.com/openssl/openssl
+      ref: tags/OpenSSL_1_1_1g
+  - type: cmake
+    cpm_name: OpenSSL
+    # option:
+    #   - ENABLE_DEBUG ON
+    #   - ENABLE_CURLDEBUG ON
+    #   - BUILD_TESTING OFF
+    #   - BUILD_CURL_EXE OFF
+    #   - ENABLE_MANUAL OFF
+    #   # FIXME: remove this
+    #   # why add this? hostip.h:140:24: error: unknown type name 'GETNAMEINFO_QUAL_ARG1'
+    #   # who define HAVE_GETNAMEINFO? cares define it
+    #   - HAVE_GETNAMEINFO OFF
+
+    retriever:
+      <<: *default-retriever

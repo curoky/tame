@@ -1,0 +1,8 @@
+target:
+  - type: bazel
+    bazel_name: io_bazel_rules_go
+    bazel_type: git_repository
+    retriever:
+      type: git
+      url: https://github.com/bazelbuild/rules_go
+      ref: heads/master

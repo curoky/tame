@@ -1,0 +1,12 @@
+target:
+  - type: bazel
+    bazel_type: new_git_repository
+    bazel_build: v3/BUILD
+    retriever:
+      type: git
+      url: https://github.com/catchorg/Catch2
+      ref: heads/devel
+      patch:
+        type: cmd
+        cmd:
+          - mv src/catch2/catch_all.hpp src/catch2/catch.hpp

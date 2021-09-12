@@ -1,0 +1,8 @@
+target:
+  - type: bazel
+    bazel_name: com_google_googleapis
+    bazel_type: git_repository
+    retriever:
+      type: git
+      url: https://github.com/googleapis/googleapis
+      ref: heads/master

@@ -1,0 +1,14 @@
+target:
+  - type: bazel
+    bazel_name: baiduhook
+    bazel_type: http_archive
+    bazel_strip_prefix: bhook-1.0.0
+    retriever:
+      type: http
+      url: https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/baiduhook/bhook-1.0.0.tar.gz
+      patch:
+        type: file
+        file:
+          # func disassembler changed
+          # https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=003ca0fd22863aaf1a9811c8a35a0133a2d27fb1;hp=60fd657792228e3eb59e87c26fcdeccbfe94d224
+          - default/patch/0002-fix-bfd-disassembler.patch

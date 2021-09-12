@@ -1,0 +1,14 @@
+target:
+  - type: bazel
+    bazel_name: binutils
+    bazel_type: http_archive
+    bazel_strip_prefix: binutils-2.38
+    retriever:
+      type: http
+      url: https://ftp.gnu.org/gnu/binutils/binutils-2.38.tar.gz
+      patch:
+        type: file
+        file:
+          # disable config check in bfd.h
+          # https://stackoverflow.com/questions/11748035/binutils-bfd-h-wants-config-h-now/11748919#11748919
+          - default/patch/0001-remove-bfd-config-check.patch

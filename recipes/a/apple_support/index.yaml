@@ -1,0 +1,8 @@
+target:
+  - type: bazel
+    bazel_name: build_bazel_apple_support
+    bazel_type: git_repository
+    retriever:
+      type: git
+      url: https://github.com/bazelbuild/apple_support
+      ref: heads/master

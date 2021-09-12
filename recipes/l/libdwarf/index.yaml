@@ -1,0 +1,9 @@
+target:
+  - type: bazel
+    bazel_name: libdwarf
+    bazel_type: http_archive
+    bazel_build: default/BUILD
+    bazel_strip_prefix: libdwarf-0.3.1
+    retriever:
+      type: http
+      url: https://www.prevanders.net/libdwarf-0.3.1.tar.xz

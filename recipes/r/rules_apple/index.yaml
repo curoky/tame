@@ -1,0 +1,8 @@
+target:
+  - type: bazel
+    bazel_name: build_bazel_rules_apple
+    bazel_type: git_repository
+    retriever:
+      type: git
+      url: https://github.com/bazelbuild/rules_apple
+      ref: heads/master

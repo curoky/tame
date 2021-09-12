@@ -1,0 +1,13 @@
+target:
+  - type: bazel
+    bazel_type: new_git_repository
+    bazel_build: default/BUILD
+    retriever:
+      type: git
+      url: https://github.com/facebook/fbthrift
+      ref: tags/v2022.04.25.00
+      patch:
+        type: cmd
+        cmd:
+          - sed -i -e 's/folly::badge<ThriftServer>{},//g' thrift/lib/cpp2/server/ThriftServer.cpp
+          - sed -i -e 's/folly::badge<ThriftServer>,//g' thrift/lib/cpp2/server/ThriftServer.h
