@@ -28,23 +28,6 @@ repos:
     rev: 'v2.31.0'
     hooks:
       - id: pyupgrade
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: 'v0.31.1'
-    hooks:
-      - id: markdownlint
-  - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: 'v0.8.0.4'
-    hooks:
-      - id: shellcheck
-  - repo: https://github.com/cpplint/cpplint
-    rev: '1.5.5'
-    hooks:
-      - id: cpplint
-        args: ['--linelength=100']
-  - repo: https://github.com/PyCQA/pylint
-    rev: 'v2.12.2'
-    hooks:
-      - id: pylint
   - repo: https://github.com/PyCQA/isort
     rev: '5.10.1'
     hooks:
@@ -58,10 +41,6 @@ repos:
     hooks:
       - id: shfmt
         args: ['-i', '2', '-s', '-l', '-ci']
-  # - repo: https://github.com/pocc/pre-commit-hooks
-  #   rev: v1.3.5
-  #   hooks:
-  #     - id: cppcheck
   - repo: https://github.com/keith/pre-commit-buildifier
     rev: '5.0.1'
     hooks:
