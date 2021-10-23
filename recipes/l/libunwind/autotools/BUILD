@@ -24,9 +24,11 @@ filegroup(
 
 configure_make(
     name = "libunwind",
+    autoreconf = True,
+    autoreconf_options = ["-i"],
     configure_command = "configure",
     configure_in_place = True,
-    configure_options = [],
+    # configure_options = [],
     # includes = ["include"],
     lib_source = "@libunwind//:all",
     out_shared_libs = [
