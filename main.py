@@ -20,6 +20,7 @@ import typer
 
 from tame.model import Recipe
 from tame.target.bazel import Bazel
+from tame.target.cmake import Cmake
 
 RECIPES_PATH = Path.cwd() / 'recipes'
 
@@ -31,6 +32,14 @@ def bazel(out: Path = typer.Option(Path('./bazel/recipes.bzl'), help='output dir
     recipes = Recipe.loads(RECIPES_PATH)
     bazel = Bazel(recipes=recipes)
     bazel.generate(out.expanduser())
+    logging.info(f'success to generate recipes, size:{len(recipes)}')
+
+
+@app.command()
+def cmake(out: Path = typer.Option(Path('./cmake/recipes.cmake'), help='output directory'),):
+    recipes = Recipe.loads(RECIPES_PATH)
+    cmake = Cmake(recipes=recipes)
+    cmake.generate(out.expanduser())
     logging.info(f'success to generate recipes, size:{len(recipes)}')
 
 
