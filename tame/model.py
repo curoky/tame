@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+import logging
 from pathlib import Path
 from typing import Dict, List, Literal, Optional, Union
 
@@ -67,7 +69,14 @@ class Recipe(pydantic_yaml.YamlModel):
 
         retriever: 'Recipe._Retriever'
 
-    _Target: Optional[Annotated] = Annotated[Union[CompileTarget, BazelTarget],
+    class CmakeTarget(pydantic_yaml.YamlModel):
+        type: Literal['cmake']
+        cpm_name: Optional[str]
+        option: List[str] = pydantic.Field(default=[])
+
+        retriever: 'Recipe._Retriever'
+
+    _Target: Optional[Annotated] = Annotated[Union[CompileTarget, BazelTarget, CmakeTarget],
                                              pydantic.Field(discriminator='type')]
 
     target: List[_Target]
@@ -76,10 +85,14 @@ class Recipe(pydantic_yaml.YamlModel):
     def loads(path: Path) -> dict[str, 'Recipe']:
         recipes = {}
 
-        for file in path.glob('**/**/index.yaml'):
-            r = Recipe.parse_raw(file.read_text())
-            r.meta.name = r.meta.name or file.parent.stem
-            recipes[r.meta.name] = r
+        for file in sorted(path.glob('**/**/index.yaml')):
+            try:
+                r = Recipe.parse_raw(file.read_text())
+                r.meta.name = r.meta.name or file.parent.stem
+                recipes[r.meta.name] = r
+            except Exception as e:
+                logging.error(f'parse {file} failed: {e}')
+                raise e
 
         return recipes
 
@@ -87,3 +100,4 @@ class Recipe(pydantic_yaml.YamlModel):
 Recipe.BazelTarget.update_forward_refs()
 Recipe.HttpRetriever.update_forward_refs()
 Recipe.GitRetriever.update_forward_refs()
+Recipe.CmakeTarget.update_forward_refs()
