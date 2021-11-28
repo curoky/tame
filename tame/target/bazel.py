@@ -19,6 +19,7 @@ from typing import Dict
 
 import giturlparse
 import jinja2
+from yapf.yapflib import yapf_api
 
 from tame.model import Recipe
 
@@ -139,4 +140,7 @@ def pkg_rules_dependencies():
                                 patch_cmds=patch_cmds,
                             ))
 
-        output.write_text(buf.getvalue())
+        content, _ = yapf_api.FormatCode(buf.getvalue(),
+                                         filename=output.name,
+                                         style_config='google')
+        output.write_text(content)
