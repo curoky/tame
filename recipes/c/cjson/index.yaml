@@ -2,7 +2,13 @@ target:
   - type: bazel
     bazel_type: new_git_repository
     bazel_build: default/BUILD
-    retriever:
+    retriever: &default-retriever
       type: git
       url: https://github.com/DaveGamble/cJSON
       ref: heads/master
+  - type: cmake
+    option:
+      - ENABLE_CJSON_TEST OFF
+      - ENABLE_CJSON_UNINSTALL OFF
+    retriever:
+      <<: *default-retriever

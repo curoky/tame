@@ -2,11 +2,18 @@ target:
   - type: bazel
     bazel_name: com_google_protobuf
     bazel_type: git_repository
-    retriever:
+    retriever: &default-retriever
       type: git
       url: https://github.com/protocolbuffers/protobuf
       ref: heads/main
       patch:
         type: cmd
         cmd:
-          - sed -i -e 's/@zlib/@net_zlib_zlib/g' BUILD
+          - sed -i -e 's/@zlib/@net_zlib_zlib/g' BUILD.bazel
+  - type: cmake
+    option:
+      - protobuf_MSVC_STATIC_RUNTIME OFF
+      - protobuf_BUILD_TESTS OFF
+      - protobuf_WITH_ZLIB ON
+    retriever:
+      <<: *default-retriever

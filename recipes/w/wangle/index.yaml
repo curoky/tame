@@ -2,7 +2,11 @@ target:
   - type: bazel
     bazel_type: new_git_repository
     bazel_build: default/BUILD
-    retriever:
+    retriever: &default-retriever
       type: git
       url: https://github.com/facebook/wangle
-      ref: tags/v2022.04.11.00
+      ref: tags/v2022.04.25.00
+  - type: cmake
+    retriever:
+      <<: *default-retriever
+      ref: tags/v2022.03.21.00

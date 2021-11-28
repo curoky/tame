@@ -2,7 +2,10 @@ target:
   - type: bazel
     bazel_type: new_git_repository
     bazel_build: default/BUILD
-    retriever:
+    retriever: &default-retriever
       type: git
       url: https://github.com/Neargye/nameof
       ref: heads/master
+  - type: cmake
+    retriever:
+      <<: *default-retriever

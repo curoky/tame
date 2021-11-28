@@ -2,7 +2,7 @@ target:
   - type: bazel
     bazel_type: new_git_repository
     bazel_build: default/BUILD
-    retriever:
+    retriever: &default-retriever
       type: git
       url: https://github.com/facebook/fbthrift
       ref: tags/v2022.04.25.00
@@ -11,3 +11,15 @@ target:
         cmd:
           - sed -i -e 's/folly::badge<ThriftServer>{},//g' thrift/lib/cpp2/server/ThriftServer.cpp
           - sed -i -e 's/folly::badge<ThriftServer>,//g' thrift/lib/cpp2/server/ThriftServer.h
+
+          # for: v2022.04.11.00 and before, fixed in v2022.04.25.00
+          # error log: fbthrift/thrift/compiler/compiler.cc:331:19: error: aggregate ‘std::ofstream genfile’ has incomplete type and cannot be defined
+          # scope: This patch fixes fbthrift build compatibility with Boost 1.79.0.
+          # fixed in: https://github.com/facebook/fbthrift/commit/5bd55f11e1b6cc2cb08a0001f9c77f56fb8ac649
+          # - sed -i -e 's/#include <ctime>/#include <ctime>\\n#include <fstream>/g' thrift/compiler/compiler.cc
+
+  # - type: cmake
+  #   option:
+  #   retriever:
+  #     <<: *default-retriever
+  #     ref: tags/v2022.03.21.00

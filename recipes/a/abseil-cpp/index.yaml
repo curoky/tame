@@ -1,7 +1,10 @@
 target:
   - type: bazel
     bazel_type: git_repository
-    retriever:
+    retriever: &default-retriever
       type: git
       url: https://github.com/abseil/abseil-cpp
       ref: heads/master
+  - type: cmake
+    retriever:
+      <<: *default-retriever

@@ -1,7 +1,12 @@
 target:
   - type: bazel
     bazel_type: git_repository
-    retriever:
+    retriever: &default-retriever
       type: git
       url: https://github.com/google/benchmark
       ref: heads/main
+  - type: cmake
+    option:
+      - BENCHMARK_ENABLE_TESTING OFF
+    retriever:
+      <<: *default-retriever

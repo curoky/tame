@@ -2,7 +2,25 @@ target:
   - type: bazel
     bazel_type: new_git_repository
     bazel_build: default/BUILD
-    retriever:
+    retriever: &default-retriever
       type: git
       url: https://github.com/apache/thrift
       ref: heads/master
+  # - type: cmake
+  #   option:
+  #     - BUILD_COMPILER OFF
+  #     - BUILD_TESTING OFF
+  #     - BUILD_TUTORIALS OFF
+  #     - WITH_ZLIB OFF
+  #     - WITH_AS3 OFF
+  #     - WITH_JAVA OFF
+  #     - WITH_JAVASCRIPT OFF
+  #     - WITH_NODEJS OFF
+  #     - BUILD_NODEJS OFF
+  #     - WITH_HASKELL OFF
+  #     - WITH_PYTHON OFF
+  #     - BUILD_PYTHON OFF
+  #     - WITH_C_GLIB OFF
+  #   retriever:
+  #     <<: *default-retriever
+  #     ref: tags/v0.16.0

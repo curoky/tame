@@ -2,7 +2,12 @@ target:
   - type: bazel
     bazel_type: new_git_repository
     bazel_build: default/BUILD
-    retriever:
+    retriever: &default-retriever
       type: git
       url: https://github.com/gabime/spdlog
       ref: tags/v1.10.0
+  - type: cmake
+    option:
+      - 'SPDLOG_FMT_EXTERNAL=ON'
+    retriever:
+      <<: *default-retriever
