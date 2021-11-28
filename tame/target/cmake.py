@@ -14,11 +14,14 @@
 
 import io
 import logging
+import os
 from pathlib import Path
 from typing import Dict
 
 import giturlparse
 import jinja2
+from cmakelang import configuration
+from cmakelang.format import __main__ as format_main
 
 from tame.model import Recipe
 
@@ -56,4 +59,7 @@ CPMAddPackage(
                             option=t.option,
                         ))
 
-        output.write_text(buf.getvalue())
+        content, _ = format_main.process_file(
+            config=configuration.Configuration(**format_main.get_config(os.getcwd(), None)),
+            infile_content=buf.getvalue())
+        output.write_text(content)
