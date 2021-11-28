@@ -1,0 +1,25 @@
+# https://github.com/TheLartians/Format.cmake/pull/19#issuecomment-671782960
+parse:
+  additional_commands:
+    cpmaddpackage:
+      pargs:
+        nargs: '*'
+        flags: []
+      spelling: CPMAddPackage
+      kwargs:
+        NAME: 1
+        FORCE: 1
+        VERSION: 1
+        GIT_TAG: 1
+        DOWNLOAD_ONLY: 1
+        GITHUB_REPOSITORY: 1
+        GITLAB_REPOSITORY: 1
+        GIT_REPOSITORY: 1
+        SOURCE_DIR: 1
+        DOWNLOAD_COMMAND: 1
+        FIND_PACKAGE_ARGUMENTS: 1
+        NO_CACHE: 1
+        GIT_SHALLOW: 1
+        URL: 1
+        URL_HASH: 1
+        OPTIONS: +
