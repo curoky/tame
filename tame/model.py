@@ -28,6 +28,7 @@ class Recipe(pydantic_yaml.YamlModel):
         homepage: Optional[pydantic.HttpUrl]
         descrition: Optional[str]
         license: Optional[str]
+        _related_path: Path = pydantic.PrivateAttr()
 
     meta: Meta = pydantic.Field(default=Meta.construct())
 
@@ -89,6 +90,7 @@ class Recipe(pydantic_yaml.YamlModel):
             try:
                 r = Recipe.parse_raw(file.read_text())
                 r.meta.name = r.meta.name or file.parent.stem
+                r.meta._related_path = file.parent.relative_to(path.parent)
                 recipes[r.meta.name] = r
             except Exception as e:
                 logging.error(f'parse {file} failed: {e}')

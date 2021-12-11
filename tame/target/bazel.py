@@ -25,6 +25,7 @@ from tame.model import Recipe
 
 
 class Bazel:
+    NAMESPACE = '@com_curoky_tame'
     TPL_git_repository: jinja2.Template = jinja2.Template('''
     git_repository(
         name={{ name }},
@@ -81,19 +82,17 @@ def pkg_rules_dependencies():
                         'https://github.com/', 'com_github_').replace('/', '_').replace(
                             '-', '_').lower()
 
+                    bazel_file_location_prefix = f'{self.NAMESPACE}//:{r.meta._related_path}'
+
                     patch_files = []
                     patch_cmds = []
                     if t.retriever.patch:
                         if t.retriever.patch.type == 'file':
-                            patch_files = map(
-                                lambda f: f'"@com_curoky_rules_pkg//:recipes/{r.meta.name}/{f}"',
-                                t.retriever.patch.file,
-                            )
+                            self.logger.debug(f'use patch file {r.meta._related_path}')
+                            patch_files = map(lambda f: f'"{bazel_file_location_prefix}/{f}"',
+                                              t.retriever.patch.file)
                         elif t.retriever.patch.type == 'cmd':
-                            patch_cmds = map(
-                                lambda f: f'"{f}"',
-                                t.retriever.patch.cmd,
-                            )
+                            patch_cmds = map(lambda f: f'"{f}"', t.retriever.patch.cmd)
 
                     if t.bazel_type == 'new_git_repository':
                         # self.TPL_new_git_repository.render(
@@ -109,8 +108,7 @@ def pkg_rules_dependencies():
                             self.TPL_http_archive.render(
                                 name=name,
                                 url=f'{git.url2https[:-4]}/archive/refs/{t.retriever.ref}.tar.gz',
-                                build_file=
-                                f'@com_curoky_rules_pkg//:recipes/{r.meta.name}/{t.bazel_build}',
+                                build_file=f'{bazel_file_location_prefix}/{t.bazel_build}',
                                 strip_prefix=
                                 f'{git.name}-{t.retriever.ref.split("/")[1].removeprefix("v")}',
                                 patch_files=patch_files,
@@ -133,8 +131,8 @@ def pkg_rules_dependencies():
                             self.TPL_http_archive.render(
                                 name=t.bazel_name,
                                 url=t.retriever.url,
-                                build_file=
-                                f'@com_curoky_rules_pkg//:recipes/{r.meta.name}/{t.bazel_build}',
+                                build_file=f'{bazel_file_location_prefix}/{t.bazel_build}'
+                                if t.bazel_build else None,
                                 strip_prefix=t.bazel_strip_prefix,
                                 patch_files=patch_files,
                                 patch_cmds=patch_cmds,
