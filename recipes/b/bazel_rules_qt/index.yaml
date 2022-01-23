@@ -1,0 +1,13 @@
+target:
+  - type: bazel
+    bazel_name: com_justbuchanan_rules_qt
+    bazel_type: git_repository
+    retriever:
+      type: git
+      url: https://github.com/justbuchanan/bazel_rules_qt
+      ref: heads/master
+      patch:
+        type: cmd
+        cmd:
+          - sed -i -e 's^/usr/include/x86_64-linux-gnu/qt5^/home/linuxbrew/.linuxbrew/opt/qt@5/^g' qt_configure.bzl
+          # - sed -i -e 's^includes = \[\".\"\]^includes = \[\"include\"\]^g' qt.BUILD
