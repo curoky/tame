@@ -24,13 +24,15 @@ from typing_extensions import Annotated
 class Recipe(pydantic_yaml.YamlModel):
 
     class Meta(pydantic_yaml.YamlModel):
-        name: Optional[str]
+        name: str = ''
         homepage: Optional[pydantic.HttpUrl]
         descrition: Optional[str]
         license: Optional[str]
         _related_path: Path = pydantic.PrivateAttr()
 
     meta: Meta = pydantic.Field(default=Meta.construct())
+
+    depend: Optional[List[str]]
 
     class FilePatch(pydantic_yaml.YamlModel):
         type: Literal['file']
@@ -55,11 +57,26 @@ class Recipe(pydantic_yaml.YamlModel):
 
     _Retriever = Annotated[Union[HttpRetriever, GitRetriever], pydantic.Field(discriminator='type')]
 
-    class CompileTarget(pydantic_yaml.YamlModel):
-        type: Literal['compile']
-        option: Dict[str, str]
+    class CMakeBuildTool(pydantic_yaml.YamlModel):
+        type: Literal['cmake']
 
+    class MakeBuildTool(pydantic_yaml.YamlModel):
+        type: Literal['make']
+
+    class PerlBuildTool(pydantic_yaml.YamlModel):
+        type: Literal['perl']
+
+    class ConfigureBuildTool(pydantic_yaml.YamlModel):
+        type: Literal['configure']
+
+    _BuildTool = Annotated[Union[CMakeBuildTool, MakeBuildTool, PerlBuildTool, ConfigureBuildTool],
+                           pydantic.Field(discriminator='type')]
+
+    class BuildTarget(pydantic_yaml.YamlModel):
+        type: Literal['build']
+        # option: Dict[str, str]
         retriever: 'Recipe._Retriever'
+        tool: 'Recipe._BuildTool'
 
     class BazelTarget(pydantic_yaml.YamlModel):
         type: Literal['bazel']
@@ -77,7 +94,7 @@ class Recipe(pydantic_yaml.YamlModel):
 
         retriever: 'Recipe._Retriever'
 
-    _Target: Optional[Annotated] = Annotated[Union[CompileTarget, BazelTarget, CmakeTarget],
+    _Target: Optional[Annotated] = Annotated[Union[BuildTarget, BazelTarget, CmakeTarget],
                                              pydantic.Field(discriminator='type')]
 
     target: List[_Target]
@@ -100,6 +117,11 @@ class Recipe(pydantic_yaml.YamlModel):
 
 
 Recipe.BazelTarget.update_forward_refs()
+Recipe.CmakeTarget.update_forward_refs()
+Recipe.BuildTarget.update_forward_refs()
 Recipe.HttpRetriever.update_forward_refs()
 Recipe.GitRetriever.update_forward_refs()
-Recipe.CmakeTarget.update_forward_refs()
+Recipe.CMakeBuildTool.update_forward_refs()
+Recipe.PerlBuildTool.update_forward_refs()
+Recipe.ConfigureBuildTool.update_forward_refs()
+Recipe.MakeBuildTool.update_forward_refs()
