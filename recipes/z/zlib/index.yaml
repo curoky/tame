@@ -7,3 +7,9 @@ target:
       type: git
       url: https://github.com/madler/zlib
       ref: heads/master
+  - type: build
+    retriever:
+      type: http
+      url: https://zlib.net/zlib-1.2.12.tar.gz
+    tool:
+      type: configure

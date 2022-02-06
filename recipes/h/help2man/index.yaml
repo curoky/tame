@@ -1,0 +1,7 @@
+target:
+  - type: build
+    retriever:
+      type: http
+      url: http://ftp.gnu.org/gnu/help2man/help2man-1.47.9.tar.xz
+    tool:
+      type: configure

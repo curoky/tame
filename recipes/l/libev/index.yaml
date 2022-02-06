@@ -1,0 +1,7 @@
+target:
+  - type: build
+    retriever:
+      type: http
+      url: http://dist.schmorp.de/libev/libev-4.25.tar.gz
+    tool:
+      type: configure

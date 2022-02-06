@@ -1,0 +1,8 @@
+target:
+  - type: build
+    retriever:
+      type: http
+      url: https://nchc.dl.sourceforge.net/project/freetype/freetype2/2.10.0/freetype-2.10.0.tar.gz
+    tool:
+      type: configure
+      # args: --without-harfbuzz

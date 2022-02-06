@@ -1,0 +1,11 @@
+target:
+  - type: build
+    retriever:
+      type: http
+      url: https://dbus.freedesktop.org/releases/dbus/dbus-1.13.10.tar.xz
+    tool:
+      type: cmake
+
+depend:
+  - glib
+  - expat

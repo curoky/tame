@@ -6,3 +6,9 @@ target:
       type: git
       url: https://github.com/google/double-conversion
       ref: heads/master
+  - type: build
+    retriever:
+      type: http
+      url: https://github.com/google/double-conversion/archive/v3.1.5.tar.gz
+    tool:
+      type: cmake

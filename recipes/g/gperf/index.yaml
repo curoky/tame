@@ -1,0 +1,7 @@
+target:
+  - type: build
+    retriever:
+      type: http
+      url: https://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz
+    tool:
+      type: configure

@@ -8,3 +8,9 @@ target:
   - type: cmake
     retriever:
       <<: *default-retriever
+  - type: build
+    retriever:
+      type: http
+      url: https://github.com/abseil/abseil-cpp/archive/refs/tags/20211102.0.tar.gz
+    tool:
+      type: cmake

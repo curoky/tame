@@ -1,0 +1,7 @@
+target:
+  - type: build
+    retriever:
+      type: http
+      url: https://www.ijg.org/files/jpegsrc.v9c.tar.gz
+    tool:
+      type: configure

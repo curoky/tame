@@ -1,0 +1,7 @@
+target:
+  - type: build
+    retriever:
+      type: http
+      url: https://github.com/Tencent/libco/archive/master.zip
+    tool:
+      type: cmake

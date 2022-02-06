@@ -6,3 +6,9 @@ target:
       type: git
       url: https://github.com/fmtlib/fmt
       ref: heads/master
+  - type: build
+    retriever:
+      type: http
+      url: https://github.com/fmtlib/fmt/archive/5.3.0.tar.gz
+    tool:
+      type: cmake

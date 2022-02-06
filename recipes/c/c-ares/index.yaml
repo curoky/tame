@@ -1,0 +1,7 @@
+target:
+  - type: build
+    retriever:
+      type: http
+      url: https://c-ares.haxx.se/download/c-ares-1.15.0.tar.gz
+    tool:
+      type: cmake

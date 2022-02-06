@@ -6,3 +6,11 @@ target:
       type: git
       url: https://github.com/libevent/libevent
       ref: heads/master
+  - type: build
+    retriever:
+      type: http
+      url: https://github.com/libevent/libevent/releases/download/release-2.1.10-stable/libevent-2.1.10-stable.tar.gz
+    tool:
+      type: cmake
+depend:
+  - openssl

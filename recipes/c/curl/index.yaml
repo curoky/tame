@@ -21,3 +21,12 @@ target:
 
     retriever:
       <<: *default-retriever
+  - type: build
+    retriever:
+      type: http
+      url: http://curl.haxx.se/download/curl-7.64.0.tar.gz
+    tool:
+      type: configure
+
+depend:
+  - openssl

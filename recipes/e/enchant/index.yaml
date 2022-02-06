@@ -1,0 +1,10 @@
+target:
+  - type: build
+    retriever:
+      type: http
+      url: https://github.com/AbiWord/enchant/releases/download/v2.2.3/enchant-2.2.3.tar.gz
+    tool:
+      type: configure
+
+depend:
+  - glib

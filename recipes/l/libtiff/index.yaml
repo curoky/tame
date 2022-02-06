@@ -1,0 +1,9 @@
+target:
+  - type: build
+    retriever:
+      type: http
+      url: http://download.osgeo.org/libtiff/tiff-4.0.10.tar.gz
+    tool:
+      type: cmake
+depend:
+  - zlib

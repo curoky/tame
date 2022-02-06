@@ -1,0 +1,7 @@
+target:
+  - type: build
+    retriever:
+      type: http
+      url: https://ftp.gnu.org/gnu/coreutils/coreutils-8.31.tar.xz
+    tool:
+      type: configure

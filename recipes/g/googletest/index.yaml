@@ -5,3 +5,9 @@ target:
       type: git
       url: https://github.com/google/googletest
       ref: heads/main
+  - type: build
+    retriever:
+      type: http
+      url: https://github.com/google/googletest/archive/release-1.8.1.tar.gz
+    tool:
+      type: cmake
