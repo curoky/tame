@@ -19,7 +19,7 @@ import sys
 import jinja2
 
 from .build import BuilderOptions
-from .helper import EnvHelper, MirrorHelper
+from .helper import EnvHelper
 
 
 class Package(object):
@@ -31,8 +31,6 @@ class Package(object):
                  install_prefix,
                  module,
                  version: str = None,
-                 verbose: bool = False,
-                 thread_num: int = None,
                  stdout=None,
                  stderr=None):
 
@@ -44,13 +42,13 @@ class Package(object):
         self.module = module
         self.version = version or module['version'][0]
         self.dirname = '{}-{}'.format(self.name, self.version)
-        self.verbose = verbose
+        self.verbose = True
         ####################### base ############################
 
         ##################### download ##########################
         # download url
         self.url = jinja2.Template(module['archive']).render(version=self.version)
-        self.mirror = MirrorHelper.get_mirror(self.url)
+        self.mirror = self.url
         # archive file path
         self.archive_path = os.path.join(self.archive_prefix,
                                          self.dirname + '.' + self.get_archive_suffix(self.url))
@@ -63,7 +61,7 @@ class Package(object):
         self.args = ''
         self.install_args = ''
         self.type = None  # cmake or configure or custom
-        self.thread_num = thread_num
+        self.thread_num = 1
         self.build_options = None
         self.index_path = ''
         self.build_path = ''
