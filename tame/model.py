@@ -66,10 +66,14 @@ class Recipe(pydantic_yaml.YamlModel):
     class PerlBuildTool(pydantic_yaml.YamlModel):
         type: Literal['perl']
 
+    class NinjaBuildTool(pydantic_yaml.YamlModel):
+        type: Literal['ninja']
+
     class ConfigureBuildTool(pydantic_yaml.YamlModel):
         type: Literal['configure']
 
-    _BuildTool = Annotated[Union[CMakeBuildTool, MakeBuildTool, PerlBuildTool, ConfigureBuildTool],
+    _BuildTool = Annotated[Union[CMakeBuildTool, MakeBuildTool, NinjaBuildTool, PerlBuildTool,
+                                 ConfigureBuildTool],
                            pydantic.Field(discriminator='type')]
 
     class BuildTarget(pydantic_yaml.YamlModel):
@@ -121,6 +125,7 @@ Recipe.CmakeTarget.update_forward_refs()
 Recipe.BuildTarget.update_forward_refs()
 Recipe.HttpRetriever.update_forward_refs()
 Recipe.GitRetriever.update_forward_refs()
+Recipe.NinjaBuildTool.update_forward_refs()
 Recipe.CMakeBuildTool.update_forward_refs()
 Recipe.PerlBuildTool.update_forward_refs()
 Recipe.ConfigureBuildTool.update_forward_refs()
