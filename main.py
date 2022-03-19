@@ -20,6 +20,7 @@ import typer
 
 from tame.model import Recipe
 from tame.target.bazel import Bazel
+from tame.target.builder import Dispatcher
 from tame.target.cmake import Cmake
 
 RECIPES_PATH = Path.cwd() / 'recipes'
@@ -44,8 +45,10 @@ def cmake(out: Path = typer.Option(Path('./cmake/recipes.cmake'), help='output d
 
 
 @app.command()
-def show(recipe: str):
-    pass
+def build(name: str, root: Path = Path.cwd() / 'output'):
+    logging.info(f'start building {name}')
+    disp = Dispatcher(root)
+    disp.build(Recipe.loads(RECIPES_PATH)[name])
 
 
 if __name__ == '__main__':
