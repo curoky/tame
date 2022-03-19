@@ -1,7 +1,0 @@
-target:
-  - type: build
-    retriever:
-      type: http
-      url: http://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.xz
-    tool:
-      type: configure

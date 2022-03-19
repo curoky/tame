@@ -12,3 +12,12 @@ target:
       - SNAPPY_BUILD_BENCHMARKS OFF
     retriever:
       <<: *default-retriever
+  - type: build
+    retriever:
+      type: http
+      url: https://github.com/google/snappy/archive/1.1.7.tar.gz
+    tool:
+      type: cmake
+      # args: -DSNAPPY_BUILD_TESTS=OFF
+depend:
+  - googletest

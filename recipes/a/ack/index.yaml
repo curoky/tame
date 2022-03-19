@@ -1,8 +1,0 @@
-target:
-  - type: build
-    retriever:
-      type: http
-      url: https://github.com/beyondgrep/ack3/archive/v3.0.2.tar.gz
-    tool:
-      type: perl
-      # make ack-standalone

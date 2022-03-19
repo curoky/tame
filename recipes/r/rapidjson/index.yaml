@@ -13,3 +13,9 @@ target:
       - RAPIDJSON_BUILD_TESTS OFF
     retriever:
       <<: *default-retriever
+  - type: build
+    retriever:
+      type: http
+      url: https://github.com/Tencent/rapidjson/archive/v1.1.0.tar.gz
+    tool:
+      type: cmake

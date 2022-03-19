@@ -1,9 +1,0 @@
-target:
-  - type: build
-    retriever:
-      type: http
-      url: https://xcb.freedesktop.org/dist/libxcb-1.13.tar.gz
-    tool:
-      type: configure
-depend:
-  - xcb-proto

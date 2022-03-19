@@ -1,9 +1,0 @@
-target:
-  - type: build
-    retriever:
-      type: http
-      url: http://releases.llvm.org/8.0.0/cfe-8.0.0.src.tar.xz
-    tool:
-      type: cmake
-depend:
-  - llvm

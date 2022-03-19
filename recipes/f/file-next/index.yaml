@@ -1,7 +1,0 @@
-target:
-  - type: build
-    retriever:
-      type: http
-      url: https://github.com/petdance/file-next/archive/1.16.tar.gz
-    tool:
-      type: perl
