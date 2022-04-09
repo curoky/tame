@@ -31,8 +31,10 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import List
+
 import requests
 from pydantic import BaseModel
+
 from tame.model import Recipe
 
 
@@ -42,13 +44,37 @@ class PathMetaInfo(BaseModel):
     install_path: Path
 
 
+def PrepareEnvironment(include_paths):
+    env = dict()
+    base_path = os.path.expanduser('~/.local/bin') + ':/usr/local/bin:/usr/bin/:/usr/sbin/:/bin'
+
+    env['PATH'] = ':'.join([os.path.join(p, 'bin') for p in include_paths]) + ':' + base_path
+
+    env['PKG_CONFIG_PATH'] = ':'.join([os.path.join(p, 'lib/pkgconfig') for p in include_paths] +
+                                      [os.path.join(p, 'share/pkgconfig') for p in include_paths])
+
+    env['LD_LIBRARY_PATH'] = ':'.join([os.path.join(p, 'lib') for p in include_paths])
+    env['DYLD_LIBRARY_PATH'] = env['LD_LIBRARY_PATH']
+    # Just use for automake
+    dep_libs = ''
+    dep_incs = ''
+    for p in include_paths:
+        dep_libs += '-L%s ' % os.path.join(p, 'lib')
+        dep_incs += '-I%s ' % os.path.join(p, 'include')
+    env['LDFLAGS'] = '%s' % dep_libs
+    env['CPPFLAGS'] = '%s' % dep_incs
+    env['CFLAGS'] = env['CPPFLAGS']
+
+    env['CXXFLAGS'] = env['CPPFLAGS']
+    # for perl
+    env['PERL5LIB'] = ':'.join([os.path.join(p, 'lib/perl5') for p in include_paths])
+    return env
+
+
 class Builder:
 
     def __init__(self, recipe: Recipe):
         self.recipe = recipe
-
-    def isInstalled(self):
-        pass
 
     def exec(self, command: List[str], path: Path):
         logging.info('start to exec: %s', command)
