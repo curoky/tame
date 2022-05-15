@@ -1,10 +1,7 @@
-conan
 jinja2
-GitPython
 requests
-PySocks
-ruamel.yaml
 requests-ftp
+ruamel.yaml
 giturlparse
 pydantic
 pydantic_yaml
