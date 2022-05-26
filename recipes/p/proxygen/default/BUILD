@@ -51,7 +51,7 @@ genrule(
         "proxygen/lib/utils/TraceFieldType.cpp",
     ],
     cmd = "mkdir -p $(@D)/proxygen/lib/utils/ && " +
-          "python $(location proxygen/lib/utils/gen_trace_event_constants.py) " +
+          "python3 $(location proxygen/lib/utils/gen_trace_event_constants.py) " +
           "--output_type=cpp " +
           "--input_files=$(location proxygen/lib/utils/samples/TraceFieldType.txt),$(location proxygen/lib/utils/samples/TraceEventType.txt) " +
           "--output_scope=proxygen " +
